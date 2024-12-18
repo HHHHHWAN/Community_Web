@@ -1,0 +1,76 @@
+
+
+
+
+
+<body>
+
+        <div class="box_error_status">
+            <div class="box_error_status_1">
+                <div> 404 </div>
+                <div> This page does not exist</div>
+                <div> 존재하지 않은 페이지입니다.</div>
+            </div>
+            <div class="box_error_status_2">
+                <div><a href="/popular">인기</a></div>
+                <div><a href="/info">정보</a></div>
+                <div><a href="/qa">질문</a></div>
+                <div><a href="/life">생활</a></div>
+                <div><a href="/">메인으로 돌아가기</a></div>
+            </div>
+        </div>
+</body>
+
+
+
+<style>
+    body{
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+    .box_error_status{
+        background-color: rgb(178, 224, 193);
+        display: grid;
+        grid-template-rows: 40% 60%;
+        border-radius: 10px;
+        width: 500px;
+        height: 500px;
+
+        padding: 20px;
+
+    }
+    .box_error_status_1{
+        border-radius: 10px;
+        display: block;
+
+    }.box_error_status_1 div{
+        display: flex;
+        height: 50px;
+        justify-content: center;
+        font-weight:bolder;
+        font-size: 24px;
+        color: rgb(28, 59, 42);
+    }
+    
+    .box_error_status_2{
+        background-color: rgb(246, 246, 247);
+        border-radius: 10px;
+        display: grid;
+        grid-gap: 10px;
+    }.box_error_status_2 div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    a{
+        color: black;
+        font-weight: bolder;
+        text-decoration:none;
+    }
+
+
+
+</style>

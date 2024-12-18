@@ -1,0 +1,90 @@
+<!-- log_in.ejs ( 로그인 ) -->
+<% title = "login"; %>
+
+
+<body>
+    <%- include('layout/log_sign.ejs')%>
+    <div class="login_box">
+        <div style="display: flex; background-color: bisque;"><a href="/"> 메인 배너 </a></div>
+        <p> SNS 로그인 </p>
+        <a class="button_login_github" href="/login/github"><img src="public/img/GitHub_Logo.png" width="70px" alt="github_logo"><img src="public/img/github-mark.png" width="30px" alt="github_logo"></a>
+        <p> 계정 로그인 </p>
+        <form class=login action="/login" method="POST">
+            <div>
+                아이디
+                <input type="username" id="username" name="username" value="<%= username %>" >   
+                <span class="alert_span" id="error_id"></span> 
+            </div>
+
+            <div>
+                비밀번호
+                <input type="password" id="password" name="password" >
+                <span class="alert_span" id="error_pw"></span>
+            </div>
+
+            
+
+            <% if (request === "auth_login_request") { %>
+                <input type="hidden" name="request" value="<%= request %>">
+            <% } %>
+
+            <button type="submit">로그인</button>
+        </form>
+        <div>아직 회원이 아니신가요? <a href="/signup">회원가입</a></div>
+    </div> 
+    
+    <% if (error) {%>
+        <div class="alertbox">
+            <p>로그인 실패</p>
+            <span class="alert_span">
+                <% switch (error) { case 'already_key' : %>
+                    이미 연동이 완료된 계정입니다.
+                <% break; case 'email_inconsistency' :%>
+                    소셜 계정과 다른 이메일을 사용하고 있어
+                    <br> 연동에 실패했습니다.
+                <% break; case 'login_fail':%>
+                    아이디, 비밀번호 문제로 로그인에 실패했습니다.
+                <% break; default :%>
+                    서버와 통신 중, 문제가 발생했습니다.
+                    <br>처음부터 다시 시도해 주세요.
+                <% } %>
+            </span>
+            <span class="alert_span" ></span>
+        </div>
+    <% } %>
+    <% if (request === "auth_login_request") { %>
+        <div class="alertbox">
+            <p>알림</p>
+            <span class="hint">
+                소셜 계정의 이메일이 이미 존재합니다. 
+                <br>이미 가입한 계정과 연동하고 싶으시다면, 로그인 해주세요.
+            </span>
+        </div>
+    <% } %>
+
+    <% if (signup === "ok") {%>
+        <div class="alertbox">
+            <p>알림</p>
+            
+                <% if (social_signup) {%>
+                    <span class="hint">
+                    소셜계정 연동 및 
+                    </span>
+                <% } else if ( social_signup === 'social_registering'){%>
+                    <span class="alert_span">
+                        "소셜계정 연결 실패"
+                        <br> 이메일 불일치
+                    </span>
+                <% } %>
+            <span class="hint">
+                회원가입이 정상적으로 처리되었습니다.
+            </span>
+
+        </div>
+    <% } %>
+    
+</body>
+
+<head>
+    <script src="/public/js/forum_login.js"></script>
+</head>

@@ -1,0 +1,147 @@
+
+/* 컨테이너 박스 분할 */
+.forum_box {
+    min-height: 100px;
+    margin: 10px;
+    padding: 5px;
+    align-content: center;	
+    
+    background-color: rgb(255, 255, 255);
+
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    border-radius: 4px;
+
+}
+
+/* 컨테이너 상위 게시판 박스 */
+.forum_list_box{
+    min-height: 900px;
+    margin: 10px;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    border-radius: 4px;
+}
+
+/* 게시물 정보 박스 */
+#forum_list_box_info{
+    display: flex;
+    height: 70px;
+    width: 100%;
+}
+#forum_list_box_info div{
+    height: 100%;
+    /* background-color: rgb(158, 158, 158); */
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}.info_page_ctl{
+    display: flex;
+    justify-content: right;
+    width: 100%;
+}.forum_describe{
+    min-width: 150px;
+}
+
+
+
+
+/* 게시물 li 내부 박스 */
+.forum_list_box_content {
+    margin-top: 10px;
+    display: block;
+    height: 70px;
+    background-color: white;
+    border-radius: 3px;
+}
+/* 게시물 제목 라인 박스 */
+#forum_list_box_detail {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    font-size: 16px;
+    margin-top: 5px;
+}#forum_list_box_detail div{
+    white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
+    overflow: hidden;         /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
+}
+
+
+.filter_div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}.filter_div button{
+    border: none;
+    background-color: white;
+    font-size: 13px;
+    margin-top: 5px;
+}.filter_div button:hover{
+    color: rgb(149, 212, 171);
+
+}
+.filter_button_div{
+    position:relative;
+    z-index: 1;
+}.filter_button_div button{
+    height: 30px;
+    border-radius: 5px;
+}
+.filter_modal{
+    border-radius: 3px;
+    box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+    background-color: white;
+
+    position:absolute;
+    top: 80%;
+
+    padding: 3px;
+
+}
+
+
+
+
+/* page 박스처리
+#page_box{
+    min-height: 80px;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-top: 1px solid black;
+
+}
+#page_box div{
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.page_box_center{
+    width: 80%;
+    font-size: 17px;
+    text-align: center;
+} */
+
+/* 목록 스타일 */
+ul {
+    list-style-type: square;
+    padding: 5px;
+}
+
+ul li {
+    margin-bottom: 10px;
+    height: 70px;
+    list-style-type: none ;
+    border-top: 1px solid rgba(0, 0, 0, 0.274);
+}
+span {
+    color: gray;
+}

@@ -1,0 +1,124 @@
+<% title = "유저 정보"; %>
+
+<head>
+    <script src="/public/js/forum_user.js"></script>
+</head>
+
+<div>
+    <div class="user_info_box">
+        <div class="user_info_box_text">
+            <%= user_info.nickname %>
+        </div>
+        <div class="user_info_box_ctl">
+            <nav>
+                <ul>
+                    <li><div><button class="user_contents">게시물</button></div></li>
+                    <li><div><button class="user_activity">활동</button></div></li>
+                    <li><div><button class="">...</button></div></li>
+                    <li><div><button class="">...</button></div></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="user_list_box">
+        <div>
+            <ul class="user_list_box_dom">
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .user_info_box{
+        display: flex;
+        flex-direction: column;
+
+        min-height: 100px;
+        margin: 10px;
+        border-radius: 5px;
+        background-color: rgb(255, 255, 255);
+        
+    }.user_info_box_text{
+        flex: 4;
+
+        display: flex;
+
+        align-items: center;
+        padding: 20px;
+
+    }.user_info_box_ctl{
+        flex: 1;
+        margin-top: auto;
+
+        border-top: 1px solid rgba(121, 119, 119, 0.582);
+        display: flex;
+        align-items: center;
+    }
+
+    nav{
+        margin: 0;
+        padding: 0; 
+    }
+    nav ul {
+        display: flex;
+        list-style: none;
+
+        margin: 0;
+        padding: 0;
+    } nav li button{
+        font-size: medium;
+        
+        width: 100px;
+        margin-right: 5px;
+        background-color: white;
+        border: none;
+    }nav li button:hover{
+        cursor: pointer;
+    }
+
+    .user_list_box{
+        min-height: 800px;
+        margin: 10px;
+        border-radius: 5px;
+        padding: 20px;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .user_list_box_dom{
+        list-style: none;
+        /* background-color: blanchedalmond; */
+        margin: 0px;
+        padding: 0px;
+
+    } .user_list_box_dom li {
+        padding: 5px;
+        min-height: 50px;
+        border-top: 2px solid rgba(102, 101, 101, 0.24);
+    } 
+    .post_li_div_info{
+        display: flex;
+    }.post_li_div_info div{
+        flex : 1;
+        
+    }
+
+    .post_li_div_title {
+        display: flex;
+        height: 50px;
+        width: 600px;
+        align-items: center;
+
+        white-space: nowrap;     
+        text-overflow:ellipsis;   
+        overflow: hidden;         
+    }
+
+
+
+</style>
+
+<script>
+    eventsetting("<%= user_info.id %>");
+</script>

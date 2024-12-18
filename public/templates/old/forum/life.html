@@ -1,0 +1,19 @@
+{% extends "common/forum_main.html" %}
+
+
+{% block title %} MyPage - life {% endblock %}
+
+
+{% block body %}
+	{% if latest_content_list %}
+	<ul>
+		{% for text_list in latest_content_list %}
+		<li>
+			<div>
+				<a href="{% url 'detail' text_list.Content_type text_list.id %}">{{text_list}}</a>
+			</div>
+		</li>
+		{% endfor%}
+	</ul>
+	{% endif%}
+{% endblock %}

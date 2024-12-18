@@ -1,0 +1,239 @@
+<!--  templates/forum_search.ejs -->
+
+<% title = 'search'%>
+
+
+
+<div class="search_main_div"> 
+    <h3>'<%= search_keyword %>' 의 대한 검색 결과입니다.</h4>
+    <div class="search_forum_div">
+        <div class="search_contents">
+            검색결과  <%= contents_count.count + comments_count.count %>건 의 항목이 검색되었습니다.
+            <div class="list">
+                <% if (post_contents.length) {%>
+                <ul>
+                    <% post_contents.forEach( row => { %>
+                        <li>
+                            <div class="search_link"><a href="/<%= row.content_type %>/<%= row.id %>"><%= row.title %></a></div>
+                            <div class="search_sub"> <%= row.text %></div>
+                        </li>
+                    <%}); %>
+                </ul>
+                <%} else { %>
+                    <div class="not_found_div"> 일치하는 게시글이 없습니다. </div>
+                <% } %>      
+            </div>
+            <div id="page_box">
+                <div>
+                    <!-- 가장 첫번쨰 페이지가 아닐경우 -->
+                    <% if ( front_page !== 1 ) {%>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page - 1 %>&pageB=<%= back_page %>"> Previous </a>
+                    <% } else { %>
+                        <span> Previous </span>
+                    <% } %>
+                </div>
+                <div id="page_box_center">
+        
+                    <!--  첫 페이지 표시 -->
+                    <% if ( front_page > 4 ) { %>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=1&pageB=<%= back_page %>">1</a>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page - 3 %>&pageB=<%= back_page %>">...</a>
+                    <% } %>
+        
+                    <!-- 현재 페이지 표시 -->
+                    <% if ( front_page < 5 ) { %>
+                        <% for (let i=1; i <= contents_count.page && i < 6; i++) {%>
+                            <% if ( front_page === i ) {%>
+                                <span><%= front_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= i %>&pageB=<%= back_page %>"><%= i %></a>
+                            <% } %>
+                        <% } %>
+                    <!-- 5 페이지 부터 표시 방식  -->
+                    <% } else if ( contents_count.page-4 < front_page ) { %> 
+                        <% for (let i=contents_count.page-4; i <= contents_count.page; i++) {%>
+                            <% if ( front_page === i ) {%>
+                                <span><%= front_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= i %>&pageB=<%= back_page %>"><%= i %></a>
+                            <% } %>
+                        <% } %>
+                    <!-- 그 외 -->
+                    <% } else { %> 
+                        <% for ( let i= front_page-1; i < front_page + 2 ; i++ ) {%>
+                            <% if ( front_page === i ) {%>
+                                <span><%= front_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= i %>&pageB=<%= back_page %>"><%= i %></a>
+                            <% } %>
+                        <%}%>
+                    <%}%>
+        
+                    <!-- 마지막 페이지 표시 -->
+                    <% if ( front_page < contents_count.page-3) { %>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page + 3 %>&pageB=<%= back_page %>">...</a>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= contents_count.page %>&pageB=<%= back_page %>"><%= contents_count.page %></a>
+                    <% } %>
+                </div>
+                <div>
+                    <!-- 마지막 페이지가 아닐 경우 -->
+                    <% if ( front_page < contents_count.page ) {%>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page + 1 %>&pageB=<%= back_page %>"> Next  </a>
+                    <% } else { %>
+                        <span> Next </span>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="search_comments">
+            <div class="list">
+                <% if (post_comments.length) {%>
+                    <ul>
+                        <% post_comments.forEach( row => { %>
+                            <li>
+                                <div class="search_link"> <a href="/<%= row.content_type %>/<%- row.content_id %>"><%= row.comment %></a></div>
+                                <div class="search_sub">  <%= row.content_title %></div>
+                            </li>
+                        <%}); %>
+                    </ul>
+                <%} else { %>
+                    <div class="not_found_div"> 일치하는 댓글이 없습니다. </div>
+                <% } %> 
+            </div>
+            <div id="page_box">
+                <div>
+                    <!-- 가장 첫번쨰 페이지가 아닐경우 -->
+                    <% if ( back_page !== 1 ) {%>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= back_page - 1 %>"> Previous </a>
+                    <% } else { %>
+                        <span> Previous </span>
+                    <% } %>
+                </div>
+                <div id="page_box_center">
+        
+                    <!--  첫 페이지 표시 -->
+                    <% if ( back_page > 4 ) { %>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=1">1</a>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= back_page - 3 %>">...</a>
+                    <% } %>
+        
+                    <!-- 현재 페이지 표시 -->
+                    <% if ( back_page < 5 ) { %>
+                        <% for (let i=1; i <= comments_count.page && i < 6; i++) {%>
+                            <% if ( back_page === i ) {%>
+                                <span><%= back_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= i %>"><%= i %></a>
+                            <% } %>
+                        <% } %>
+                    <!-- 5 페이지 부터 표시 방식  -->
+                    <% } else if ( comments_count.page-4 < back_page ) { %> 
+                        <% for (let i=comments_count.page-4; i <= comments_count.page; i++) {%>
+                            <% if ( back_page === i ) {%>
+                                <span><%= back_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= i %>"><%= i %></a>
+                            <% } %>
+                        <% } %>
+                    <!-- 그 외 -->
+                    <% } else { %> 
+                        <% for ( let i= back_page-1; i < back_page + 2 ; i++ ) {%>
+                            <% if ( back_page === i ) {%>
+                                <span><%= back_page %></span>	
+                            <%} else {%>
+                                <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= i %>"><%= i %></a>
+                            <% } %>
+                        <%}%>
+                    <%}%>
+        
+                    <!-- 마지막 페이지 표시 -->
+                    <% if ( back_page < comments_count.page-3) { %>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= back_page + 3 %>">...</a>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= comments_count.page %>"><%= contents_count.page %></a>
+                    <% } %>
+                </div>
+                <div>
+                    <!-- 마지막 페이지가 아닐 경우 -->
+                    <% if ( back_page < comments_count.page ) {%>
+                        <a href="/search?search_keyword=<%= search_keyword %>&pageF=<%= front_page %>&pageB=<%= back_page + 1 %>"> Next  </a>
+                    <% } else { %>
+                        <span> Next </span>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+
+</script>
+
+<style>
+    .search_main_div{
+        padding: 10px;
+    }
+    .search_forum_div{
+        min-height: 800px;
+        margin: 10px;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: white;
+        
+    }
+
+    .search_forum_div div{
+        margin: 10px;
+    }
+
+    .search_comments{
+        padding-top: 10px;
+        min-height: 400px;
+        border-top: 3px solid rgba(59, 59, 59, 0.349);
+    }
+    .search_contents{
+        min-height: 400px;
+    }
+    .list{
+        min-height: 320px;
+    }
+
+    ul{
+        margin-top: 0;
+        padding: 0;
+        list-style: none;
+    } li{
+        border-top: 1px solid rgba(73, 73, 73, 0.123);
+    }
+    span{
+        color: rgba(88, 90, 90, 0.486);
+    }
+    .search_link{
+        white-space: nowrap;     
+        text-overflow:ellipsis;   
+        overflow: hidden;   
+    }
+    .search_sub{
+        color: rgba(71, 71, 71, 0.616);
+        font-size: 12px;
+        padding-left: 5px;
+
+        white-space: nowrap;     
+        text-overflow:ellipsis;   
+        overflow: hidden;   
+    }
+
+
+    .not_found_div{
+        display: flex;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    
+</style>

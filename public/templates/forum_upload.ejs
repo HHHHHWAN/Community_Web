@@ -1,0 +1,43 @@
+<!-- /templates/forum_upload.ejs -->
+<!-- 게시물 작성 페이지 -->
+
+
+<% title = pagetype; %> 
+
+<div class="forum_list_box">
+    <div id="Content_text_box">
+        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
+            <!-- <label for="title">제목 :</label> -->
+
+            <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+
+            <br><br>
+
+            <!-- <label for="text">내용 :</label> -->
+            <textarea id="text" name="text" aria-setsize="500px" required placeholder="내용을 입력하세요..." wrap="hard"><%= result ? result.text : '' %></textarea>
+
+            <br><br>
+            <button type="submit" class="forum_button_2">게시하기</button>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    input{
+        width: 100%;
+        border-radius: 5px;
+        height: 30px;
+        padding: 10px;
+    }
+
+    textarea{
+        width: 100%;
+        height: 800px;
+    }
+    #Content_text_box{
+        margin: 10px;
+    }
+
+</style>
+
