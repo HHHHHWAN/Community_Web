@@ -1,9 +1,0 @@
-
-# npm pakages
-/node_modules/
-
-#environment file
-.env
-
-#local_dbdata
-/db_data/
