@@ -33,21 +33,6 @@ async function check_dup_userinfo(email, username = null){
         console.error("(check_dup_userinfo) 쿼리 오류 발생 : ", err);
         return null;
     }
-
-    //// create return promise 
-    //// return 값 promise 처리 
-    //// resolve 작업이 성공할 경우 
-    //// reject 작업이 실패할 경우 호출
-    //// return new Promise((resolve, reject) => {
-    ////     read_DB.query(query, [username , email] ,(err, results) => {
-    ////         if (err) {
-    ////             console.log(" ### signin check DB select error ");
-    ////             reject(err);
-    ////         }else{
-    ////             resolve(results);
-    ////         }
-    ////     });
-    //// });
 };
 
  
@@ -103,7 +88,6 @@ async function del_redis_dup_user_session(user_id, sessionID) {
 
 
 const User_model = {
-
     // 계정생성 
     set_createUser : async (req, signup_password, request, callback ) => {
 
@@ -159,20 +143,6 @@ const User_model = {
             console.error("( set_createUser ) 쿼리 오류 발생 : ", err);
             callback(true, 'signup_request_fail');
         }
-    },
-
-    old_set_createUser : (username, email, nickname, hashedPassword, callback ) => {
-        const query = `insert into User (username, email, nickname,password) values ( ?, ?, ?, ?)`;
-
-        write_DB.query(query, [ username, email, nickname, hashedPassword ] ,(err) => {
-            if(err) {
-                console.error("insert error : " , err);
-                return callback(err);
-            }
-
-            callback(null);
-        });
-
     },
 
     // 로그인 처리 return (string -> issue) 
@@ -347,7 +317,20 @@ const User_model = {
             const url_params = new URLSearchParams(config_info).toString();
         
             callback(`${authUrl_github}?${url_params}`);
+        } else if(social_type === "naver"){
+            const authUrl_naver = 'https://nid.naver.com/oauth2.0/authorize';
+
+            const config_info = {
+                client_id : process.env.NAVER_CLIENT_ID,
+                redirect_uri : `http://localhost:2200/login/naver/callback`,
+                state: process.env.NAVER_CLIENT_STATE
+            }
+
+            const url_params = new URLSearchParams(config_info).toString();
+
+            callback(`${authUrl_naver}?${url_params}`);
         }else{
+            // error
             callback('back');
         }
     },
