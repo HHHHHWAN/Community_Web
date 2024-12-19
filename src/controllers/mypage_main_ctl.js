@@ -12,7 +12,7 @@ exports.getMyPagelist = (req, res) => {
         // popular contents load
         Content_db.get_popular_contents(5,0,'',(err, result_popular) => {
             if(err){
-                return res.status(500).send('mainpage_popular read error');
+                return res.status(500).send('mainpage_popular query READ error');
             }
             
 

@@ -1,18 +1,17 @@
 const express = require('express');
+
+// layouts setting
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
-const indexRoutes = require('./src/routes/index'); // app url 상속
+
+// app url 상속
+const indexRoutes = require('./src/routes/index'); 
 
 const session_config = require('./src/auth/session_setting');
 
 // session local setting middleware
 const local_session = require('./src/middleware/sessions_local');
 
-// const flash = require('connect-flash');
-// app.use(flash());
-
-// const createForumTable= require('./src/models/forum_list_DB');
-// createForumTable();
 
 const app = express();
 
@@ -57,6 +56,7 @@ async function startserver(){
 		console.log('-----------------------------------------------');
 	});
 }
+
 
 startserver();
 

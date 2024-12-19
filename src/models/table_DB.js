@@ -1,21 +1,22 @@
 //table_DB defined
 
-const DB_connect = require('../utils/mysql_connect'); //Mysql 연결 파일 
-
 const createTable = { 
 
-    Forum_Table : () => {
+    Forum_Table : (write_db) => {
         const query = `
         CREATE TABLE IF NOT EXISTS Content (
             id INT AUTO_INCREMENT PRIMARY KEY,
             title VARCHAR(100) NOT NULL,
             text TEXT NOT NULL,
-            date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
             view_count INT DEFAULT 0,
-            content_type ENUM('info','qa','life') NOT NULL
+            content_type ENUM('info','qa','life') NOT NULL,
+            user_id INT NOT NULL,
+            date_create DATETIME DEFAULT CURRENT_TIMESTAMP,
+            visible BIT(1) DEFAULT 1 NOT NULL,
+            date_delete DATETIME
         )`;
 
-        DB_connect.query(query, (err, results) => {
+        write_db.query(query, (err, results) => {
             if(err){
                 console.error('create table err :',err);
             } else {
@@ -24,17 +25,19 @@ const createTable = {
         });
     },
 
-    User_Table : () => {
+    User_Table : (write_db) => {
         const query = `
-        CREATE table if not exists User (
+        CREATE TABLE IF NOT EXISTS User (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id VARCHAR(15) NOT NULL UNIQUE,
+            nickname VARCHAR(15) NOT NULL,
+            username VARCHAR(15) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
             email VARCHAR(30) NOT NULL UNIQUE,
+            key_github INT UNIQUE,
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`;
         
-        DB_connect.query(query, (err, results) => {
+        write_db.query(query, (err, results) => {
             if(err){
                 console.error('create table err : ' , err);
             } else {
@@ -43,19 +46,24 @@ const createTable = {
         });
     },
 
-    Comment_Table : () => {
+    Comment_Table : (write_db) => {
         const query = `
-        CREATE table if not exists Comment (
+        CREATE TABLE IF NOT EXISTS Comment (
             id INT AUTO_INCREMENT PRIMARY KEY,
             comment VARCHAR(255) NOT NULL,
-            create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             user_id INT NOT NULL,
             content_id  INT NOT NULL,
-            CONSTRAINT cons_p1 FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE,
-            CONSTRAINT cons_p2 FOREIGN KEY(content_id) REFERENCES Content(id) ON DELETE CASCADE
+            parent_id INT,
+            create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            visible BIT(1) DEFAULT 1,
+            delete_at DATETIME
         )`;
+
+        // CREATE CONSTRAINT
+        // CONSTRAINT cons_p1 FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE,
+        // CONSTRAINT cons_p2 FOREIGN KEY(content_id) REFERENCES Content(id) ON DELETE CASCADE
         
-        DB_connect.query(query, (err, results) => {
+        write_db.query(query, (err, results) => {
             if(err){
                 console.error('create table err : ' , err);
             } else {
@@ -65,4 +73,4 @@ const createTable = {
     }
 };
 
-module.exports = createForumTable;
+module.exports = createTable;

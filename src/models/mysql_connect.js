@@ -55,7 +55,25 @@ write_DB.connect((err) => {
         return;
         }
         console.log('MySql ( write_DB ) Connect Success');   
-    });
+});
+
+
+
+
+//  Initialized Table
+read_DB.query(`SHOW TABLES`, (err, query_results) => {
+    if(!query_results.length){
+        const TableObject = require('./table_DB');
+        TableObject.Comment_Table(write_DB);
+        TableObject.Forum_Table(write_DB);
+        TableObject.User_Table(write_DB);
+    }
+});
+
+
+
+
+
 
 
 // 현 프로젝트 모듈화 
