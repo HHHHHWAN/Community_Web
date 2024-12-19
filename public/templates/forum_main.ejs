@@ -7,11 +7,9 @@
 	<link rel="stylesheet" href="/public/css/main_style.css">
 </head>
 <body>
-	<!-- 페이지 헤더 -->
+
 	<%- include('layout/header_cate.ejs') %>
 
-	<!-- 페이지 중간 -->
-	 
 	<div class="container">
 		<div class="sidebox" id="left_sidebox">
 			
@@ -22,7 +20,6 @@
 			
 		</div>
 		<div class="box">
-			<!-- 인기 박스 -->
 			<div class="endbox">
 				<a href="/popular"><h2>인기</h2></a>
 				<% if (Popular.length) { %>
@@ -36,71 +33,71 @@
 					</li>
 					<% }); %>
 				</ul>
+				<% } else { %>
+					<span> 게시글이 존재하지 않습니다. </span>
 				<% } %>
 			</div>	
 
-			<!-- 정보 박스  -->
 			<div class="endbox">
 				<a href="/info"><h2>정보</h2></a>
-				<% if (Contents.length) { %>
+				<% const Info_Contents = Contents.filter( content => content.content_type === "info")
+					if ( Info_Contents.length){%>
 				<ul>
-					<% Contents.forEach( content => { %>
-						<% if (content.content_type === "info") { %>
+					<% Info_Contents.forEach( content => { %>
 						<li>
 							<div id="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
 								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
 							</div>
 						</li>
-						<% } %>
 					<% }); %>
 				</ul>
+				<% } else { %>
+					<span> 게시물이 존재하지 않습니다.</span>
 				<% } %>
 			</div>	
 			
-			<!-- 질답 박스 -->
 			<div class="endbox">
 				<a href="/qa"><h2>Q&A</h2></a>
-				<% if (Contents.length) { %>
+				<% const Qa_Contents = Contents.filter( content => content.content_type === "qa")
+				if ( Qa_Contents.length){%>
 				<ul>
-					<% Contents.forEach( content => { %>
-						<% if (content.content_type === "qa") { %>
+					<% Qa_Contents.forEach( content => { %>
 						<li>
 							<div id="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id %>"><%= content.title %></a>
+								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
 							</div>
 						</li>
-						<% } %>
 					<% }); %>
 				</ul>
+				<% } else { %>
+					<span> 게시물이 존재하지 않습니다.</span>
 				<% } %>
 			</div>
 
-			<!-- 생활 박스 -->
 			<div class="endbox">
 				<a href="/life"><h2>생활</h2></a>
-				<% if (Contents.length) { %>
-					<ul>
-						<% Contents.forEach( content => { %>
-							<% if (content.content_type === "life") { %>
-							<li>
-								<div id="main_contents_list_box">
-									<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
-								</div>
-							</li>
-							<% } %>
-						<% }); %>
-					</ul>
-					<% } %>
-				</div>
+				<% const Life_Contents = Contents.filter( content => content.content_type === "life")
+				if ( Life_Contents.length){%>
+				<ul>
+					<% Life_Contents.forEach( content => { %>
+						<li>
+							<div id="main_contents_list_box">
+								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
+								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
+							</div>
+						</li>
+					<% }); %>
+				</ul>
+				<% } else { %>
+					<span> 게시물이 존재하지 않습니다.</span>
+				<% } %>
+			</div>
 		</div>
 		<div class="sidebox"></div>
 	</div>
-	<!-- 페이지 중간 끝-->
 
-	<!-- 하단 스크린 고정 바-->
 	<%- include('layout/footer_company.ejs') %>
 
 

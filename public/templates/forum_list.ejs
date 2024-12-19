@@ -97,7 +97,7 @@
 		</div>
 	</div>
 
-	<div>
+	<div class="contents_list_box" style="min-height: 800px;">
 		<ul id="contents_list">
 			<!-- 게시글 목록 -->
 			<% if (Contents.length) { %>
@@ -122,6 +122,8 @@
 					</div>
 				</li>
 				<% }); %>
+			<% } else { %>
+				<span> 게시글이 존재하지 않습니다.</span>
 			<% } %>
 		</ul>
 	</div>	
