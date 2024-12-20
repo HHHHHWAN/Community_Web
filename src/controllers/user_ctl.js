@@ -1,10 +1,9 @@
 // controllers/User_ctl.js
-
 const redis_client = require('../models/redis_connect');
 
 
 // service 단 연결
-const user_DB = require("../service/User_model");
+const user_DB = require("../service/User_Service");
 
 // env 연동
 require('dotenv').config();
@@ -50,8 +49,8 @@ exports.getSignUp_page = ( req , res ) => {
     const history = req.session.sign || {};
     delete req.session.sign;
     
-    if( request && req.session.github){
-        history.social_email = req.session.github.email;
+    if( request && req.session.social){
+        history.social_email = req.session.social.email;
     }
 
     res.render('sign_in.ejs', { layout : false , issue, request, history});
@@ -126,7 +125,6 @@ exports.getLogout = (req , res) => {
         }
 
         redis_client.del(`user:${user_id}:session`);
-
         res.redirect('/login');
     });
 };

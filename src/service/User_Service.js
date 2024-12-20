@@ -5,6 +5,8 @@ const { read_DB , write_DB } = require("../models/mysql_connect");
 const redis_client = require('../models/redis_connect');
 const data_utils = require('../utils/dataUtils');
 
+
+
 const socail_list = Object.freeze({
     GITHUB: 'key_github',
     NAVER : 'key_naver',
@@ -126,8 +128,8 @@ const User_model = {
 
                     if(request === 'auth_signup_request'){
                         return_message.social_signup = 'social_registering';
-                        if(req.session.github.email === req.session.sign.email){
-                            const social_connect = await update_user_social_key(socail_list.GITHUB, req.session.github.id, result.insertId);
+                        if(req.session.social.email === req.session.sign.email){
+                            const social_connect = await update_user_social_key(socail_list.GITHUB, req.session.social.id, result.insertId);
                             return_message.social_signup = social_connect;
                         }
                     }
@@ -173,14 +175,14 @@ const User_model = {
                             }
                             
                             // social key register
-                            if(req.session.github){
-                                if(req.session.github.email === check_user_info[0].email ){
+                            if(req.session.social){
+                                if(req.session.social.email === check_user_info[0].email ){
                                     
-                                    const social_connect = await update_user_social_key(socail_list.GITHUB,req.session.github.id,check_user_info[0].id);
+                                    const social_connect = await update_user_social_key(socail_list.GITHUB,req.session.social.id,check_user_info[0].id);
         
                                     if(social_connect){
                                         // 쿼리 처리문제
-                                        req.session.github = null;
+                                        req.session.social = null;
                                         // 일반 로그인 처리
                                         console.log("User_model, 147line : Update query err")
                                         return callback(true,'Server account update error');
@@ -193,7 +195,7 @@ const User_model = {
                             }
                         }
 
-                        delete req.session.github; // 세션정리
+                        delete req.session.social; // 세션정리
 
                         //disconnect dup_user_session && create redis key
                         del_redis_dup_user_session(check_user_info[0].id, req.sessionID);
@@ -219,12 +221,12 @@ const User_model = {
                 const query = `select id, nickname, key_github  from User where email = ? and key_github = ? `;
                 
                 //User_DB query 
-                const [ check_user_info ] = await read_DB_promise.query(query,[req.session.github.email, req.session.github.id]);
+                const [ check_user_info ] = await read_DB_promise.query(query,[req.session.social.email, req.session.social.id]);
             
                 
                 // registered social_user login 
                 if(check_user_info.length){
-                    req.session.github = null;
+                    req.session.social = null;
 
                     //disconnect dup_user_session && create redis key
                     del_redis_dup_user_session(check_user_info[0].id, req.sessionID);
@@ -302,7 +304,7 @@ const User_model = {
         });
     },
 
-    // request url create
+    // social auth request url create
     request_auth_social : ( social_type , callback ) => {
 
         if( social_type === "github"){
@@ -317,6 +319,7 @@ const User_model = {
             const url_params = new URLSearchParams(config_info).toString();
         
             callback(`${authUrl_github}?${url_params}`);
+
         } else if(social_type === "naver"){
             const authUrl_naver = 'https://nid.naver.com/oauth2.0/authorize';
 
@@ -335,52 +338,29 @@ const User_model = {
         }
     },
 
+    //Social Login Token request
     request_token_social : async ( req, social_type, request_code, callback) => {
-        const client_id = process.env.GITHUB_CLIENT_ID;
-        const client_secret = process.env.GITHUB_CLIENT_SECRET;
-    
-        try{
-            // api 통신으로 토큰 발행
-            // 필수 정보 post body 형식으로 제시
-            const token_response = await fetch('https://github.com/login/oauth/access_token',{
-                method : 'POST',
-                headers : {
-                    'Content-type' : 'application/json',
-                    'Accept': 'application/json'
-                },
-                body : JSON.stringify({
-                    client_id: client_id,
-                    client_secret : client_secret,
-                    code : request_code,
-                    redirect_uri : 'http://localhost:2200/login/github/callback',
-                }),
-            });
-            
-    
-            const token_data = await token_response.json();
-            const access_token = token_data.access_token;
-    
-            // if (!access_token) {
-            //     console.log("access_token is Empty!!");
-            //     throw new Error('Access token not found');
-            // }
-    
-            const user_response = await fetch('https://api.github.com/user',{
-                headers : {
-                    Authorization: `Bearer ${access_token}`,
-                }
-            });
 
-            // if (!user_response.ok) {
-            //     throw new Error('Failed to fetch user data from GitHub');
-            // }
-    
-            const user_data = await user_response.json();
+        const Oauth_modul_object = require('./User_Service_Oauth');
+
+        try{
+
+            // Social token request
+            if(social_type === 'github'){
+                var user_data = await Oauth_modul_object.request_token_social_github(request_code);
+            } else if ( social_type === 'naver'){
+                var user_data = await Oauth_modul_object.request_token_social_naver(request_code);
+            }
             
+            if(!user_data){
+                throw new Error('Social Connect Fail');
+            }
+
+            // social email duplicated check
             const dup_email_check = await check_dup_userinfo(user_data.email);
 
-            // 임시 세션 저장
-            req.session.github = {
+            // 회원가입용 임시 세션 저장
+            req.session.social = {
                 id : user_data.id,
                 email : user_data.email
             }
