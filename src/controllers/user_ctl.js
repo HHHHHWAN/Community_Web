@@ -92,20 +92,14 @@ exports.getSocialLogin = (req, res) => {
 
 // 소셜 연동 승인 콜백
 exports.setSocialLogin = async (req, res) => {
-    // 승인시 반환 코드 체크
-    const request_code = req.query.code;
-    const social_type = req.params.social_url;
-
-    user_DB.request_token_social(req, social_type, request_code, (status, issue ) => {
+    user_DB.request_token_social(req, (status, issue ) => {
         // status === 'null' : ok
         if(status){
             switch (issue){
                 case 'auth_signup_request' :
                     return res.redirect(`/signup?request=${issue}`);
-                    break;
                 case 'auth_login_request' :
                     return res.redirect(`/login?request=${issue}`);
-                    break;
                 default :
                     // server error result page
                     return res.redirect(`/login?error=${issue}`);

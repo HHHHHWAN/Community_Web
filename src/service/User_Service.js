@@ -4,6 +4,7 @@ require('dotenv').config();
 const { read_DB , write_DB } = require("../models/mysql_connect");
 const redis_client = require('../models/redis_connect');
 const data_utils = require('../utils/dataUtils');
+const { response } = require('express');
 
 
 
@@ -324,8 +325,9 @@ const User_model = {
             const authUrl_naver = 'https://nid.naver.com/oauth2.0/authorize';
 
             const config_info = {
+                response_type : 'code',
                 client_id : process.env.NAVER_CLIENT_ID,
-                redirect_uri : `http://localhost:2200/login/naver/callback`,
+                redirect_uri : 'http://localhost:2200/login/naver/callback',
                 state: process.env.NAVER_CLIENT_STATE
             }
 
@@ -339,7 +341,10 @@ const User_model = {
     },
 
     //Social Login Token request
-    request_token_social : async ( req, social_type, request_code, callback) => {
+    request_token_social : async (req,callback) => {
+
+        const request_code = req.query.code;
+        const social_type = req.params.social_url;
 
         const Oauth_modul_object = require('./User_Service_Oauth');
 
@@ -347,9 +352,19 @@ const User_model = {
 
             // Social token request
             if(social_type === 'github'){
+
                 var user_data = await Oauth_modul_object.request_token_social_github(request_code);
             } else if ( social_type === 'naver'){
+                if( req.query.error ){
+                    console.log("소셜 연동 에러 반환 : ", req.query.error_description);
+                    return callback(true, "Social Access Fail");
+                }
+
                 var user_data = await Oauth_modul_object.request_token_social_naver(request_code);
+                
+                console.log("유저 데이터 반환 : ", user_data);
+                // TEST
+                return callback(true, "Console log test 중");
             }
             
             if(!user_data){
@@ -384,10 +399,11 @@ const User_model = {
                 //new user create 유저 post 처리 필요
                 callback(true,"auth_signup_request");
             }
+
         }catch(err){
             // 소셜 토큰 에러
             console.log(err);
-            return callback(true, err);
+            callback(true, err);
         }
     }
 

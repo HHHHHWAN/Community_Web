@@ -34,6 +34,7 @@ const createTable = {
             password VARCHAR(255) NOT NULL,
             email VARCHAR(30) NOT NULL UNIQUE,
             key_github INT UNIQUE,
+            key_naver INT UNIQUE,
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`;
         

@@ -62,10 +62,19 @@ button{
     border-radius: 5px;
     cursor: pointer;
 }
+a {
+    margin-bottom: 10px;
+}
 
 .button_login_github{
     display: flex;
     background-color: rgb(217, 228, 218);
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}.button_login_naver{
+    display: flex;
+    background-color: rgb(3, 199, 90);
     align-items: center;
     justify-content: center;
     border-radius: 5px;
