@@ -73,7 +73,11 @@ exports.request_token_social_naver = async (request_code) => {
 
         const user_data = await user_response.json();
 
-        return user_data;
+        if(user_data.message != 'success' ){
+            throw new Error('Social Connect Fail');
+        }
+
+        return user_data.response;
 
     }catch(err){
 

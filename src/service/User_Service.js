@@ -7,12 +7,6 @@ const data_utils = require('../utils/dataUtils');
 const { response } = require('express');
 
 
-
-const socail_list = Object.freeze({
-    GITHUB: 'key_github',
-    NAVER : 'key_naver',
-});
-
 // email, nickname used check
 async function check_dup_userinfo(email, username = null){
 
@@ -91,6 +85,7 @@ async function del_redis_dup_user_session(user_id, sessionID) {
 
 
 const User_model = {
+
     // 계정생성 
     set_createUser : async (req, signup_password, request, callback ) => {
 
@@ -130,7 +125,7 @@ const User_model = {
                     if(request === 'auth_signup_request'){
                         return_message.social_signup = 'social_registering';
                         if(req.session.social.email === req.session.sign.email){
-                            const social_connect = await update_user_social_key(socail_list.GITHUB, req.session.social.id, result.insertId);
+                            const social_connect = await update_user_social_key( req.session.social.social_key, req.session.social.id, result.insertId);
                             return_message.social_signup = social_connect;
                         }
                     }
@@ -151,6 +146,7 @@ const User_model = {
     // 로그인 처리 return (string -> issue) 
     set_loginUser : async (req, callback , username = null, password = null, request = null) => {
         const read_DB_promise = read_DB.promise();
+
         try{
 
             /// setLogin_page -> process
@@ -158,7 +154,6 @@ const User_model = {
                 const query = `select * from User where username = ? `;
                 //DB check
                 const [ check_user_info ] = await read_DB_promise.query(query,[username]);
-                // const check_user_info = query_result[0];
                 
                 if(!check_user_info.length){
                     callback(true,'login_fail');
@@ -171,7 +166,7 @@ const User_model = {
                         // register request check
                         if(request === 'auth_login_request'){
                             // 이미 가입된 경우
-                            if(check_user_info[0][socail_list.GITHUB]){
+                            if(check_user_info[0][req.session.social.social_key]){
                                 return callback(true,'already_key');
                             }
                             
@@ -179,7 +174,7 @@ const User_model = {
                             if(req.session.social){
                                 if(req.session.social.email === check_user_info[0].email ){
                                     
-                                    const social_connect = await update_user_social_key(socail_list.GITHUB,req.session.social.id,check_user_info[0].id);
+                                    const social_connect = await update_user_social_key( req.session.social.social_key, req.session.social.id, check_user_info[0].id);
         
                                     if(social_connect){
                                         // 쿼리 처리문제
@@ -219,7 +214,8 @@ const User_model = {
                 /// setSocialLogin -> process
                 // social login access define
                 // used email status
-                const query = `select id, nickname, key_github  from User where email = ? and key_github = ? `;
+
+                const query = `select id, nickname from User where email = ? and ${ req.session.social.social_key } = ? `;
                 
                 //User_DB query 
                 const [ check_user_info ] = await read_DB_promise.query(query,[req.session.social.email, req.session.social.id]);
@@ -361,23 +357,16 @@ const User_model = {
                 }
 
                 var user_data = await Oauth_modul_object.request_token_social_naver(request_code);
-                
-                console.log("유저 데이터 반환 : ", user_data);
-                // TEST
-                return callback(true, "Console log test 중");
             }
             
-            if(!user_data){
-                throw new Error('Social Connect Fail');
-            }
-
             // social email duplicated check
             const dup_email_check = await check_dup_userinfo(user_data.email);
 
             // 회원가입용 임시 세션 저장
             req.session.social = {
                 id : user_data.id,
-                email : user_data.email
+                email : user_data.email,
+                social_key : 'key_' + social_type
             }
 
             // 이미 존재하는 이메일인 경우
