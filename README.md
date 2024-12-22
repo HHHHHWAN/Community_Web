@@ -29,7 +29,7 @@
             - 일반 로그인
     2. MySql
         - ERD
-          ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7e9db0a2-0c8a-46d0-b6e4-050d7f5313d0/d305a9f7-04f0-4b3b-b85d-17d174397193/image.png)
+          ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
 
     3. Redis
 
