@@ -112,6 +112,10 @@ exports.setSocialLogin = async (req, res) => {
 
 // 로그아웃 처리
 exports.getLogout = (req , res) => {
+    if(!req.session.user){
+        res.redirect('/login');
+    }
+    
     const user_id = req.session.user.user_id || '';
     req.session.destroy( err => {
         if (err) {
