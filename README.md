@@ -37,7 +37,7 @@
             - 일반 로그인
               - 일반 회원가입 지원 
     2. MySql
-        - ERD
+        - ERD &nbsp;
        ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
 
     3. Redis
