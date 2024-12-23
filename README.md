@@ -1,6 +1,6 @@
 # Community_Web
 
-기준 12.19.2024
+기준 12.23.2024
 
 1. 개요
     - CRUD 학습을 위한 인터넷 커뮤니티 웹 서비스 개발 
@@ -37,7 +37,7 @@
             - 일반 로그인
               - 일반 회원가입 지원 
     2. MySql
-        - ERD &nbsp;
+        - ERD
        ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
 
     3. Redis

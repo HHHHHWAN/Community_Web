@@ -1,5 +1,4 @@
 // controllers/forum_list_ctl 
-//old 
 const Content_db = require('../models/forum_Content');
 
 

@@ -1,26 +1,55 @@
 <!-- /templates/forum_upload.ejs -->
 <!-- 게시물 작성 페이지 -->
 
-
 <% title = pagetype; %> 
 
-<div class="forum_list_box">
-    <div id="Content_text_box">
-        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
-            <!-- <label for="title">제목 :</label> -->
+<header>
+    <script>
+        async function uploadImage() {
+          const fileInput = document.getElementById('imageInput');
+          const formData = new FormData();
+          formData.append('image', fileInput.files[0]);
+    
+          const response = await fetch("/<%= pagetype %>/upload", { method: 'POST', body: formData });
+          const data = await response.json();
+          
+          console.log(data);
 
-            <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+          const editor = document.getElementById('text');
+          editor.value += `<img src="${data.filePath}" alt="Uploaded Image" style="max-width: 100%;"/>\n`;
+        }
+    </script>
 
-            <br><br>
+</header>
 
-            <!-- <label for="text">내용 :</label> -->
-            <textarea id="text" name="text" aria-setsize="500px" required placeholder="내용을 입력하세요..." wrap="hard"><%= result ? result.text : '' %></textarea>
+<body>
+    <div class="forum_list_box">
+        <div id="Content_text_box">
+            <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
+                <!-- <label for="title">제목 :</label> -->
 
-            <br><br>
-            <button type="submit" class="forum_button_2">게시하기</button>
-        </form>
+                <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+
+                <br>
+
+                <div class="Content_image_box">
+                    <input class="file_input" type="file" id="imageInput" accept="image/*">
+                    <button class="forum_button_2" type="button" onclick="uploadImage()">Upload Image</button>
+                </div>
+
+                <br>
+
+                <!-- <label for="text">내용 :</label> -->
+                <textarea id="text" name="text" aria-setsize="500px" required placeholder="내용을 입력하세요..." wrap="hard"><%= result ? result.text : '' %></textarea>
+
+                <br>
+                <button type="submit" class="forum_button_2">게시하기</button>
+            </form>
+        </div>
     </div>
-</div>
+</body>
+
+
 
 
 <style>
@@ -29,6 +58,7 @@
         border-radius: 5px;
         height: 30px;
         padding: 10px;
+        margin-bottom: 10px;
     }
 
     textarea{
@@ -37,6 +67,18 @@
     }
     #Content_text_box{
         margin: 10px;
+    }
+    .Content_image_box{
+        display: flex;
+        padding: 10px;
+    }
+
+    .file_input{
+        min-height: 30px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: white;
+        border : 1px solid black
     }
 
 </style>

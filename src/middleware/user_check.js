@@ -1,6 +1,6 @@
 
 const user_login_check = (req,res,next) => {
-    if(!req.session){
+    if(!req.session.user){
         return res.redirect('/login');
     }
     next();

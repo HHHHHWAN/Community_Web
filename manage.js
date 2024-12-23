@@ -1,3 +1,4 @@
+/// Server start js
 const express = require('express');
 
 // layouts setting
@@ -21,10 +22,9 @@ app.use(local_session);
 
 
 
-//정적 파일 경로 alias 정의 (css , js , img)
+// 정적 파일 경로 alias 정의 (css , js , img  클라이언트 기준)
 // express.static의 용도, 클라이언트에 path 제공 (ex. localhost/public/img/eye-icon.png)
 app.use('/public', express.static(path.join(__dirname, '/public')));
-
 
 ///settings...
 // 뷰 & 템플릿 엔진, 경로 alias 설정 (컨트롤러 기준)

@@ -53,7 +53,7 @@ exports.getSignUp_page = ( req , res ) => {
         history.social_email = req.session.social.email;
     }
 
-    res.render('sign_in.ejs', { layout : false , issue, request, history});
+    res.render('sign_up.ejs', { layout : false , issue, request, history});
 };
 
 // 회원가입 post
@@ -161,84 +161,3 @@ exports.getUserinfo = (req, res) => {
         });
     }
 };
-
-
-
-// --------------------------------------------------------------
-
-// 백업
-// exports.old_setSignin_page = async ( req , res ) => {
-//     const { username , email , nickname , password } = req.body;
-//     let errorMsg = '';
-
-//     try {
-//         const results = await user_DB.get_userid( username , email );
-
-//         // 아이디, 이메일 중복 체크
-//         if(results){
-//             results.forEach(row => {
-//                 if(row.username === username){
-//                     errorMsg = 'dup_username';
-//                 }
-//                 if(row.email === email){
-//                     errorMsg = 'dup_email';
-//                 }
-//             });
-//         }
-
-//         // 회원가입 에러 존재 시 리다이렉트
-//         if (errorMsg){
-//             return res.redirect(`signin?error=${errorMsg}`);
-//         }
-    
-
-//         // DB 접속전 해쉬화 처리
-//         const salt = await bcrypt.genSalt(10); // salt 생성
-//         const hashedPassword = await bcrypt.hash(password, salt);
-
-//         // 아이디 생성 
-//         user_DB.set_createUser( username, email, nickname, hashedPassword, (err) => {
-//             if (err){
-//                 return res.status(500).send("DB : User create fail");
-//             }
-
-//             res.redirect('/login');
-//         });
-
-//     } catch (error) {
-//         // 해쉬 생성 문제
-//         res.status(500).send("hash create error ");
-//     }
-// };
-
-
-// exports.old_setLogin_page = async ( req , res ) => {
-//     const { username , password } = req.body;
-
-//     user_DB.set_loginUser( username , async (err,user_info) => {
-//         if(!user_info){
-//             // 아이디 없음
-//             return res.redirect(`/login?error=login_fail1&username=${username}`);
-//         }
-
-//         try {
-//             const match = await bcrypt.compare(password, user_info.password);
-
-//             if(match){
-//                 req.session.nickname = user_info.nickname; // ejs 유저 로그인 체크용
-//                 req.session.userId = user_info.id;
-//                 res.redirect('/');
-//             } else {
-//                 // 비밀번호 불일치
-//                 res.redirect(`/login?error=login_fail2&username=${username}`);
-//             }
-
-//         } catch {
-//             // 해쉬 컴페어 오류 발생 시
-//             console.log("해쉬 컴페어 에러")
-//             res.redirect(`/login?error=login_fail3&username=${username}`);
-//         }
-
-//     });
-
-// };

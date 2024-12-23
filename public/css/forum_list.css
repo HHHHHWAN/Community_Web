@@ -105,31 +105,6 @@
 }
 
 
-
-
-/* page 박스처리
-#page_box{
-    min-height: 80px;
-    background-color: rgb(255, 255, 255);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border-top: 1px solid black;
-
-}
-#page_box div{
-    margin: 10px;
-    justify-content: center;
-    align-items: center;
-}
-.page_box_center{
-    width: 80%;
-    font-size: 17px;
-    text-align: center;
-} */
-
 /* 목록 스타일 */
 ul {
     list-style-type: square;

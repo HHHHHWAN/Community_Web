@@ -1,1 +1,35 @@
-세션테스트
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Post</title>
+  <script>
+    async function uploadImage() {
+      const fileInput = document.getElementById('imageInput');
+      const formData = new FormData();
+      formData.append('image', fileInput.files[0]);
+
+      const response = await fetch('/upload', { method: 'POST', body: formData });
+      const data = await response.json();
+
+      const editor = document.getElementById('editor');
+      editor.value += `<img src="${data.imageUrl}" alt="Uploaded Image" style="max-width: 100%;"/>\n`;
+    }
+  </script>
+</head>
+<body>
+  <h1>Create a New Post</h1>
+  <form action="/posts" method="POST">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" required><br><br>
+
+    <textarea id="editor" name="content" rows="10" cols="50" placeholder="Write your content here..."></textarea><br><br>
+
+    <input type="file" id="imageInput" accept="image/*">
+    <button type="button" onclick="uploadImage()">Upload Image</button><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

@@ -13,9 +13,13 @@ const user_Controller = require('../controllers/user_ctl');
 const get_Controller = require('../controllers/forum_list_get');
 const set_Controller = require('../controllers/forum_list_set');
 
-//게시판 url 타입 체크 미들웨어
+//게시판 url 유효성 검사 미들웨어
 const urlType_Check = require('../middleware/url_content_check');
 const login_Check = require('../middleware/user_check');
+
+// upload object
+const upload = require('../middleware/upload_multer');
+
 // ------------------------------------------------------------
 
 // 로그인 관련
@@ -41,7 +45,7 @@ router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
 
 router.get('/testpage', (req, res) => {
-    res.render('testpage',{ layout : false });
+    res.render('testpage');
 });
 
 
@@ -49,19 +53,24 @@ router.get('/testpage', (req, res) => {
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
 // get forum contents list 
-router.get('/:pagetype', urlType_Check , get_Controller.getTypeContents);
+router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 
 
 // 게시글 삭제, 비활성 처리
 router.delete('/delete/:content_id', set_Controller.setInvisiblyctl);
 
-// 게시글 작성 페이지
-router.get('/:pagetype/edit', login_Check, urlType_Check , get_Controller.getCreateContent);
-// 게시글  
-router.post('/:pagetype/edit' , login_Check ,urlType_Check ,set_Controller.setCreateContent);
+// Post edit get
+router.get('/:pagetype/edit', login_Check, urlType_Check, get_Controller.getCreateContent);
+
+// edit Post upload  
+router.post('/:pagetype/edit' , login_Check, urlType_Check, set_Controller.setCreateContent);
+router.post('/:pagetype/upload' , login_Check, upload.single('image'), (req, res) => {
+    console.log(req.file.filename);
+    res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
+});
 
 // 게시글 내용
-router.get('/:pagetype/:id',urlType_Check, get_Controller.getDetailContents);
+router.get('/:pagetype/:id', urlType_Check, get_Controller.getDetailContents);
 
 router.post('/reply/edit/:comment_id',login_Check, set_Controller.setCreateComment);
 router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
