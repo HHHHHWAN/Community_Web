@@ -25,15 +25,16 @@
     }
     .Content_image_box{
         display: flex;
-        padding: 10px;
-    }
-
-    .file_input{
-        min-height: 30px;
+        min-height: 20px;
+        align-items: center;
         padding: 5px;
         border-radius: 5px;
         background-color: white;
         border : 1px solid black
+    }
+
+    .file_input{
+
     }
 
     .update_label{
@@ -41,13 +42,53 @@
         font-weight: bolder;
         color: rgba(3, 3, 3, 0.575);
     }
+    .text_length_display{
+        display: flex;
+        padding: 5px;
+        font-size: small;
+        color: rgba(83, 83, 83, 0.918);
+    }
 
 </style>
 
 
+<div class="forum_list_box">
+    <div id="Content_text_box">
+        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST" id="post_form">
+            <label class="update_label" for="title">제목</label>
+            <input type="text" id="title" name="title" value="<%= post_info ? post_info.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+
+            <label class="update_label">첨부</label>
+            <div class="Content_image_box">
+                <input class="file_input" type="file" id="imageInput" accept="image/*">
+                <button class="forum_button_2" id="imageUpload" type="button">올리기</button>
+            </div>
+
+            <br>
+            <label class="update_label" for="text">본문</label>
+            <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
+            <input type="hidden" id="text_input" name="text_input" value="<%= post_info ? post_info.text : '' %>">
+            <div class="text_length_display"> 
+                <div>1000</div>&nbsp;/&nbsp;
+                <div id="text_length_div">1</div>
+            </div>
+
+            <br>
+            <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
+        </form>
+
+    </div>
+</div>
+
+
 <script>
+    document.getElementById('text').innerHTML = document.getElementById('text_input').value;
+
     async function uploadImage() {
         const fileInput = document.getElementById('imageInput');
+        if(!fileInput.files.length){
+            return;
+        }
         const formData = new FormData();
         formData.append('image', fileInput.files[0]);
 
@@ -56,7 +97,7 @@
         
         const editor = document.getElementById('text');
         const img_path = document.createElement('img');
-        img_path.src = `/public/${data.filePath}`;
+        img_path.src = `/public${data.filePath}`;
         img_path.alt = `${data.filePath}`;
         img_path.setAttribute('style','max-width: 100%;');
 
@@ -69,44 +110,25 @@
         }
     });
 
-    const editableDiv = document.getElementById('editableDiv');
-    const maxLength = 500;  // 최대 글자 수
+    const editableDiv = document.getElementById('text');
+    const maxLength = 21844;  
+    const length_display = document.getElementById('text_length_div');
 
     editableDiv.addEventListener('input', function() {
-        // 현재 텍스트 길이를 확인
+        
+        length_display.innerHTML = `${editableDiv.innerText.length}`;
+
         if (editableDiv.innerText.length > maxLength) {
-            // 최대 길이를 넘으면, 텍스트 자르기
+            
             editableDiv.innerText = editableDiv.innerText.substring(0, maxLength);
         }
     });
+
+    document.getElementById('post_form').addEventListener('submit', function(event){
+        document.getElementById('text_input').value = document.getElementById('text').innerHTML;
+    });
     
 </script>
-
-
-<div class="forum_list_box">
-    <div id="Content_text_box">
-        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
-            <label class="update_label" for="title">제목</label>
-            <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
-
-            <label class="update_label" for="imageInput">첨부</label>
-            <div class="Content_image_box">
-                <input class="file_input" type="file" id="imageInput" accept="image/*">
-                <button class="forum_button_2" id="imageUpload" type="button">올리기</button>
-            </div>
-
-            <label class="update_label" for="text">본문</label>
-            <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
-            <input type="hidden">
-
-            <br>
-            <button type="submit" class="forum_button_2">게시하기</button>
-        </form>
-    </div>
-</div>
-
-
-
 
 
 

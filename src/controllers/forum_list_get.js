@@ -105,18 +105,18 @@ exports.getCreateContent = (req, res) => {
     const content_id = req.query.contentid || '';
 
     if (content_id){
-        Content_db.get_record(content_id,(err,result) =>{
+        Content_db.get_record(content_id,(err,post_info) =>{
             //임시
             if(err){
                 res.status(500).send("게시물 불러오기 실패");
-            } else if ( !result || (result.user_id != req.session.user.user_id ) ){
+            } else if ( !post_info || (post_info.user_id != req.session.user.user_id ) ){
                 return res.status(404).render('forum_error.ejs',{ layout : false });
             }
     
-            res.render('forum_upload.ejs', { pagetype , content_id , result });
+            res.render('forum_upload.ejs', { pagetype , content_id , post_info });
         });
     } else {
-        res.render('forum_upload.ejs', { pagetype , content_id , result : undefined });
+        res.render('forum_upload.ejs', { pagetype , content_id , post_info : undefined });
     }
 
 };

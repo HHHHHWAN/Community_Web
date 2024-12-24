@@ -7,12 +7,14 @@ const content_db = require('../service/forum_Content');
 // create post ctl
 exports.setCreateContent = (req,res) => {
     const { pagetype } = req.params
-    const { title, text } = req.body;
+    const { title, text_input } = req.body;
     const content_id = req.query.contentid;
+
+    console.log('break : ', text_input);
 
     // 수정인지, 새 작성인지 id 쿼리 스트링으로 체크
     if (content_id){
-        content_db.re_create_content(title,text,content_id,(err) => {
+        content_db.re_create_content(title,text_input,content_id,(err) => {
             if (err) {
                 return console.log("게시물 수정 에러");
             }
@@ -20,7 +22,7 @@ exports.setCreateContent = (req,res) => {
             res.redirect(`/${pagetype}/${content_id}`);
         });
     } else {
-        content_db.create_content(title, text, pagetype, req.session.user.user_id, (err,result) => {
+        content_db.create_content(title, text_input, pagetype, req.session.user.user_id, (err,result) => {
             if(err){
                 return res.status(500).send('게시물 등록 실패')
             }   
