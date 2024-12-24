@@ -7,9 +7,7 @@
     <script src="/public/js/forum_detail_comment.js"></script>
 </head>
 
-<!-- <div class="endbox">
 
-</div> -->
 
 
 <p> 
@@ -22,23 +20,18 @@
 
 <div class="forum_detail_box">
 
-    <!-- 게시자 정보 -->
     <div id="forum_detail_user">
         <div><a class="user_href" href="/user/<%= Contents.user_id %>"><%= Contents.nickname %></a></div>
         <div><span><b>·</b></span></div>
         <div class="detail_date" style="font-size: 14px;"><span><%= Contents.date_create%> 작성</span></div>
     </div>
-    <!-- 게시물 작성일 -->
     
-    <!-- 게시물 타이틀 -->
     <div class="title_forum"><h1><%= Contents.title %></h2></div>
-    <!-- 게시물 내용 -->
+
     <div class="text_forum">
         <pre><%= Contents.text %></pre>
     </div><br>
 
-    
-   <!-- 페이지 조작 버튼 -->
     <div class="forum_detail_ctl">
         <% if (userId == Contents.user_id) {%>
         <div class="forum_detail_ctl_edit">
@@ -51,10 +44,8 @@
         </div>
     </div>
 
-
-    <!-- 댓글 구현 영역 -->
     <div class="forum_comment_box">
-        <!-- 작성 -->
+        
         <div>
             <% if (userId) {%>
                 <form action="/reply/<%= Contents.id %>/" method="POST" id="form1">
@@ -68,7 +59,7 @@
             <% } %>
         </div>
 
-        <!-- 표시 -->
+        
         <div>
             <%if (comments.length) {%>
                 <ul class="comment_list_div">

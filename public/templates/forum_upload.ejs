@@ -3,54 +3,6 @@
 
 <% title = pagetype; %> 
 
-<header>
-    <script>
-        async function uploadImage() {
-          const fileInput = document.getElementById('imageInput');
-          const formData = new FormData();
-          formData.append('image', fileInput.files[0]);
-    
-          const response = await fetch("/<%= pagetype %>/upload", { method: 'POST', body: formData });
-          const data = await response.json();
-          
-          console.log(data);
-
-          const editor = document.getElementById('text');
-          editor.value += `<img src="${data.filePath}" alt="Uploaded Image" style="max-width: 100%;"/>\n`;
-        }
-    </script>
-
-</header>
-
-<body>
-    <div class="forum_list_box">
-        <div id="Content_text_box">
-            <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
-                <!-- <label for="title">제목 :</label> -->
-
-                <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
-
-                <br>
-
-                <div class="Content_image_box">
-                    <input class="file_input" type="file" id="imageInput" accept="image/*">
-                    <button class="forum_button_2" type="button" onclick="uploadImage()">Upload Image</button>
-                </div>
-
-                <br>
-
-                <!-- <label for="text">내용 :</label> -->
-                <textarea id="text" name="text" aria-setsize="500px" required placeholder="내용을 입력하세요..." wrap="hard"><%= result ? result.text : '' %></textarea>
-
-                <br>
-                <button type="submit" class="forum_button_2">게시하기</button>
-            </form>
-        </div>
-    </div>
-</body>
-
-
-
 
 <style>
     input{
@@ -61,7 +13,10 @@
         margin-bottom: 10px;
     }
 
-    textarea{
+    .textbox{
+        background-color: white;
+        border-radius: 5px;
+        padding: 10px;
         width: 100%;
         height: 800px;
     }
@@ -81,5 +36,77 @@
         border : 1px solid black
     }
 
+    .update_label{
+        font-size: 13px;
+        font-weight: bolder;
+        color: rgba(3, 3, 3, 0.575);
+    }
+
 </style>
+
+
+<script>
+    async function uploadImage() {
+        const fileInput = document.getElementById('imageInput');
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+
+        const response = await fetch("/<%= pagetype %>/upload", { method: 'POST', body: formData });
+        const data = await response.json();
+        
+        const editor = document.getElementById('text');
+        const img_path = document.createElement('img');
+        img_path.src = `/public/${data.filePath}`;
+        img_path.alt = `${data.filePath}`;
+        img_path.setAttribute('style','max-width: 100%;');
+
+        editor.appendChild(img_path);
+    }
+
+    document.addEventListener('click',function(event){
+        if(event.target.id === 'imageUpload'){
+            uploadImage();
+        }
+    });
+
+    const editableDiv = document.getElementById('editableDiv');
+    const maxLength = 500;  // 최대 글자 수
+
+    editableDiv.addEventListener('input', function() {
+        // 현재 텍스트 길이를 확인
+        if (editableDiv.innerText.length > maxLength) {
+            // 최대 길이를 넘으면, 텍스트 자르기
+            editableDiv.innerText = editableDiv.innerText.substring(0, maxLength);
+        }
+    });
+    
+</script>
+
+
+<div class="forum_list_box">
+    <div id="Content_text_box">
+        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST">
+            <label class="update_label" for="title">제목</label>
+            <input type="text" id="title" name="title" value="<%= result ? result.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+
+            <label class="update_label" for="imageInput">첨부</label>
+            <div class="Content_image_box">
+                <input class="file_input" type="file" id="imageInput" accept="image/*">
+                <button class="forum_button_2" id="imageUpload" type="button">올리기</button>
+            </div>
+
+            <label class="update_label" for="text">본문</label>
+            <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
+            <input type="hidden">
+
+            <br>
+            <button type="submit" class="forum_button_2">게시하기</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
 

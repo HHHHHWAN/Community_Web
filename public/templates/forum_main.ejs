@@ -5,9 +5,29 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title> MyPage </title>
 	<link rel="stylesheet" href="/public/css/main_style.css">
+	<style>
+		#moving_div{
+			position: absolute;
+			top: 33px;
+			/* transition: transform 0.1 ease; */
+			border: 3px solid rgba(118, 141, 122, 0.39);
+			padding: 20px;
+			border-radius: 15px;
+		}
+		ul{
+			padding: 10px;
+		}
+		li{
+			padding: 5px;
+			list-style-type: none;
+			border-bottom: 1px solid black;
+		} li:last-child{
+			border-bottom: none;
+		}
+	</style>
+	<script src="/public/js/forum_main.js"></script>
 </head>
 <body>
-
 	<%- include('layout/header_cate.ejs') %>
 
 	<div class="container">
@@ -40,33 +60,33 @@
 
 			<div class="endbox">
 				<a href="/info"><h2>정보</h2></a>
-				<% const Info_Contents = Contents.filter( content => content.content_type === "info")
-					if ( Info_Contents.length){%>
+				<% const Info_Contents = Contents.filter( content => content.content_type === "info") %>
+				<% if ( Info_Contents.length){%>
 				<ul>
 					<% Info_Contents.forEach( content => { %>
 						<li>
 							<div id="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
+								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
 							</div>
 						</li>
 					<% }); %>
 				</ul>
 				<% } else { %>
-					<span> 게시물이 존재하지 않습니다.</span>
+				<span> 게시물이 존재하지 않습니다.</span>
 				<% } %>
 			</div>	
 			
 			<div class="endbox">
 				<a href="/qa"><h2>Q&A</h2></a>
-				<% const Qa_Contents = Contents.filter( content => content.content_type === "qa")
-				if ( Qa_Contents.length){%>
+				<% const Qa_Contents = Contents.filter( content => content.content_type === "qa") %>
+				<% if ( Qa_Contents.length){%>
 				<ul>
 					<% Qa_Contents.forEach( content => { %>
 						<li>
 							<div id="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
+								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
 							</div>
 						</li>
 					<% }); %>
@@ -78,14 +98,14 @@
 
 			<div class="endbox">
 				<a href="/life"><h2>생활</h2></a>
-				<% const Life_Contents = Contents.filter( content => content.content_type === "life")
-				if ( Life_Contents.length){%>
+				<% const Life_Contents = Contents.filter( content => content.content_type === "life") %>
+				<% if ( Life_Contents.length){%>
 				<ul>
 					<% Life_Contents.forEach( content => { %>
 						<li>
 							<div id="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a>
+								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
 							</div>
 						</li>
 					<% }); %>
@@ -97,108 +117,6 @@
 		</div>
 		<div class="sidebox"></div>
 	</div>
-
 	<%- include('layout/footer_company.ejs') %>
-
-
-<script>
-	
-	function callWeatherApi(lat,lon) {
-		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=d3a0c668295b51b59af1af53947ed478`)
-		.then( Response => {
-			if(!Response.ok){
-				console.error("fail weather api load");
-			}
-			return Response.json();
-		})
-		.then( data => {
-			const weatherBox = document.getElementById('weather_box');
-			weatherBox.innerHTML = '';
-			const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-			weatherBox.innerHTML=`
-			<div>
-				<img src="${icon}" alt="weather icon">
-			</div>
-			<div style="height:100%">
-				<div>지역 ${data.name}</div>
-				<div>날씨 ${data.weather[0].main}</div>
-				<div>기온 ${(data.main.temp - 273.15).toFixed(1)}도</div>
-			</div>
-			`;
-		});
-	}
-
-	function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-	}
-
-	function showPosition(position) {
-		const latitude = position.coords.latitude;
-		const longitude = position.coords.longitude;
-		
-		callWeatherApi(latitude,longitude);
-	}
-
-	function showError(error) {
-		switch(error.code) {
-			case error.PERMISSION_DENIED:
-				console.log("User denied the request for Geolocation.");
-				break;
-			case error.POSITION_UNAVAILABLE:
-				console.log("Location information is unavailable.");
-				break;
-			case error.TIMEOUT:
-				console.log("The request to get user location timed out.");
-				break;
-			case error.UNKNOWN_ERROR:
-				console.log("An unknown error occurred.");
-				break;
-		}
-	}
-
-	document.addEventListener('DOMContentLoaded',function(){
-		getLocation(); 
-	});
-
-
-
-	window.addEventListener('scroll', function(){
-		const scrollTop = window.scrollY;
-
-		const scroll_post_div = document.getElementById('left_sidebox');
-		const scroll_post = document.getElementById('moving_div');
-
-
-		scroll_post.style.transform = `translateY(${scrollTop - scroll_post.offsetTop + 30 }px)`;
-
-	});
-
-</script>
-
-<style>
-	#moving_div{
-		position: absolute;
-		top: 33px;
-		/* transition: transform 0.1 ease; */
-		border: 3px solid rgba(118, 141, 122, 0.39);
-		padding: 20px;
-		border-radius: 15px;
-	}
-	ul{
-		padding: 10px;
-	}
-	li{
-		padding: 5px;
-		list-style-type: none;
-		border-bottom: 1px solid black;
-	} li:last-child{
-		border-bottom: none;
-	}
-</style>
-
 </body>
 </html>

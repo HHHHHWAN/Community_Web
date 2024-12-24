@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router(); // url 넘기기용 
+require('dotenv').config();
 
 //view controller 객체 생성
 const main_Controller = require('../controllers/mypage_main_ctl'); 
@@ -34,6 +35,24 @@ router.get('/login/:social_url',user_Controller.getSocialLogin);
 router.get('/login/:social_url/callback',user_Controller.setSocialLogin);
 
 //api 호출 라우터
+router.get('/api/weather', async (req, res) => {
+    const { lat, lon } = req.query;
+
+    try{
+        const api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`);
+
+        if(!api_Response.ok){
+            throw new Error(`Api HTTP error ! status : ${api_Response.status}`)
+        }
+
+        const data = await api_Response.json();
+
+        res.json(data);
+    }catch (err){
+        res.status(500).json({error: err.message});
+    }
+});
+
 router.get('/api/:pagetype',urlType_Check, get_Controller.api_getContents);
 
 
