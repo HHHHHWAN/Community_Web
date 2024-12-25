@@ -104,7 +104,7 @@
 <script>
 	
 	function callWeatherApi(lat,lon) {
-		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=d3a0c668295b51b59af1af53947ed478`)
+		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}`)
 		.then( Response => {
 			if(!Response.ok){
 				console.error("fail weather api load");
