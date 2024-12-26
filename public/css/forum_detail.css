@@ -1,0 +1,165 @@
+
+/* 게시물 내용 전체 */
+.forum_detail_box{
+    margin: 10px;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    padding: 20px;
+
+}
+
+/* 유저 정보란 */
+#forum_detail_user{
+    display: flex;
+    font-size: 15px;
+}
+#forum_detail_user div{
+    margin-right: 10px;
+}
+
+/* 게시물 본문 */
+.forum_detail_text_box{
+    min-height: 800px;
+
+    padding-top: 20px;
+    border-top: 1px solid rgb(99, 98, 98);
+    border-bottom: 1px solid rgb(99, 98, 98);
+}
+
+.forum_detail_ctl{
+    display: flex;
+    width: 100%;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 3px solid rgba(99, 98, 98, 0.322);
+}.forum_detail_ctl_edit {
+    flex : 1;
+}.forum_detail_ctl_return {
+    flex : 1;
+    display: flex;
+    justify-content: right;
+}
+
+.comment_label{
+    margin-top: 10px;
+    font-weight: bold;
+    color: #868585;
+    font-size: 13px;
+}
+
+#page_box{
+    width: 100%;
+}
+
+#page_box button {
+    font-size: 15px;
+    background-color:white;
+    border: none ;
+}#page_box button:hover {
+    color: rgb(119, 121, 120);
+    cursor: pointer;
+}
+#page_box button:disabled {
+    color: rgb(119, 121, 120);
+    cursor: default;
+}
+#page_box_center button:hover {
+    color: rgb(128, 175, 152);
+}#page_box_center button:disabled {
+    color: rgb(128, 175, 152);
+}
+.button_comment_cancel{
+    height: 30px;
+    font-size: 13px;
+    background-color: rgb(226, 231, 228);
+    border-radius: 5px;
+    border: none;
+    white-space : nowrap;
+    margin-right: 10px;
+}
+
+.comment_text{
+    width: 100%;
+    min-height: 70px;
+    max-height: 800px;
+
+}	
+/* 목록 스타일 */
+ul {
+    list-style-type: square;
+    padding: 5px;
+}
+
+ul li {
+    padding: 5px;
+    font-size: 13px;
+    min-height: 30px;
+    list-style-type: none ;
+    border-top: 2px solid rgba(167, 163, 163, 0.521);
+}
+
+
+/* 게시물 li 내부 박스 */
+.forum_list_box_content {
+    margin-top: 10px;
+    display: block;
+    height: 50px;
+    background-color: rgba(155, 52, 52, 0);
+    border-radius: 3px;
+}
+/* 게시물 제목 라인 박스 */
+#forum_list_box_detail {
+    display: grid;
+    grid-template-columns: 85% 15%;
+    font-size: 16px;
+    margin-top: 5px;
+
+}#forum_list_box_detail div{
+    white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
+    overflow: hidden;         /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
+}
+
+
+.create_subcomment_div{
+    padding: 5px;
+}
+
+
+p{
+    /* 중앙정렬, 선 */
+    color: rgb(99, 98, 98);
+    display: flex;
+    align-items: center;
+}
+p::before{
+    border-bottom: 1px solid rgb(99, 98, 98);
+    flex: 11;
+    content: "";
+    margin: 0 10px;
+}
+p::after{
+    border-bottom: 1px solid rgb(99, 98, 98);
+    flex: 1;
+    content: "";
+    margin: 0 10px;
+}
+span{
+    color: #868585;;
+}
+
+pre{
+    padding-right: 10px;
+    white-space: pre-wrap;
+}
+
+.comment_delete, .comment_edit{
+    font-size: 11px; color: #868585; 
+    border: none; 
+    background-color: white;
+}
+button:hover{
+    cursor: pointer;
+}
+    

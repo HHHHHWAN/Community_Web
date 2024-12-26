@@ -3,8 +3,8 @@
 
 const data_utils = {
 
-    date_before : (create_time) => {
-        const last_time = new Date - new Date(create_time);
+    date_before : (create_Date) => {
+        const last_time = new Date - new Date(create_Date);
     
         const before_minutes = Math.floor(last_time / (1000*60)) 
         const before_times = Math.floor(last_time / (1000*60*60)) 

@@ -56,6 +56,15 @@ exports.getDetailContents = (req, res) => {
     });
 };
 
+exports.getDetailPost = ( req, res ) => {
+
+
+    res.json({ 
+        Message : "ss" , 
+        Content_object : 
+    });
+};
+
 
 
 

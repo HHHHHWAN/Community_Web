@@ -1,17 +1,15 @@
 <!-- templates/forum_detail -->
 
 <% title = Contents.title; %>
-<head>
-    <script src="/public/js/forum_detail_util.js"></script>
-    <script src="/public/js/forum_detail_list.js"></script>
-    <script src="/public/js/forum_detail_comment.js"></script>
-</head>
 
+
+
+<link rel="stylesheet" href="/public/css/forum_detail.css">
 
 
 
 <p> 
-    <% switch (recall_pagetype) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
+    <% switch (returnURL.pagetype) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
     <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
     <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
     <%; break; default : %>	<a href="/popular" style="color: #4c705a;">인기</a>
@@ -21,15 +19,18 @@
 <div class="forum_detail_box">
 
     <div id="forum_detail_user">
-        <div><a class="user_href" href="/user/<%= Contents.user_id %>"><%= Contents.nickname %></a></div>
+        <div><a class="user_href" id="forum_detail_user_nickname"></a></div>
         <div><span><b>·</b></span></div>
-        <div class="detail_date" style="font-size: 14px;"><span><%= Contents.date_create%> 작성</span></div>
+        <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"></span></div>
+        <div><span><b>·</b></span></div>
+        <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count"></span></div>
     </div>
     
-    <div class="title_forum"><h1><%= Contents.title %></h2></div>
+    <div class="forum_detail_title_box"><h1 id="forum_detail_title"></h1></div>
 
-    <div class="text_forum">
-        <pre><%= Contents.text %></pre>
+
+    <div class="forum_detail_text_box">
+        <div id="forum_detail_text"></div>
     </div><br>
 
     <div class="forum_detail_ctl">
@@ -40,7 +41,7 @@
         </div>
         <% } %>
         <div class="forum_detail_ctl_return">           
-            <a href="/<%= recall_pagetype %>?page=<%= page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
+            <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
         </div>
     </div>
 
@@ -62,6 +63,7 @@
         
         <div>
             <%if (comments.length) {%>
+                <div class="comment_label">총  <%= comments.length %> 개의 댓글</div>
                 <ul class="comment_list_div">
                     <% comments.forEach(row => { if( row.visible.toString('hex') === '01' || row.children.length ) {%>
                         <li>
@@ -141,7 +143,7 @@
 
 <div class="forum_detail_box">
     <h3>    
-        <% switch (recall_pagetype) { case 'qa': %>  Q & A
+        <% switch (returnURL.pagetype) { case 'qa': %>  Q & A
         <%; break; case 'info': %> 정보
         <%; break; case 'life': %> 생활
         <%; break; default : %>	인기
@@ -156,173 +158,15 @@
     </div>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function(){
-        reloadPage("<%= recall_pagetype %>","<%= page %>");
-        editcomment();
-        loadedcomment();
+        getPostload("<%= pagetype %>","<%= Contents.id %>");
+        reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");
     });
-
 </script>
 
-<style>
-
-/* 게시물 내용 전체 */
-.forum_detail_box{
-    margin: 10px;
-
-    background-color: rgb(255, 255, 255);
-    border-radius: 4px;
-    padding: 20px;
-
-}
-
-/* 유저 정보란 */
-#forum_detail_user{
-    display: flex;
-    font-size: 15px;
-}
-#forum_detail_user div{
-    margin-right: 10px;
-}
-
-/* 게시물 본문 */
-.text_forum{
-    min-height: 800px;
-
-    padding-top: 20px;
-    border-top: 1px solid rgb(99, 98, 98);
-    border-bottom: 1px solid rgb(99, 98, 98);
-}
-
-.forum_detail_ctl{
-    display: flex;
-    width: 100%;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 3px solid rgba(99, 98, 98, 0.322);
-}.forum_detail_ctl_edit {
-    flex : 1;
-}.forum_detail_ctl_return {
-    flex : 1;
-    display: flex;
-    justify-content: right;
-}
-
-#page_box{
-    width: 100%;
-}
-
-#page_box button {
-    font-size: 15px;
-    background-color:white;
-    border: none ;
-}#page_box button:hover {
-    color: rgb(119, 121, 120);
-    cursor: pointer;
-}
-#page_box button:disabled {
-    color: rgb(119, 121, 120);
-    cursor: default;
-}
-#page_box_center button:hover {
-    color: rgb(128, 175, 152);
-}#page_box_center button:disabled {
-    color: rgb(128, 175, 152);
-}
-.button_comment_cancel{
-    height: 30px;
-    font-size: 13px;
-    background-color: rgb(226, 231, 228);
-    border-radius: 5px;
-    border: none;
-    white-space : nowrap;
-    margin-right: 10px;
-}
-
-.comment_text{
-    width: 100%;
-    min-height: 70px;
-    max-height: 800px;
-
-}	
-/* 목록 스타일 */
-ul {
-    list-style-type: square;
-    padding: 5px;
-}
-
-ul li {
-    padding: 5px;
-    font-size: 13px;
-    min-height: 30px;
-    list-style-type: none ;
-    border-top: 2px solid rgba(167, 163, 163, 0.521);
-}
-
-
-/* 게시물 li 내부 박스 */
-.forum_list_box_content {
-    margin-top: 10px;
-    display: block;
-    height: 50px;
-    background-color: rgba(155, 52, 52, 0);
-    border-radius: 3px;
-}
-/* 게시물 제목 라인 박스 */
-#forum_list_box_detail {
-    display: grid;
-    grid-template-columns: 85% 15%;
-    font-size: 16px;
-    margin-top: 5px;
-
-}#forum_list_box_detail div{
-    white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
-    overflow: hidden;         /* 넘치는 텍스트를 숨김 */
-    text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
-}
-
-
-.create_subcomment_div{
-    padding: 5px;
-}
-
-
-p{
-    /* 중앙정렬, 선 */
-    color: rgb(99, 98, 98);
-    display: flex;
-    align-items: center;
-}
-p::before{
-    border-bottom: 1px solid rgb(99, 98, 98);
-    flex: 11;
-    content: "";
-    margin: 0 10px;
-}
-p::after{
-    border-bottom: 1px solid rgb(99, 98, 98);
-    flex: 1;
-    content: "";
-    margin: 0 10px;
-}
-span{
-    color: #868585;;
-}
-
-pre{
-    padding-right: 10px;
-    white-space: pre-wrap;
-}
-
-.comment_delete, .comment_edit{
-    font-size: 11px; color: #868585; 
-    border: none; 
-    background-color: white;
-}
-button:hover{
-    cursor: pointer;
-}
-    
-</style>
+<script src="/public/js/forum_detail_post.js"></script>
+<script src="/public/js/forum_detail_util.js"></script>
+<script src="/public/js/forum_detail_list.js"></script>
+<script src="/public/js/forum_detail_comment.js"></script>

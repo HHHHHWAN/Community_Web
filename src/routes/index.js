@@ -42,7 +42,7 @@ router.get('/api/weather', async (req, res) => {
         const api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`);
 
         if(!api_Response.ok){
-            throw new Error(`Api HTTP error ! status : ${api_Response.status}`)
+            throw new Error(`API HTTP error ! status : ${api_Response.status}`)
         }
 
         const data = await api_Response.json();
@@ -53,7 +53,8 @@ router.get('/api/weather', async (req, res) => {
     }
 });
 
-router.get('/api/:pagetype',urlType_Check, get_Controller.api_getContents);
+router.get('/api/:pagetype', urlType_Check, get_Controller.api_getContents);
+router.get('/api/:pagetype/:Content_id', urlType_Check, get_Controller.getDetailPost);
 
 
 // ( 요청 url, 실행될 메서드 )
@@ -84,7 +85,6 @@ router.get('/:pagetype/edit', login_Check, urlType_Check, get_Controller.getCrea
 // edit Post upload  
 router.post('/:pagetype/edit' , login_Check, urlType_Check, set_Controller.setCreateContent);
 router.post('/:pagetype/upload' , login_Check, upload.single('image'), (req, res) => {
-    console.log(req.file.filename);
     res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
 });
 

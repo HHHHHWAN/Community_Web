@@ -3,6 +3,17 @@ const { read_DB , write_DB  } = require('../models/mysql_connect');
 const data_utils = require('../utils/dataUtils');
 const data_recreate = require('../utils/re_structure');
 
+    
+function set_viewcount(content_id){
+    const query = `update Content set view_count = view_count + 1 where id = ?`;
+    write_DB.query(query, [content_id], (err) => {
+        if (err) {
+            console.log(`Content id : ${content_id}`);
+            console.log("( set_viewcount ) View Count Error : ", set_view.err);
+        }
+    });
+}
+
 const Content = {
     // main_page_listView
     get_mainpage_contents : ( callback ) => {
@@ -30,7 +41,7 @@ const Content = {
     // 인기페이지 쿼리 
     get_popular_contents: (limit, offset, order_type, callback) => {
 
-        //popular post list 
+        //popular content list 
         var query = `select A.*, User.nickname from ( select * from Content where view_count > 3 and visible = 1 order by date_create desc limit ? offset ? ) A left join User on User.id = A.user_id`;
 
         switch(order_type){
@@ -98,35 +109,44 @@ const Content = {
     },
     
     // 게시물 내용 가져오기
-    get_record: (id,callback) => {
+    get_record:  (id , request_type , callback) => {
         const query = `select A.*, User.nickname from (select * from Content where id = ? and visible = 1) A left join User on User.id = A.user_id`;
-
         read_DB.query(query, [id], (err, results) => {
-            
             if (err) {
                 return callback(err, null);
             }
 
-            results[0].date_create = data_utils.date_before(results[0].date_create);
+            if( request_type === "view"){
 
-            return callback(null, results[0]); // 배열이 아닌 단일 값으로 반환**
+                // view count 1 add
+                set_viewcount(id);
+    
+                // 날짜 정보 가공
+                results[0].date_create = data_utils.date_before(results[0].date_create);
+            }
+
+            return callback(null, results[0]); // 배열이 아닌 인덱스 0으로 반환
         });
     },
 
-    get_comment_list: ( content_id , callback ) => {
+    get_comment_list: ( content_id, callback ) => {
         const query = `select A.*, User.nickname from ( select * from Comment where content_id = ? ) A left join User on A.user_id = User.id`;
 
         read_DB.query(query, [content_id], ( err, comment_results ) => {
             if (err){
-                console.log("error code 0000 : " , err);
+                console.log("( get_comment_list ) error : " , err);
+                return callback (null);
             }
 
+            // 날짜 가공
             comment_results.forEach( row => {
                 row.create_at = data_utils.date_before(row.create_at);
             });
 
+            // 노출 체크
             comment_results = data_utils.change_delete_comment_text(comment_results);
 
+            // 종속 트리 생성 ( 대댓글 )
             comment_results = data_recreate.comment_structure(comment_results);
 
             callback(comment_results);
@@ -146,16 +166,7 @@ const Content = {
         });
     },
 
-    // view_count 증가 쿼리
-    set_viewcount: (id, callback) => {
-        const query = `update Content set view_count = view_count + 1 where id = ?`;
-        write_DB.query(query, [id], (err, results) => {
-            if (err) {
-                return callback(err);
-            }
-            callback(null);
-        });
-    },
+
 
     //새 게시물 insert 쿼리
     create_content: (title, text, content_type , user_id , callback) => {
