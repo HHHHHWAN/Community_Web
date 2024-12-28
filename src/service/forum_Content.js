@@ -42,17 +42,29 @@ const Content = {
     get_popular_contents: (limit, offset, order_type, callback) => {
 
         //popular content list 
-        var query = `select A.*, User.nickname from ( select * from Content where view_count > 3 and visible = 1 order by date_create desc limit ? offset ? ) A left join User on User.id = A.user_id`;
+        var order_column = 'date_create';
+        var order_rule = 'DESC';
 
         switch(order_type){
             case "oldest_order" :
-                query = `select A.*, User.nickname from ( select * from Content where view_count > 3 and visible = 1 limit ? offset ? ) A left join User on User.id = A.user_id`;
+                order_rule = 'ASC';
                 break;
             case "view_count_order" :
-                query = `select A.*, User.nickname from ( select * from Content where view_count > 3 and visible = 1 order by view_count desc limit ? offset ? ) A left join User on User.id = A.user_id`;
+                order_column = 'view_count';
                 break;
-            default : 
+            case "comment_count_order" : 
+                order_column = 'comment_count';
+                break;
+            default :
         }
+
+        const query = `
+        select A.*, User.nickname from (
+        select * from Content left join (
+        select content_id, count(*) as comment_count from Comment group by content_id ) B on Content.id = B.content_id 
+        where view_count > 3 and visible = 1  order by ${order_column} ${order_rule}, date_create DESC limit ? offset ? ) A 
+        left join User on User.id = A.user_id; 
+        `; 
 
         const query_count = `select count(*) as popular_count from Content where view_count > 3 and visible = 1  order by date_create desc`; 
         // view_count 3 초과 레코드 출력
@@ -80,19 +92,29 @@ const Content = {
     // 카테고리 게시판 페이지 리스트 호출
     get_type: (pagetype, offset, order_type, callback) => {
 
-        var query = `select A.*, User.nickname from ( select * from Content where content_type = ? and visible = 1  order by date_create desc limit 10 offset ? ) A left join User on User.id = A.user_id `; 
-        
+        var order_column = 'date_create';
+        var order_rule = 'DESC';
+
         switch(order_type){
             case "oldest_order" :
-                query = `select A.*, User.nickname from ( select * from Content where content_type = ? and visible = 1 limit 10 offset ? ) A left join User on User.id = A.user_id `; 
+                order_rule = 'ASC';
                 break;
             case "view_count_order" :
-                query = `select A.*, User.nickname from ( select * from Content where content_type = ? and visible = 1  order by view_count desc limit 10 offset ? ) A left join User on User.id = A.user_id `; 
+                order_column = 'view_count';
                 break;
-            default : 
+            case "comment_count_order" : 
+                order_column = 'comment_count';
+                break;
+            default :
         }
 
-
+        const query = `
+        select A.*, User.nickname from (
+        select * from Content left join (
+        select content_id, count(*) as comment_count from Comment group by content_id ) B on Content.id = B.content_id 
+        where content_type = ? and visible = 1  order by ${order_column} ${order_rule}, date_create DESC limit 10 offset ? ) A 
+        left join User on User.id = A.user_id; 
+        `; 
 
         read_DB.query(query, [pagetype, offset], (err, results) => {
             

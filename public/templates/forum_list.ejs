@@ -49,8 +49,6 @@
 		</div>
 
 		<div class= "info_page_ctl">
-
-			
 			<div style="font-size: 15px;">
 				<div>
 					<% if ( page !== 1 ) {%>
@@ -116,6 +114,8 @@
 							</div>
 							
 							<div style="justify-content: right; display:flex ; font-size: 14px; align-items: center;" >
+								<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+								&nbsp;<span><b>·</b></span>&nbsp;
 								<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
 							</div>
 						</div>
