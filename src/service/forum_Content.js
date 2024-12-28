@@ -116,8 +116,7 @@ const Content = {
                 return callback(err, null);
             }
 
-            if( request_type === "view"){
-
+            if( request_type === "view" && results.length){
                 // view count 1 add
                 set_viewcount(id);
     
@@ -138,6 +137,8 @@ const Content = {
                 return callback (null);
             }
 
+            const comment_count = comment_results.length;
+
             // 날짜 가공
             comment_results.forEach( row => {
                 row.create_at = data_utils.date_before(row.create_at);
@@ -149,7 +150,7 @@ const Content = {
             // 종속 트리 생성 ( 대댓글 )
             comment_results = data_recreate.comment_structure(comment_results);
 
-            callback(comment_results);
+            callback({Count : comment_count , Comments: comment_results});
         });
 
     },

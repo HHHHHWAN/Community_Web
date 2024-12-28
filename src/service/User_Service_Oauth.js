@@ -4,7 +4,6 @@ require('dotenv').config();
 exports.request_token_social_github = async (request_code) => {
 
     try{
-
         // api 통신으로 토큰 발행
         // 필수 정보 post body 형식으로 제시
         const token_response = await fetch('https://github.com/login/oauth/access_token',{
@@ -45,8 +44,6 @@ exports.request_token_social_github = async (request_code) => {
 exports.request_token_social_naver = async (request_code) => {
 
     try{
-        // api 통신으로 토큰 발행
-        // 필수 정보 post body 형식으로 제시
         const token_response = await fetch('https://nid.naver.com/oauth2.0/token',{
             method : 'POST',
             headers: {

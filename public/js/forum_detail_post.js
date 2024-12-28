@@ -1,11 +1,17 @@
 
-
-
 function getPostload( pagetype, Content_id ){
     fetch(`/api/${pagetype}/${Content_id}`)
     .then(Response => {
         if(!Response.ok){
-            throw new Error(`API HTTP error ! status : ${Response.status}`);
+            switch (Response.status) {
+                case 500 : 
+                    throw new Error(`서버 접속 에러`);
+                case 404 :
+                    throw new Error(`존재하지 않은 페이지입니다.`);
+                default :
+                    throw new Error(`API HTTP error ! status : ${Response.status}`);
+            } 
+            
         }
 
         return Response.json();
@@ -20,6 +26,7 @@ function getPostload( pagetype, Content_id ){
 
         name_box.setAttribute('href',`/user/${Content.user_id}`);
         name_box.innerText = Content.nickname;
+        title_box.innerHTML = Content.title;
         date_box.innerText = Content.date_create + " 작성";
         count_box.innerText = "  " + Content.view_count;
 
@@ -27,6 +34,9 @@ function getPostload( pagetype, Content_id ){
         text_box.innerHTML = Purify_output;  
     })
     .catch( err => {
-
+        console.error(err);
+        alert(err.message);
     });
 }
+
+

@@ -1,15 +1,12 @@
-<!-- templates/forum_detail -->
 
-<% title = Contents.title; %>
-
-
+<% title = 'post'%>
 
 <link rel="stylesheet" href="/public/css/forum_detail.css">
 
 
 
 <p> 
-    <% switch (returnURL.pagetype) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
+    <% switch ( returnURL.pagetype ) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
     <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
     <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
     <%; break; default : %>	<a href="/popular" style="color: #4c705a;">인기</a>
@@ -35,10 +32,10 @@
 
     <div class="forum_detail_ctl">
         <% if (userId == Contents.user_id) {%>
-        <div class="forum_detail_ctl_edit">
-            <a href="/<%= Contents.content_type %>/edit?contentid=<%= Contents.id %>"><button type="button" class="forum_button_2">수정</button></a>
-            <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Contents.content_type%>','<%= Contents.id %>')">삭제</button>
-        </div>
+            <div class="forum_detail_ctl_edit">
+                <a href="/<%= Contents.content_type %>/edit?contentid=<%= Contents.id %>"><button type="button" class="forum_button_2">수정</button></a>
+                <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Contents.content_type%>','<%= Contents.id %>')">삭제</button>
+            </div>
         <% } %>
         <div class="forum_detail_ctl_return">           
             <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
@@ -62,10 +59,10 @@
 
         
         <div>
-            <%if (comments.length) {%>
-                <div class="comment_label">총  <%= comments.length %> 개의 댓글</div>
+            <%if ( Comment_Info.Count ) {%>
+                <div class="comment_label">총  <%= Comment_Info.Count %> 개의 댓글</div>
                 <ul class="comment_list_div">
-                    <% comments.forEach(row => { if( row.visible.toString('hex') === '01' || row.children.length ) {%>
+                    <% Comment_Info.Comments.forEach(row => { if( row.visible.toString('hex') === '01' || row.children.length ) {%>
                         <li>
                             <div>
                                 <div class="comment_container">

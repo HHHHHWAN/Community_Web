@@ -60,7 +60,7 @@ exports.getTypeContents = (req, res) => {
 
 
 
-// 게시물 내용 호출 
+// Detail View 정적 페이지 반환
 exports.getDetailContents = (req, res) => {
     const pagetype = req.params.pagetype; 
     const returnURL = {
@@ -79,9 +79,9 @@ exports.getDetailContents = (req, res) => {
         }
 
         //get Content Comments
-        Content_Service.get_comment_list(content_id, (comments) => {
+        Content_Service.get_comment_list(content_id, (Comment_Info) => {
 
-            res.render('forum_detail.ejs' , { Contents : results, comments, pagetype , returnURL });
+            res.render('forum_detail.ejs' , { Contents : results, Comment_Info, pagetype , returnURL });
         });
     });
 };
@@ -91,15 +91,22 @@ exports.getDetailPost = ( req, res) => {
 
     Content_Service.get_record(content_id, "view", (err,results) => {
         if (err) { // 서버 에러
-            return res.status(500).send('query output error');
+            console.log(err);
+            return res.status(500).json({
+                Message : 'query output error',
+                Content_object : results
+            });
         }
 
         if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
-            return res.status(404).render('forum_error.ejs',{layout:false});
+            return res.status(404).json({
+                Message : 'invaild Post',
+                Content_object : results
+            });
         }
 
-        res.json({ 
-            Message : "Post Response OK" , 
+        res.status(200).json({ 
+            Message : "Post Response OK", 
             Content_object : results
         });
     });

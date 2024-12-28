@@ -4,21 +4,15 @@ require('dotenv').config();
 
 //view controller 객체 생성
 const main_Controller = require('../controllers/mypage_main_ctl'); 
+
 //게시판 컨트롤러
-// const list_Controller = require('../controllers/forum_list_ctl');
 const user_Controller = require('../controllers/user_ctl');
-
-
-// 모듈화 테스트 컨트롤러 
-
 const get_Controller = require('../controllers/forum_list_get');
 const set_Controller = require('../controllers/forum_list_set');
 
-//게시판 url 유효성 검사 미들웨어
+//미들웨어
 const urlType_Check = require('../middleware/url_content_check');
 const login_Check = require('../middleware/user_check');
-
-// upload object
 const upload = require('../middleware/upload_multer');
 
 // ------------------------------------------------------------
@@ -84,7 +78,7 @@ router.get('/:pagetype/edit', login_Check, urlType_Check, get_Controller.getCrea
 
 // edit Post upload  
 router.post('/:pagetype/edit' , login_Check, urlType_Check, set_Controller.setCreateContent);
-router.post('/:pagetype/upload' , login_Check, upload.single('image'), (req, res) => {
+router.post('/image/upload' , login_Check, upload.single('image'), (req, res) => {
     res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
 });
 
