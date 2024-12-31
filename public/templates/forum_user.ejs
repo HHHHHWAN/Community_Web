@@ -4,31 +4,32 @@
     <script src="/public/js/forum_user.js"></script>
 </head>
 
-<div>
-    <div class="user_info_box">
-        <div class="user_info_box_text">
-            <%= user_info.nickname %>
+<div class="box">
+    <div>
+        <div class="user_info_box">
+            <div class="user_info_box_text">
+                <%= user_info.nickname %>
+            </div>
+            <div class="user_info_box_ctl">
+                <nav>
+                    <ul>
+                        <li><div><button class="user_contents">게시물</button></div></li>
+                        <li><div><button class="user_activity">활동</button></div></li>
+                        <li><div><button class="">...</button></div></li>
+                        <li><div><button class="">...</button></div></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <div class="user_info_box_ctl">
-            <nav>
-                <ul>
-                    <li><div><button class="user_contents">게시물</button></div></li>
-                    <li><div><button class="user_activity">활동</button></div></li>
-                    <li><div><button class="">...</button></div></li>
-                    <li><div><button class="">...</button></div></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
 
-    <div class="user_list_box">
-        <div>
-            <ul class="user_list_box_dom">
-            </ul>
+        <div class="user_list_box">
+            <div>
+                <ul class="user_list_box_dom">
+                </ul>
+            </div>
         </div>
     </div>
 </div>
-
 
 <style>
     .user_info_box{

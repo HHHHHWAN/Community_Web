@@ -17,7 +17,7 @@ exports.getMyPagelist = (req, res) => {
             
 
             //default layout off
-            res.render('forum_main.ejs' , { Contents : result , Popular : result_popular , layout : false });
+            res.render('forum_main.ejs' , { Contents : result , Popular : result_popular });
         });
 
     });

@@ -1,150 +1,144 @@
-<!DOCTYPE html>
-<html lang="ko">
+<% title = "Main" %>
+
 <head>
-	<meta charset="UTF-9">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title> MyPage </title>
-	<link rel="stylesheet" href="/public/css/main_style.css">
-	<style>
-		#moving_div{
-			position: absolute;
-			top: 33px;
-			/* transition: transform 0.1 ease; */
-			border: 3px solid rgba(118, 141, 122, 0.39);
-			padding: 20px;
-			border-radius: 15px;
-		}
-		ul{
-			padding: 10px;
-		}
-		li{
-			padding: 5px;
-			list-style-type: none;
-			border-bottom: 1px solid black;
-		} li:last-child{
-			border-bottom: none;
-		}
-	</style>
+	<link rel="stylesheet" href="/public/css/forum_main.css">
 	<script src="/public/js/forum_main.js"></script>
 </head>
-<body>
-	<%- include('layout/header_cate.ejs') %>
 
-	<div class="container">
-		<div class="sidebox" id="left_sidebox">
-			
-			<div id="moving_div" style="margin-top: 80px auto;">
-				기상날씨
-				<div id="weather_box" style="display: flex;" ></div>
-			</div>
-			
-		</div>
-		<div class="box">
-			<div class="endbox">
-				<a href="/popular"><h2>인기</h2></a>
-				<% if (Popular.length) { %>
-				<ul>
-					<% Popular.forEach( popular => {%>
-					<li>
-						<div class="main_contents_list_box">
-							<div><a class="user_href" href="/user/<%= popular.user_id %>"><%= popular.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= popular.date_create %></div>
-							<div class="list_title_box">
-								<div><a href="/<%=popular.content_type %>/<%= popular.id %>"><%= popular.title %></a></div>
-								<div class="post_list_info">  
-									<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= popular.comment_count ? popular.comment_count : 0 %>
-									&nbsp;<span><b>·</b></span>&nbsp;
-									<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= popular.view_count %>
-								</div>
+<div class="sidebox" id="left_sidebox">
+	<div id="moving_div" style="margin-top: 80px auto;">
+		기상날씨
+		<div id="weather_box" style="display: flex;" ></div>
+	</div>
+</div>
+
+<div class="box">
+	<div class="endbox">
+		<a href="/popular"><h2>인기</h2></a>
+		<% if (Popular.length) { %>
+		<ul>
+			<% Popular.forEach( popular => {%>
+			<li>
+				<div class="main_contents_list_box">
+					<div><a class="user_href" href="/user/<%= popular.user_id %>"><%= popular.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= popular.date_create %></div>
+					<div class="list_title_box">
+						<div><a href="/<%=popular.content_type %>/<%= popular.id %>"><%= popular.title %></a></div>
+						<div class="post_list_info">  
+							<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= popular.comment_count ? popular.comment_count : 0 %>
+							&nbsp;<span><b>·</b></span>&nbsp;
+							<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= popular.view_count %>
+						</div>
+					</div>
+				</div>
+			</li>
+			<% }); %>
+		</ul>
+		<% } else { %>
+			<span> 게시글이 존재하지 않습니다. </span>
+		<% } %>
+	</div>	
+
+	<div class="endbox">
+		<a href="/info"><h2>정보</h2></a>
+		<% const Info_Contents = Contents.filter( content => content.content_type === "info") %>
+		<% if ( Info_Contents.length){%>
+		<ul>
+			<% Info_Contents.forEach( content => { %>
+				<li>
+					<div class="main_contents_list_box">
+						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
+						<div class="list_title_box">
+							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div class="post_list_info">  
+								<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+								&nbsp;<span><b>·</b></span>&nbsp;
+								<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
 							</div>
 						</div>
-					</li>
-					<% }); %>
-				</ul>
-				<% } else { %>
-					<span> 게시글이 존재하지 않습니다. </span>
-				<% } %>
-			</div>	
-
-			<div class="endbox">
-				<a href="/info"><h2>정보</h2></a>
-				<% const Info_Contents = Contents.filter( content => content.content_type === "info") %>
-				<% if ( Info_Contents.length){%>
-				<ul>
-					<% Info_Contents.forEach( content => { %>
-						<li>
-							<div class="main_contents_list_box">
-								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div class="list_title_box">
-									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
-									<div class="post_list_info">  
-										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
-										&nbsp;<span><b>·</b></span>&nbsp;
-										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
-									</div>
-								</div>
+					</div>
+				</li>
+			<% }); %>
+		</ul>
+		<% } else { %>
+		<span> 게시물이 존재하지 않습니다.</span>
+		<% } %>
+	</div>	
+	
+	<div class="endbox">
+		<a href="/qa"><h2>Q&A</h2></a>
+		<% const Qa_Contents = Contents.filter( content => content.content_type === "qa") %>
+		<% if ( Qa_Contents.length){%>
+		<ul>
+			<% Qa_Contents.forEach( content => { %>
+				<li>
+					<div class="main_contents_list_box">
+						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
+						<div class="list_title_box">
+							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div class="post_list_info">  
+								<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+								&nbsp;<span><b>·</b></span>&nbsp;
+								<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
 							</div>
-						</li>
-					<% }); %>
-				</ul>
-				<% } else { %>
-				<span> 게시물이 존재하지 않습니다.</span>
-				<% } %>
-			</div>	
-			
-			<div class="endbox">
-				<a href="/qa"><h2>Q&A</h2></a>
-				<% const Qa_Contents = Contents.filter( content => content.content_type === "qa") %>
-				<% if ( Qa_Contents.length){%>
-				<ul>
-					<% Qa_Contents.forEach( content => { %>
-						<li>
-							<div class="main_contents_list_box">
-								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div class="list_title_box">
-									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
-									<div class="post_list_info">  
-										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
-										&nbsp;<span><b>·</b></span>&nbsp;
-										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
-									</div>
-								</div>
-							</div>
-						</li>
-					<% }); %>
-				</ul>
-				<% } else { %>
-					<span> 게시물이 존재하지 않습니다.</span>
-				<% } %>
-			</div>
-
-			<div class="endbox">
-				<a href="/life"><h2>생활</h2></a>
-				<% const Life_Contents = Contents.filter( content => content.content_type === "life") %>
-				<% if ( Life_Contents.length){%>
-				<ul>
-					<% Life_Contents.forEach( content => { %>
-						<li>
-							<div class="main_contents_list_box">
-								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div class="list_title_box">
-									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
-									<div class="post_list_info">  
-										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
-										&nbsp;<span><b>·</b></span>&nbsp;
-										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
-									</div>
-								</div>
-							</div>
-						</li>
-					<% }); %>
-				</ul>
-				<% } else { %>
-					<span> 게시물이 존재하지 않습니다.</span>
-				<% } %>
-			</div>
-		</div>
-		<div class="sidebox"></div>
+						</div>
+					</div>
+				</li>
+			<% }); %>
+		</ul>
+		<% } else { %>
+			<span> 게시물이 존재하지 않습니다.</span>
+		<% } %>
 	</div>
-	<%- include('layout/footer_company.ejs') %>
-</body>
-</html>
+
+	<div class="endbox">
+		<a href="/life"><h2>생활</h2></a>
+		<% const Life_Contents = Contents.filter( content => content.content_type === "life") %>
+		<% if ( Life_Contents.length){%>
+		<ul>
+			<% Life_Contents.forEach( content => { %>
+				<li>
+					<div class="main_contents_list_box">
+						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
+						<div class="list_title_box">
+							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div class="post_list_info">  
+								<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+								&nbsp;<span><b>·</b></span>&nbsp;
+								<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+							</div>
+						</div>
+					</div>
+				</li>
+			<% }); %>
+		</ul>
+		<% } else { %>
+			<span> 게시물이 존재하지 않습니다.</span>
+		<% } %>
+	</div>
+</div>
+<div class="sidebox"></div>
+
+
+<style>
+	#moving_div{
+		position: absolute;
+		top: 33px;
+		/* transition: transform 0.1 ease; */
+		border: 3px solid rgba(118, 141, 122, 0.39);
+		padding: 20px;
+		border-radius: 15px;
+	}
+	ul{
+		padding: 10px;
+	}
+	li{
+		padding: 5px;
+		list-style-type: none;
+		border-bottom: 1px solid black;
+	} li:last-child{
+		border-bottom: none;
+	}
+
+</style>
+
+

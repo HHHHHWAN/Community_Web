@@ -1,175 +1,166 @@
-<!-- templates/forum_list -->
+<% title = pagetype; %>
 
 <head>
 	<link rel="stylesheet" href="/public/css/forum_list.css"> 
 	<script src="/public/js/forum_list_filter.js"></script>
 </head>
 
-<% title = pagetype; %>
+<div class="box">
+	<div class="forum_list_box">
+		<div class="forum_list_box_info"> 
 
-<div class="forum_list_box">
-    <div class="forum_list_box_info"> 
-
-		<% if (nickname && (pagetype !== "popular")) { %>
-			<div>
-				<a href="<%= pagetype %>/edit"><button class="forum_button" >글쓰기</button></a>
-			</div>
-		<% }else if (pagetype !== "popular") {%>
-			<div>
-				<a href="/login"><button class="forum_button">글쓰기</button></a>
-			</div>
-		<%} else {%>
-		<% }%>
-			
-		<div class="forum_info_top">
-			<div class="forum_describe">		
-				<% switch (pagetype) { case 'qa': %>  질문 게시판입니다.
-					<%; break; case 'info': %>	정보 게시판입니다.
-					<%; break; case 'life': %>	생활 게시판입니다.
-					<%; break; default : %>	인기 게시판입니다.
-				<%}%>
-			</div>
-
-			<div class= "forum_info_page_ctl">
-				<div style="font-size: 15px;">
-					<div>
-						<% if ( page !== 1 ) {%>
-							<a class="page_a_button_current" data-setting_page = "<%= page - 1 %>"> ◀&nbsp;&nbsp; </a>
-						<% } else { %>
-							<span> ◁&nbsp;&nbsp; </span>
-						<% } %>
-					</div>
-					<div style="border: 2px solid rgba(64, 77, 67, 0.144); height: 25px; padding: 5px; border-radius: 5px;">
-						<%= page %>&nbsp;·&nbsp;<%= count %>
-					</div>
-					<div>
-						<% if ( page !== count ) {%>
-							<a class="page_a_button_current" data-setting_page = "<%= page + 1 %>"> &nbsp;&nbsp;▶ </a>
-						<% } else { %>
-							<span> &nbsp;&nbsp;▷ </span>
-						<% } %>
-					</div>	
-
+			<% if (nickname && (pagetype !== "popular")) { %>
+				<div>
+					<a href="<%= pagetype %>/edit"><button class="forum_button" >글쓰기</button></a>
+				</div>
+			<% }else if (pagetype !== "popular") {%>
+				<div>
+					<a href="/login"><button class="forum_button">글쓰기</button></a>
+				</div>
+			<%} else {%>
+			<% }%>
+				
+			<div class="forum_info_top">
+				<div class="forum_describe">		
+					<% switch (pagetype) { case 'qa': %>  질문 게시판입니다.
+						<%; break; case 'info': %>	정보 게시판입니다.
+						<%; break; case 'life': %>	생활 게시판입니다.
+						<%; break; default : %>	인기 게시판입니다.
+					<%}%>
 				</div>
 
-				<div class="filter_div" style="position:relative">
-					<div class="filter_button_div">
-						<button class="filter_button" style="display:flex; align-items: center;">
-							<% switch (order_type){ case "newest_order":%>최신순
-							<% break; case "oldest_order":%>과거순
-							<% break; case "view_count_order":%>조회순
-							<% break; default :%>댓글순
+				<div class= "forum_info_page_ctl">
+					<div style="font-size: 15px;">
+						<div>
+							<% if ( page !== 1 ) {%>
+								<a class="page_a_button_current" data-setting_page = "<%= page - 1 %>"> ◀&nbsp;&nbsp; </a>
+							<% } else { %>
+								<span> ◁&nbsp;&nbsp; </span>
 							<% } %>
-							<div class="filter_arrow" style="margin-left: 3px;">
-								&#8595;
-							</div>
-						</button>
-					</div>
-					
+						</div>
+						<div style="border: 2px solid rgba(64, 77, 67, 0.144); height: 25px; padding: 5px; border-radius: 5px;">
+							<%= page %>&nbsp;·&nbsp;<%= count %>
+						</div>
+						<div>
+							<% if ( page !== count ) {%>
+								<a class="page_a_button_current" data-setting_page = "<%= page + 1 %>"> &nbsp;&nbsp;▶ </a>
+							<% } else { %>
+								<span> &nbsp;&nbsp;▷ </span>
+							<% } %>
+						</div>	
 
-					<div class="filter_modal" style="display: none; width: 80px;height: 120px;">
-						<button class="newest_order">최신순</button>
-						<button class="oldest_order">과거순</button>
-						<button class="view_count_order">조회순</button>
-						<button class="comment_count_order">댓글순</button>
+					</div>
+
+					<div class="filter_div" style="position:relative">
+						<div class="filter_button_div">
+							<button class="filter_button" style="display:flex; align-items: center;">
+								<% switch (order_type){ case "newest_order":%>최신순
+								<% break; case "oldest_order":%>과거순
+								<% break; case "view_count_order":%>조회순
+								<% break; default :%>댓글순
+								<% } %>
+								<div class="filter_arrow" style="margin-left: 3px;">
+									&#8595;
+								</div>
+							</button>
+						</div>
+						
+
+						<div class="filter_modal" style="display: none; width: 80px;height: 120px;">
+							<button class="newest_order">최신순</button>
+							<button class="oldest_order">과거순</button>
+							<button class="view_count_order">조회순</button>
+							<button class="comment_count_order">댓글순</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="contents_list_box" style="min-height: 800px;">
-		<% if (Contents.length) { %>
-		<ul id="contents_list">
-				<% Contents.forEach( content => { %>
-				<li>
-					<div class="forum_list_box_content">
-						<div> 
-							<a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a>
-							<span><b>·</b></span>
-							<%= content.date_create %> 
-						</div>
-						<div class="forum_list_box_detail">
-							<div>
-							<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>"><%= content.title %></a>
+		<div class="contents_list_box" style="min-height: 800px;">
+			<% if (Contents.length) { %>
+			<ul id="contents_list">
+					<% Contents.forEach( content => { %>
+					<li>
+						<div class="forum_list_box_content">
+							<div> 
+								<a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a>
+								<span><b>·</b></span>
+								<%= content.date_create %> 
 							</div>
-							
-							<div style="justify-content: right; display:flex ; font-size: 14px; align-items: center;" >
-								<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
-								&nbsp;<span><b>·</b></span>&nbsp;
-								<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+							<div class="forum_list_box_detail">
+								<div>
+								<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>"><%= content.title %></a>
+								</div>
+								
+								<div style="justify-content: right; display:flex ; font-size: 14px; align-items: center;" >
+									<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+									&nbsp;<span><b>·</b></span>&nbsp;
+									<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+								</div>
 							</div>
 						</div>
-					</div>
-				</li>
-				<% }); %>
-		</ul>
-		<% } else { %>
-		<span> 게시글이 존재하지 않습니다.</span>
-		<% } if (Contents.length !== 10) { %>
-			<div style="color: rgba(97, 96, 96, 0.808); width: 100%; text-align: center; font-size:larger; font-weight: bold;"> ... </div>
-		<% } %>
-	</div>	
-
-	<div id="page_box">
-		<div>
-			<!-- 가장 첫번쨰 페이지가 아닐경우 -->
-			<% if ( page !== 1 ) {%>
-				<a class="page_a_button_current" data-setting_page = "<%= page - 1 %>"> Previous </a>
+					</li>
+					<% }); %>
+			</ul>
 			<% } else { %>
-				<span> Previous </span>
+			<span> 게시글이 존재하지 않습니다.</span>
+			<% } if (Contents.length !== 10) { %>
+				<div style="color: rgba(97, 96, 96, 0.808); width: 100%; text-align: center; font-size:larger; font-weight: bold;"> ... </div>
 			<% } %>
-		</div>
-		<div id="page_box_center">
+		</div>	
 
-			<!--  첫 페이지 표시 -->
-			<% if ( page > 4 ) { %>
-				<a class="page_a_button">1</a>
-				<a class="page_a_button_current" data-setting_page = "<%= page - 3 %>">...</a>
-			<% } %>
+		<div id="page_box">
+			<div>
+				<% if ( page !== 1 ) {%>
+					<a class="page_a_button_current" data-setting_page = "<%= page - 1 %>"> Previous </a>
+				<% } else { %>
+					<span> Previous </span>
+				<% } %>
+			</div>
+			<div id="page_box_center">
+				<% if ( page > 4 ) { %>
+					<a class="page_a_button">1</a>
+					<a class="page_a_button_current" data-setting_page = "<%= page - 3 %>">...</a>
+				<% } %>
 
-			<!-- 현재 페이지 표시 -->
-			<% if ( page < 5 ) { %>
-				<% for (let i=1; i <= count && i < 6; i++) {%>
-					<% if ( page === i ) {%>
-						<span><%= page %></span>	
-					<%} else {%>
-						<a class="page_a_button"><%= i %></a>
+				<% if ( page < 5 ) { %>
+					<% for (let i=1; i <= count && i < 6; i++) {%>
+						<% if ( page === i ) {%>
+							<span><%= page %></span>	
+						<%} else {%>
+							<a class="page_a_button"><%= i %></a>
+						<% } %>
 					<% } %>
-				<% } %>
-			<!-- 5 페이지 부터 표시 방식  -->
-			<% } else if ( count-4 < page ) { %> 
-				<% for (let i=count-4; i <= count; i++) {%>
-					<% if ( page === i ) {%>
-						<span><%= page %></span>	
-					<%} else {%>
-						<a class="page_a_button"><%= i %></a>
+				<% } else if ( count-4 < page ) { %> 
+					<% for (let i=count-4; i <= count; i++) {%>
+						<% if ( page === i ) {%>
+							<span><%= page %></span>	
+						<%} else {%>
+							<a class="page_a_button"><%= i %></a>
+						<% } %>
 					<% } %>
-				<% } %>
-			<!-- 그 외 -->
-			<% } else { %> 
-				<% for ( let i= page-1; i < page + 2 ; i++ ) {%>
-					<% if ( page === i ) {%>
-						<span><%= page %></span>	
-					<%} else {%>
-						<a class="page_a_button"><%= i %></a>
-					<% } %>
+				<% } else { %> 
+					<% for ( let i= page-1; i < page + 2 ; i++ ) {%>
+						<% if ( page === i ) {%>
+							<span><%= page %></span>	
+						<%} else {%>
+							<a class="page_a_button"><%= i %></a>
+						<% } %>
+					<%}%>
 				<%}%>
-			<%}%>
-
-			<!-- 마지막 페이지 표시 -->
-			<% if ( page < count-3) { %>
-				<a class="page_a_button_current" data-setting_page = "<%= page + 3 %>">...</a>
-				<a class="page_a_button"><%= count %></a>
-			<% } %>
-		</div>
-		<div>
-			<!-- 마지막 페이지가 아닐 경우 -->
-			<% if ( page !== count ) {%>
-				<a class="page_a_button_current" data-setting_page= "<%= page + 1 %>"> Next  </a>
-			<% } else { %>
-				<span> Next </span>
-			<% } %>
+				<% if ( page < count-3) { %>
+					<a class="page_a_button_current" data-setting_page = "<%= page + 3 %>">...</a>
+					<a class="page_a_button"><%= count %></a>
+				<% } %>
+			</div>
+			<div>
+				<% if ( page !== count ) {%>
+					<a class="page_a_button_current" data-setting_page= "<%= page + 1 %>"> Next  </a>
+				<% } else { %>
+					<span> Next </span>
+				<% } %>
+			</div>
 		</div>
 	</div>
 </div>

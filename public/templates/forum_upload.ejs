@@ -48,34 +48,34 @@
 
 </style>
 
+<div class="box">
+    <div class="forum_list_box">
+        <div id="Content_text_box">
+            <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST" id="post_form">
+                <label class="update_label" for="title">제목</label>
+                <input type="text" id="title" name="title" value="<%= post_info ? post_info.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
 
-<div class="forum_list_box">
-    <div id="Content_text_box">
-        <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST" id="post_form">
-            <label class="update_label" for="title">제목</label>
-            <input type="text" id="title" name="title" value="<%= post_info ? post_info.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
+                <label class="update_label">첨부</label>
+                <div class="Content_image_box">
+                    <input class="file_input" type="file" id="imageInput" accept="image/*">
+                </div>
 
-            <label class="update_label">첨부</label>
-            <div class="Content_image_box">
-                <input class="file_input" type="file" id="imageInput" accept="image/*">
-            </div>
+                <br>
+                <label class="update_label" for="text">본문</label>
+                <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
+                <input type="hidden" id="text_input" name="text_input" value="<%= post_info ? post_info.text : '' %>">
+                <div class="text_length_display"> 
+                    <div>1000</div>&nbsp;/&nbsp;
+                    <div id="text_length_div">1</div>
+                </div>
 
-            <br>
-            <label class="update_label" for="text">본문</label>
-            <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
-            <input type="hidden" id="text_input" name="text_input" value="<%= post_info ? post_info.text : '' %>">
-            <div class="text_length_display"> 
-                <div>1000</div>&nbsp;/&nbsp;
-                <div id="text_length_div">1</div>
-            </div>
+                <br>
+                <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
+            </form>
 
-            <br>
-            <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
-        </form>
-
+        </div>
     </div>
 </div>
-
 
 <script src="/public/js/forum_upload.js"></script>
 

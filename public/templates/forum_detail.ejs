@@ -4,156 +4,160 @@
 <link rel="stylesheet" href="/public/css/forum_detail.css">
 
 
+<div class="box">
 
-<p> 
-    <% switch ( returnURL.pagetype ) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
-    <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
-    <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
-    <%; break; default : %>	<a href="/popular" style="color: #4c705a;">인기</a>
-    <%}%>
-</p>
-
-<div class="forum_detail_box">
-
-    <div id="forum_detail_user">
-        <div><a class="user_href" id="forum_detail_user_nickname"></a></div>
-        <div><span><b>·</b></span></div>
-        <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"></span></div>
-        <div><span><b>·</b></span></div>
-        <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count"></span></div>
-    </div>
-    
-    <div class="forum_detail_title_box"><h1 id="forum_detail_title"></h1></div>
+    <p> 
+        <% switch ( returnURL.pagetype ) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
+        <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
+        <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
+        <%; break; default : %>	<a href="/popular" style="color: #4c705a;">인기</a>
+        <%}%>
+    </p>
 
 
-    <div class="forum_detail_text_box">
-        <div id="forum_detail_text"></div>
-    </div><br>
+    <div class="forum_detail_box">
 
-    <div class="forum_detail_ctl">
-        <% if (userId == Contents.user_id) {%>
-            <div class="forum_detail_ctl_edit">
-                <a href="/<%= Contents.content_type %>/edit?contentid=<%= Contents.id %>"><button type="button" class="forum_button_2">수정</button></a>
-                <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Contents.content_type%>','<%= Contents.id %>')">삭제</button>
-            </div>
-        <% } %>
-        <div class="forum_detail_ctl_return">           
-            <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
+        <div id="forum_detail_user">
+            <div><a class="user_href" id="forum_detail_user_nickname"></a></div>
+            <div><span><b>·</b></span></div>
+            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"></span></div>
+            <div><span><b>·</b></span></div>
+            <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count"></span></div>
         </div>
-    </div>
-
-    <div class="forum_comment_box">
         
-        <div>
-            <% if (userId) {%>
-                <form action="/reply/<%= Contents.id %>/" method="POST" id="form1">
-                    <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
-                    <div><button type="submit" class="forum_button_2" form="form1">댓글 작성</button></div>
-                </form> 
-            <% } else { %>
-                <div style="width: 100%; height: 100px; border: 2px solid rgb(148, 148, 148); border-radius: 5px; padding: 10px; ">
-                    댓글을 작성하려면 <a href="/login">로그인</a>을 해주세요.
+        <div class="forum_detail_title_box"><h1 id="forum_detail_title"></h1></div>
+
+
+        <div class="forum_detail_text_box">
+            <div id="forum_detail_text"></div>
+        </div><br>
+
+        <div class="forum_detail_ctl">
+            <% if (userId == Contents.user_id) {%>
+                <div class="forum_detail_ctl_edit">
+                    <a href="/<%= Contents.content_type %>/edit?contentid=<%= Contents.id %>"><button type="button" class="forum_button_2">수정</button></a>
+                    <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Contents.content_type%>','<%= Contents.id %>')">삭제</button>
                 </div>
             <% } %>
+            <div class="forum_detail_ctl_return">           
+                <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
+            </div>
         </div>
 
-        
-        <div>
-            <%if ( Comment_Info.Count ) {%>
-                <div class="comment_label">총  <%= Comment_Info.Count %> 개의 댓글</div>
-                <ul class="comment_list_div">
-                    <% Comment_Info.Comments.forEach(row => { if( row.visible.toString('hex') === '01' || row.children.length ) {%>
-                        <li>
-                            <div>
-                                <div class="comment_container">
-                                    <input type="hidden" class='comment_id_hidden' value="<%= row.id %>">
-                                    <div style="display : flex; width: 100%;">
-                                        <div style="flex: 3;">
-                                            <% if (Contents.user_id === row.user_id) {%>
-                                                <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
-                                            <% } %>
-                                            <a class="user_href" href="/user/<%= row.user_id %>"><%= row.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= row.create_at %>
-                                        </div>
-                                        <div style="flex: 1; display: flex; justify-content: right;">
-                                            <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
-                                                <button type="button" class="comment_edit">수정</button></a>
-                                                <button type="button" class="comment_delete">삭제</button>
-                                            <%}%>        
-                                        </div>
-                                    </div>
-                                    <div style='margin-bottom : 20px;'><pre class="pre_comment"><%= row.comment %></pre></div>
-                                </div>
-                                <% if (userId) {%>
-                                    <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
-                                <% } %>
-                                <div class="create_subcomment_div">
-                                    <input type='hidden' class='comment_nickname' value=''>
-                                    <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form">
-                                    </form> 
-                                </div>
-                            </div>
-                            <% if (row.children.length) { %>
-                                <ul style="margin-left : 30px;">
-                                    <% row.children.forEach( children => {%>
-                                        <li>
-                                            <div>
-                                                <div class="comment_container">
-                                                    <input type="hidden" class="comment_id_hidden" value="<%= children.id %>">
-                                                    <div style="display : flex; width: 100%;">
-                                                        <div style="flex: 3;">
-                                                            <% if (Contents.user_id === children.user_id) {%>
-                                                                <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
-                                                            <% } %>
-                                                            <a class="user_href" href="/user/<%= children.user_id %>"><%= children.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%=children.create_at %>
-                                                        </div>
-                                                        <div style="flex: 1; display: flex; justify-content: right;">
-                                                            <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
-                                                                <button type='button' class="comment_edit">수정</button></a>
-                                                                <button type='button' class="comment_delete">삭제</button>
-                                                            <%}%>        
-                                                        </div>
-                                                    </div>
-                                                    <div style='margin-bottom : 2px;'><pre class="pre_comment"><%= children.comment %></pre></div>
-                                                </div>
-                                                <% if (userId) {%>
-                                                    <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
+        <div class="forum_comment_box">
+            
+            <div>
+                <% if (userId) {%>
+                    <form action="/reply/<%= Contents.id %>/" method="POST" id="form1">
+                        <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
+                        <div><button type="submit" class="forum_button_2" form="form1">댓글 작성</button></div>
+                    </form> 
+                <% } else { %>
+                    <div style="width: 100%; height: 100px; border: 2px solid rgb(148, 148, 148); border-radius: 5px; padding: 10px; ">
+                        댓글을 작성하려면 <a href="/login">로그인</a>을 해주세요.
+                    </div>
+                <% } %>
+            </div>
+
+            
+            <div>
+                <%if ( Comment_Info.Count ) {%>
+                    <div class="comment_label">총  <%= Comment_Info.Count %> 개의 댓글</div>
+                    <ul class="comment_list_div">
+                        <% Comment_Info.Comments.forEach(row => { if( row.visible.toString('hex') === '01' || row.children.length ) {%>
+                            <li>
+                                <div>
+                                    <div class="comment_container">
+                                        <input type="hidden" class='comment_id_hidden' value="<%= row.id %>">
+                                        <div style="display : flex; width: 100%;">
+                                            <div style="flex: 3;">
+                                                <% if (Contents.user_id === row.user_id) {%>
+                                                    <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
                                                 <% } %>
-                                                <div class="create_subcomment_div">
-                                                    <input type='hidden' name='comment_nickname' value='<%= children.nickname %>' >
-                                                    <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form" >
-                                                    </form> 
-                                                </div>
+                                                <a class="user_href" href="/user/<%= row.user_id %>"><%= row.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= row.create_at %>
                                             </div>
-                                        </li>
-                                    <% });%>
-                                </ul>
-                            <% } %>
-                        </li>
-                    <%} });%>
-                </ul>
-            <%}%>
+                                            <div style="flex: 1; display: flex; justify-content: right;">
+                                                <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
+                                                    <button type="button" class="comment_edit">수정</button></a>
+                                                    <button type="button" class="comment_delete">삭제</button>
+                                                <%}%>        
+                                            </div>
+                                        </div>
+                                        <div style='margin-bottom : 20px;'><pre class="pre_comment"><%= row.comment %></pre></div>
+                                    </div>
+                                    <% if (userId) {%>
+                                        <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
+                                    <% } %>
+                                    <div class="create_subcomment_div">
+                                        <input type='hidden' class='comment_nickname' value=''>
+                                        <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form">
+                                        </form> 
+                                    </div>
+                                </div>
+                                <% if (row.children.length) { %>
+                                    <ul style="margin-left : 30px;">
+                                        <% row.children.forEach( children => {%>
+                                            <li>
+                                                <div>
+                                                    <div class="comment_container">
+                                                        <input type="hidden" class="comment_id_hidden" value="<%= children.id %>">
+                                                        <div style="display : flex; width: 100%;">
+                                                            <div style="flex: 3;">
+                                                                <% if (Contents.user_id === children.user_id) {%>
+                                                                    <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
+                                                                <% } %>
+                                                                <a class="user_href" href="/user/<%= children.user_id %>"><%= children.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%=children.create_at %>
+                                                            </div>
+                                                            <div style="flex: 1; display: flex; justify-content: right;">
+                                                                <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
+                                                                    <button type='button' class="comment_edit">수정</button></a>
+                                                                    <button type='button' class="comment_delete">삭제</button>
+                                                                <%}%>        
+                                                            </div>
+                                                        </div>
+                                                        <div style='margin-bottom : 2px;'><pre class="pre_comment"><%= children.comment %></pre></div>
+                                                    </div>
+                                                    <% if (userId) {%>
+                                                        <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
+                                                    <% } %>
+                                                    <div class="create_subcomment_div">
+                                                        <input type='hidden' name='comment_nickname' value='<%= children.nickname %>' >
+                                                        <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form" >
+                                                        </form> 
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <% });%>
+                                    </ul>
+                                <% } %>
+                            </li>
+                        <%} });%>
+                    </ul>
+                <%}%>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="forum_detail_box">
+        <h3>    
+            <% switch (returnURL.pagetype) { case 'qa': %>  Q & A
+            <%; break; case 'info': %> 정보
+            <%; break; case 'life': %> 생활
+            <%; break; default : %>	인기
+            <%}%>게시판 
+            목록 </h5>
+        <div>
+            <ul id="content_list">
+            </ul>
+        </div>    
+
+        <div id="page_box">
         </div>
     </div>
 </div>
 
-
-
-<div class="forum_detail_box">
-    <h3>    
-        <% switch (returnURL.pagetype) { case 'qa': %>  Q & A
-        <%; break; case 'info': %> 정보
-        <%; break; case 'life': %> 생활
-        <%; break; default : %>	인기
-        <%}%>게시판 
-        목록 </h5>
-    <div>
-        <ul id="content_list">
-        </ul>
-    </div>    
-
-    <div id="page_box">
-    </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
 <script>

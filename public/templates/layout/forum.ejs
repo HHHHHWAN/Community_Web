@@ -4,18 +4,13 @@
 	<meta charset="UTF-9">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>	MyPage - <%- title %></title>
-	<link rel="stylesheet" href="/public/css/main_style.css">
+	<link rel="stylesheet" href="/public/css/forum.css">
 </head>
 <body>
-	<%- include('header_cate.ejs')%>
+	<%- include('header_nav.ejs')%>
 	
 	<div class="container">
-		<div class="sidebox"></div>
-		<div class="box">
-			<!-- 상속 오버라이딩 지점-->
-			<%- body%>
-		</div>
-		<div class="sidebox"></div>
+		<%- body %>
 	</div>
 
 	<%- include('footer_company.ejs') %>
