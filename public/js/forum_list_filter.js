@@ -34,7 +34,7 @@ document.addEventListener('click',function(event){
     if(filter_classes.some(name => event.target.classList.contains(name))){
         const parent_div = event.target.closest('.filter_div');
         parent_div.querySelector('.filter_modal').style.display = "none";
-        update_queryString("order",event.target.className);
+        update_queryString("order", event.target.className);
     }
     
 

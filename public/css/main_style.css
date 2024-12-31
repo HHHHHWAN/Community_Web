@@ -1,51 +1,99 @@
 
 /* 중앙 박스*/
 
-.container {
-    display: flex;
-
-    min-height: 1000px;
-    margin: 90px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-
-    justify-content:center;
+body {
+    background-color: #2c422c;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
 }
 
-.sidebox {
-    font-size: 30px;
-    min-width: 300px;
-    /* background-color: #ffffffd2; */
-    height: 100% auto;
-    /* border: 1px solid black; */
-    position:relative;
-}
 
-.box {
-    width: 800px;
-    min-width: 500px;
-    background-color: rgba(239, 253, 238, 0.911);
-
-    font-family: arial, sans-serif;
-    font-size: 14px;
-    color: #333;
-    border-radius: 20px;
-
-    padding: 10px;
+@media (max-width: 768px){
+    .container {
+        display: flex;
+        min-height: 1000px;
+        margin: 90px auto;
+        background: white;
+        border-radius: 8px;
+        width: 100%;
+        background-color: #2c422c;
+        
+        justify-content:center;
+    }
+    .box {
+        max-width: 768px;
+        background-color: rgba(239, 253, 238, 0.911);
     
-    justify-content: center;
-    align-items: center;
+        font-family: arial, sans-serif;
+        font-size: 10px;
+        color: #333;
+        border-radius: 20px;
+    
+        padding: 10px;
+        
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .endbox {
+        min-height: 250px;
+        margin: 10px;
+        padding: 10px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 5px;
+    }
+
 }
 
-.endbox {
-    min-height: 250px;
-    margin: 10px;
-    padding: 10px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 5px;
+@media (min-width: 768px){
+    .container {
+        display: flex;
+    
+        min-height: 1000px;
+        margin-right: auto;
+        margin-top: 90px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+    
+        justify-content:center;
+    }
+
+    .sidebox {
+        font-size: 30px;
+        min-width: 300px;
+        /* background-color: #ffffffd2; */
+        height: 100% auto;
+        /* border: 1px solid black; */
+        position:relative;
+    }
+
+    .box {
+        width: 800px;
+        min-width: 500px;
+        background-color: rgba(239, 253, 238, 0.911);
+    
+        font-family: arial, sans-serif;
+        font-size: 14px;
+        color: #333;
+        border-radius: 20px;
+    
+        padding: 10px;
+        
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .endbox {
+        min-height: 250px;
+        margin: 10px;
+        padding: 10px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 5px;
+    }
+
 }
+
 
 /* 제목 스타일 ------------------------------------*/
 h2 {
@@ -75,8 +123,8 @@ a:hover {
 .forum_button{
     height: 50px;
     font-size: 13px;
-    font-weight: 1000;
-    color: #4f6d4f;
+    font-weight: bold;
+    color: #00000081;
     cursor: pointer;
     background-color: rgb(191, 238, 209);
     border-radius: 5px;
@@ -134,14 +182,26 @@ textarea{
     text-align: center;
 }
 
-/* 메인 페이지 게시물 리스트 li / div  */
-#main_contents_list_box div{
-    margin: 3px;
+.list_title_box{
+    display: grid;
+    grid-template-columns: 80% 20%;
+    font-size: 16px;
+    margin-top: 5px;
+}
 
+.list_title_box div {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.post_list_info{
+    justify-content: right;
+    display:flex;
+    font-size: 14px;
+    align-items: center;
+}
+
 .user_href{
     color: #4b4949d0;
     font-weight: 500;
@@ -152,5 +212,7 @@ button:hover{
 }
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box; /* 모든 요소에 border-box 적용 */
 }

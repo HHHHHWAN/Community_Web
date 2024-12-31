@@ -46,9 +46,16 @@
 				<ul>
 					<% Popular.forEach( popular => {%>
 					<li>
-						<div id="main_contents_list_box">
+						<div class="main_contents_list_box">
 							<div><a class="user_href" href="/user/<%= popular.user_id %>"><%= popular.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= popular.date_create %></div>
-							<div><a href="/<%=popular.content_type %>/<%= popular.id %>"><%= popular.title %></a></div>
+							<div class="list_title_box">
+								<div><a href="/<%=popular.content_type %>/<%= popular.id %>"><%= popular.title %></a></div>
+								<div class="post_list_info">  
+									<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= popular.comment_count ? popular.comment_count : 0 %>
+									&nbsp;<span><b>·</b></span>&nbsp;
+									<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= popular.view_count %>
+								</div>
+							</div>
 						</div>
 					</li>
 					<% }); %>
@@ -65,9 +72,16 @@
 				<ul>
 					<% Info_Contents.forEach( content => { %>
 						<li>
-							<div id="main_contents_list_box">
+							<div class="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+								<div class="list_title_box">
+									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+									<div class="post_list_info">  
+										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+										&nbsp;<span><b>·</b></span>&nbsp;
+										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+									</div>
+								</div>
 							</div>
 						</li>
 					<% }); %>
@@ -84,9 +98,16 @@
 				<ul>
 					<% Qa_Contents.forEach( content => { %>
 						<li>
-							<div id="main_contents_list_box">
+							<div class="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+								<div class="list_title_box">
+									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+									<div class="post_list_info">  
+										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+										&nbsp;<span><b>·</b></span>&nbsp;
+										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+									</div>
+								</div>
 							</div>
 						</li>
 					<% }); %>
@@ -103,9 +124,16 @@
 				<ul>
 					<% Life_Contents.forEach( content => { %>
 						<li>
-							<div id="main_contents_list_box">
+							<div class="main_contents_list_box">
 								<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.date_create %></div>
-								<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+								<div class="list_title_box">
+									<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+									<div class="post_list_info">  
+										<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+										&nbsp;<span><b>·</b></span>&nbsp;
+										<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+									</div>
+								</div>
 							</div>
 						</li>
 					<% }); %>

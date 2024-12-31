@@ -59,7 +59,7 @@ router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
 
 router.get('/testpage', (req, res) => {
-    res.render('testpage');
+    res.render('testpage', { layout : false});
 });
 
 
