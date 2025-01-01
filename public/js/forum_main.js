@@ -18,9 +18,18 @@ function callWeatherApi(lat,lon) {
             <img src="${icon}" class="weather_img" alt="weather icon">
         </div>
         <div class="weather_detail" style="height:100%">
-            <div>지역 ${data.name}</div>
-            <div>날씨 ${data.weather[0].main}</div>
-            <div>기온 ${(data.main.temp - 273.15).toFixed(1)}도</div>
+            <div>
+                - 지역 
+                <div style="text-align: right;" >${data.name}</div>
+            </div>
+            <div>
+                - 날씨
+                <div style="text-align: right;">${data.weather[0].main}</div>
+            </div>
+            <div>
+                - 기온
+                <div style="text-align: right;">${(data.main.temp - 273.15).toFixed(1)}℃</div>
+            </div>
         </div>
         `;
     })
@@ -77,7 +86,7 @@ window.addEventListener('resize', function(){
 
 window.addEventListener('scroll', function(){
     if( 768 < currentWidth ){
-        const scrollTop = window.scrollY;
+        const scrollTop = window.scrollY + 80;
         const scroll_post = document.getElementById('moving_div');
         scroll_post.style.transform = `translateY(${scrollTop - scroll_post.offsetTop + 30 }px)`;
     } 

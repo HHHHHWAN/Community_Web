@@ -3,7 +3,7 @@
         <div class="head_main"> 
             <a href="/">메인</a>
         </div>
-        <div class="modal_button"><button class="mobile_nav_button" type="button">임시</button></div>
+        <div class="modal_button"><button class="mobile_nav_button" type="button">메뉴</button></div>
         <div class="head_nav"> 
             <div class="head_nav_button" id="popular"><a href="/popular"> 인기 </a></div>
             <div class="head_nav_button" id="info"><a href="/info"> 정보 </a></div>
@@ -58,12 +58,12 @@
         <div class="head_mobile_ctl_user"> 
             <div class="head_ctl_user">
                 <% if (nickname) {%>
-                    <a href='/user/<%= userId %>'><%= nickname %></a>님 / 
-                    <a href="/logout">로그아웃</a> 
+                    <div style="font-weight: bold; font-size: 13px; border-bottom: 2px solid rgba(70, 69, 69, 0.74);"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
+                    <div><a href="/logout">로그아웃</a></div>
                 <% } else {%>
-                    <a href="/login?returnUrl=%2">로그인</a> 
-                    / 
-                    <a href="/signup?returnUrl=%2">회원가입</a>
+                    <div style="font-weight: bold; font-size: 13px; border-bottom: 2px solid rgba(70, 69, 69, 0.74);">비회원</div>
+                    <div><a href="/login?returnUrl=%2">로그인</a> </div>
+                    <div><a href="/signup?returnUrl=%2">회원가입</a></div>
                 <%} %>
             </div>
         </div>
@@ -73,8 +73,26 @@
 <script>
 
 window.addEventListener('resize', function(){
+    const mobile_search_box = document.querySelector('.head_mobile_ctl_search');
+    const mobile_user_box = document.querySelector('.head_mobile_ctl_user');
+    const mobile_nav_box = document.querySelector('.head_mobile_nav');
+
+    mobile_search_box.setAttribute('style','display: none;');
+    mobile_user_box.setAttribute('style','display: none;');
+    mobile_nav_box.setAttribute('style','display: none;');
     
 });  
+
+// window.addEventListener('click', function(){
+//     const mobile_search_box = document.querySelector('.head_mobile_ctl_search');
+//     const mobile_user_box = document.querySelector('.head_mobile_ctl_user');
+//     const mobile_nav_box = document.querySelector('.head_mobile_nav');
+
+//     mobile_search_box.setAttribute('style','display: none;');
+//     mobile_user_box.setAttribute('style','display: none;');
+//     mobile_nav_box.setAttribute('style','display: none;');
+    
+// });  
 
 document.addEventListener('click',function(event){
 
@@ -82,10 +100,8 @@ document.addEventListener('click',function(event){
         const parent_div = event.target.closest('.head_body');
         if(parent_div.querySelector('.head_mobile_nav').style.display === "block" ){
             parent_div.querySelector('.head_mobile_nav').style.display = "none";
-            // parent_div.querySelector('.filter_arrow').textContent = "↓";
         }else{
             parent_div.querySelector('.head_mobile_nav').style.display = "block";
-            // parent_div.querySelector('.filter_arrow').textContent = "↑";
         }
     }
 
@@ -93,10 +109,8 @@ document.addEventListener('click',function(event){
         const parent_div = event.target.closest('.head_body');
         if(parent_div.querySelector('.head_mobile_ctl_search').style.display === "block" ){
             parent_div.querySelector('.head_mobile_ctl_search').style.display = "none";
-            // parent_div.querySelector('.filter_arrow').textContent = "↓";
         }else{
             parent_div.querySelector('.head_mobile_ctl_search').style.display = "block";
-            // parent_div.querySelector('.filter_arrow').textContent = "↑";
         }
     }
 
@@ -104,28 +118,10 @@ document.addEventListener('click',function(event){
         const parent_div = event.target.closest('.head_body');
         if(parent_div.querySelector('.head_mobile_ctl_user').style.display === "block" ){
             parent_div.querySelector('.head_mobile_ctl_user').style.display = "none";
-            // parent_div.querySelector('.filter_arrow').textContent = "↓";
         }else{
             parent_div.querySelector('.head_mobile_ctl_user').style.display = "block";
-            // parent_div.querySelector('.filter_arrow').textContent = "↑";
         }
     }
-
-    // if(filter_classes.some(name => event.target.classList.contains(name))){
-    //     const parent_div = event.target.closest('.filter_div');
-    //     parent_div.querySelector('.filter_modal').style.display = "none";
-    //     update_queryString("order", event.target.className);
-    // }
-
-
-    // if(event.target.classList.contains('page_a_button')){
-    //     update_queryString("page",event.target.textContent);
-    // }
-
-    // if(event.target.classList.contains('page_a_button_current')){
-    //     update_queryString("page",event.target.dataset.setting_page);
-    // }
-
 
 });
 
