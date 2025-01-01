@@ -2,13 +2,12 @@
 
 <head>
 	<link rel="stylesheet" href="/public/css/forum_main.css">
-	<script src="/public/js/forum_main.js"></script>
 </head>
 
 <div class="sidebox" id="left_sidebox">
-	<div id="moving_div" style="margin-top: 80px auto;">
+	<div class="weather_info_box" id="moving_div">
 		기상날씨
-		<div id="weather_box" style="display: flex;" ></div>
+		<div class="weather_info" id="weather_box"></div>
 	</div>
 </div>
 
@@ -118,27 +117,4 @@
 </div>
 <div class="sidebox"></div>
 
-
-<style>
-	#moving_div{
-		position: absolute;
-		top: 33px;
-		/* transition: transform 0.1 ease; */
-		border: 3px solid rgba(118, 141, 122, 0.39);
-		padding: 20px;
-		border-radius: 15px;
-	}
-	ul{
-		padding: 10px;
-	}
-	li{
-		padding: 5px;
-		list-style-type: none;
-		border-bottom: 1px solid black;
-	} li:last-child{
-		border-bottom: none;
-	}
-
-</style>
-
-
+<script src="/public/js/forum_main.js"></script>

@@ -1,6 +1,4 @@
 
-/* 중앙 박스*/
-
 @media (max-width: 768px){
     .endbox {
         min-height: 250px;
@@ -9,6 +7,44 @@
         background-color: rgb(255, 255, 255);
         border-radius: 5px;
     }
+    .weather_info_box{
+        min-width: 200px;
+        background-color: white;
+		padding-left: 20px;
+        padding-bottom: 20px;
+        border-radius: 20px;
+
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+        font-size: 30px;
+
+	}.weather_info{
+        display: flex;
+    }.weather_icon{
+        display: flex;
+        min-width: 150px;
+        align-items: center;
+        margin-right: 15px;
+    }.weather_img{
+        width: 130px;
+    }.weather_detail{
+        width: 100%;
+    }
+
+    .list_title_box{
+        font-size: 15px;
+        margin-top: 3px;
+    }.list_title_box div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }.post_list_info{
+        justify-content: right;
+        display:flex;
+        font-size: 14px;
+        align-items: center;
+    }
+
 }
 
 @media (min-width: 768px){
@@ -19,4 +55,49 @@
         background-color: rgb(255, 255, 255);
         border-radius: 5px;
     }
+
+    .weather_info_box{
+		position: absolute;
+		top: 33px;
+        margin-top: 80px auto;
+		border: 3px solid rgba(118, 141, 122, 0.39);
+		padding: 20px;
+		border-radius: 15px;
+
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+	}
+    .weather_info{
+        display: flex;
+    }
+
+    .list_title_box{
+        display: grid;
+        grid-template-columns: 80% 20%;
+        font-size: 16px;
+        margin-top: 5px;
+    }.list_title_box div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }.post_list_info{
+        justify-content: right;
+        display:flex;
+        font-size: 14px;
+        align-items: center;
+    }
+
 }
+
+
+ul{
+    padding: 10px;
+}
+li{
+    padding: 5px;
+    list-style-type: none;
+    border-bottom: 1px solid black;
+} li:last-child{
+    border-bottom: none;
+}
+

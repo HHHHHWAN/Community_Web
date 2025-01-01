@@ -106,7 +106,11 @@
 			<% } else { %>
 			<span> 게시글이 존재하지 않습니다.</span>
 			<% } if (Contents.length !== 10) { %>
-				<div style="color: rgba(97, 96, 96, 0.808); width: 100%; text-align: center; font-size:larger; font-weight: bold;"> ... </div>
+				<ul>
+					<li>
+						<div style="color: rgba(97, 96, 96, 0.808); width: 100%; text-align: center; font-size:larger; font-weight: bold;"> ... </div>
+					</li>
+				</ul>
 			<% } %>
 		</div>	
 
@@ -167,6 +171,10 @@
 
 
 <script>
+	const nav_button = document.getElementById("<%= pagetype %>");
+	const mobile_nav_button = document.getElementById("mobile_<%= pagetype %>");
 	const modal_button = document.querySelector(".<%= order_type %>");
 	modal_button.setAttribute('style','font-weight: bold; color: rgb(78, 202, 126);');
+	nav_button.setAttribute('style','border-bottom: 2px solid #4CAF50;');
+	mobile_nav_button.setAttribute('style','border-bottom: 2px solid #4CAF50;');
 </script>

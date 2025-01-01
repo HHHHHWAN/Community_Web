@@ -14,10 +14,10 @@ function callWeatherApi(lat,lon) {
         weatherBox.innerHTML = '';
         const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
         weatherBox.innerHTML=`
-        <div>
-            <img src="${icon}" alt="weather icon">
+        <div class="weather_icon">
+            <img src="${icon}" class="weather_img" alt="weather icon">
         </div>
-        <div style="height:100%">
+        <div class="weather_detail" style="height:100%">
             <div>지역 ${data.name}</div>
             <div>날씨 ${data.weather[0].main}</div>
             <div>기온 ${(data.main.temp - 273.15).toFixed(1)}도</div>
@@ -66,14 +66,19 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 
+var currentWidth = window.innerWidth;
+
+window.addEventListener('resize', function(){
+    currentWidth = window.innerWidth;
+    const scroll_post = document.getElementById('moving_div');
+    scroll_post.style.transform = `translateY(0px)`
+});
+
 
 window.addEventListener('scroll', function(){
-    const scrollTop = window.scrollY;
-
-    const scroll_post_div = document.getElementById('left_sidebox');
-    const scroll_post = document.getElementById('moving_div');
-
-
-    scroll_post.style.transform = `translateY(${scrollTop - scroll_post.offsetTop + 30 }px)`;
-
+    if( 768 < currentWidth ){
+        const scrollTop = window.scrollY;
+        const scroll_post = document.getElementById('moving_div');
+        scroll_post.style.transform = `translateY(${scrollTop - scroll_post.offsetTop + 30 }px)`;
+    } 
 });
