@@ -1,4 +1,48 @@
 
+
+
+@media (max-width: 768px){
+    p{
+        color: rgb(99, 98, 98);
+        display: flex;
+        align-items: center;
+    }
+    p::before{
+        border-bottom: 1px solid #4CAF50;
+        flex: 11;
+        content: "";
+        margin: 0 10px;
+    }
+    p::after{
+        border-bottom: 1px solid #4CAF50;
+        flex: 1;
+        content: "";
+        margin: 0 10px;
+    }
+
+}
+
+@media (min-width: 768px){
+    p{
+        color: rgb(99, 98, 98);
+        display: flex;
+        align-items: center;
+    }
+    p::before{
+        border-bottom: 1px solid rgb(99, 98, 98);
+        flex: 11;
+        content: "";
+        margin: 0 10px;
+    }
+    p::after{
+        border-bottom: 1px solid rgb(99, 98, 98);
+        flex: 1;
+        content: "";
+        margin: 0 10px;
+    }
+
+}
+
 /* 게시물 내용 전체 */
 .forum_detail_box{
     margin: 10px;
@@ -48,27 +92,30 @@
     font-size: 13px;
 }
 
-#page_box{
-    width: 100%;
-}
-
 #page_box button {
-    font-size: 15px;
-    background-color:white;
+    font-size: 13px;
+    background-color:rgba(255, 255, 255, 0);
     border: none ;
 }#page_box button:hover {
-    color: rgb(119, 121, 120);
+    color: #4CAF50;
     cursor: pointer;
 }
 #page_box button:disabled {
     color: rgb(119, 121, 120);
     cursor: default;
-}
-#page_box_center button:hover {
-    color: rgb(128, 175, 152);
+}#page_box_center button{
+    width: 13px;
+    font-size: 15px;
+    margin-right: 10px;
+}#page_box_center button:hover {
+    color: #4CAF50;
 }#page_box_center button:disabled {
-    color: rgb(128, 175, 152);
+    margin-right: 10px;
+    font-size: 17px;
+    color: #4CAF50;
 }
+
+
 .button_comment_cancel{
     height: 30px;
     font-size: 13px;
@@ -127,24 +174,7 @@ ul li {
 }
 
 
-p{
-    /* 중앙정렬, 선 */
-    color: rgb(99, 98, 98);
-    display: flex;
-    align-items: center;
-}
-p::before{
-    border-bottom: 1px solid rgb(99, 98, 98);
-    flex: 11;
-    content: "";
-    margin: 0 10px;
-}
-p::after{
-    border-bottom: 1px solid rgb(99, 98, 98);
-    flex: 1;
-    content: "";
-    margin: 0 10px;
-}
+
 span{
     color: #868585;;
 }

@@ -1,3 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&family=Playwrite+CO+Guides&display=swap');
+
+a {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}a:hover {
+    color: #4CAF50;
+    cursor: pointer;
+}
+
+
+
+body{
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+
+
+@media (max-width: 768px){
+    .login_box{
+        width: 100%;
+        padding: 20px;
+        min-height: 130px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 20px;
+    
+        border: 1.2px solid rgb(214, 212, 212);
+    }
+    .alertbox{
+        width: 90%;
+
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+        border-radius: 20px;
+        border: 1.2px solid rgb(214, 212, 212);
+    }
+    
+}@media (min-width: 768px){
+    .login_box{
+        width: 300px;
+        padding: 20px;
+        min-height: 130px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 20px;
+        border: 1.2px solid rgb(214, 212, 212);
+    }
+    
+    /* .login_box div{
+        padding: 3px;
+        min-width: 350px;
+        min-height: 80px;
+        justify-content: center;
+    } */
+
+    
+    .alertbox{
+        width: 300px;
+
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+        border: 1.2px solid rgb(214, 212, 212);
+    }
+
+}
+
+.logo_div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo_href{
+    font-family: 'Playwrite CO Guides', serif; 
+    font-weight: 400;
+    font-style: normal;
+    font-size: 35px;
+}
+
 .alert_span{
     color: rgb(247, 66, 66);
     font-size: 11px;
@@ -8,37 +94,8 @@
     font-weight: bold;
 }
 
-body{
-    font-size: 13px;
-
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
-    align-items: center;
-} 
 
 
-.login_box{
-    
-    padding: 20px;
-
-    min-height: 200px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 20px;
-
-    border: 1.2px solid rgb(214, 212, 212);
-}
-
-.login_box div{
-    margin: auto;
-    padding: 3px;
-    width: 300px;
-    min-height: 80px;
-    justify-content: center;
-
-}
 
 p{
     /* 중앙정렬, 선 */
@@ -54,7 +111,7 @@ p::before, p::after{
     margin: 0 10px;
 }
 button{
-    width: 400px;
+    width: 100%;
     margin-top: 20px;
     height: 30px;
     background-color: rgb(210, 245, 221);
@@ -84,20 +141,16 @@ button:hover{
     background-color: rgb(151, 192, 167);
 }
 
-input{
-    margin-top: 9px;
-    margin-bottom: 9px;
+.login_input_div{
     width: 100%;
-    height: 30px;
+    padding: 3px;
+    min-height: 80px;
+    justify-content: center;
 }
 
-.alertbox{
-    width: 300px;
-
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 20px;
-    margin-top: 30px;
-    text-align: center;
-    border: 1.2px solid rgb(214, 212, 212);
+input{
+    width: 100%;
+    margin-top: 9px;
+    margin-bottom: 9px;
+    height: 30px;
 }

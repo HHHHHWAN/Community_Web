@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&family=Playwrite+CO+Guides&display=swap');
 
 * {
     margin: 0;
@@ -30,7 +29,7 @@ a {
 }
 
 .forum_button{
-    height: 50px;
+    padding: 10px;
     font-size: 13px;
     font-weight: bold;
     color: #00000081;
@@ -44,7 +43,7 @@ a {
 }
 
 .forum_button_2{
-    height: 30px;
+    padding: 10px;
     font-size: 13px;
     cursor: pointer;
     background-color: rgb(191, 238, 209);
@@ -86,6 +85,7 @@ button:hover{
 
         font-family: 'Dongle', sans-serif;
         font-weight: 400;
+        font-size: 25px;
 
     }.head_body{
         height: 60px;
@@ -93,11 +93,11 @@ button:hover{
         align-items: center;
         padding-left: 10px;
     }.head_main{
-        min-width: 50px;
         align-items: center;
         padding-right : 10px;
         margin-right: 10px;
-        border-right: 2px solid black;
+    }.logo_href{
+        font-size: 18px;
     }.mobile_nav_button{
         background-color: #00000000;
         border: none;
@@ -110,19 +110,18 @@ button:hover{
         background-color: white;
         position:absolute;
         top: 95%;
-        left: 8%;
+        left: 0%;
         padding: 3px;
     }.head_mobile_nav div{
         display: flex;
         justify-content: center;
         margin: 10px;
         min-width: 70px;
-        height: 30px;
+        height: 40px;
     }
 
     .header_mobile_ctl{
         display: flex;
-        background-color: #2c422c;
         justify-content: right;
         width: 100%;
     }
@@ -132,8 +131,8 @@ button:hover{
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
         background-color: white;
         position:absolute;
-        top: 250%;
-        right: 22%;
+        top: 90%;
+        right: 0%;
         padding: 5px;
         border-radius: 20px;
         border: 3px solid rgb(191, 238, 209);
@@ -160,9 +159,9 @@ button:hover{
         position:absolute;
         top: 80%;
         right: 1%;
+        
+        font-size: 20px;
     }.head_ctl_user{
-        font-size:15px;
-
         margin-left: 20px;
         padding-left: 15px;
         padding-right: 15px;
@@ -171,7 +170,6 @@ button:hover{
         background-color: rgb(191, 238, 209);
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
         text-align: center;
-
         border-radius: 10px;
     }.head_ctl_user div{
         margin-bottom: 10px;
@@ -235,9 +233,7 @@ button:hover{
         justify-content: center;
         align-items: center;
     }#page_box_center{
-        width: 80%;
-        font-size: 17px;
-        text-align: center;
+        display: none;
     }
 
 
@@ -248,34 +244,36 @@ button:hover{
         width: 100%;
         background-color: #ffffff ;
         box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
+
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        color: #666;
       }
-    /*
+    
       .footer_box {
-          align-items: center;
-          justify-content: center;
-          display: flex;
-          min-height: 100px;
-          border: none;
-          width: 100%;
+        min-height: 100px;
+        border: none;
+        width: 100%;
       }
     
       .footer_company_logo {
-          width: 200px;
-          height: 80%;
-          text-align: center;
-          margin-right: 10px ;
-          border-right: 1px solid rgba(122, 122, 122, 0.877);
+        width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
+      }.footer_logo{
+        font-size: 30px;
       }
       .footer_company_info_cate {
-          width: 500px;
-          line-height: 1.0;
-          border-bottom: 1px black;
+        text-align: center;
+        line-height: 1.0;
+        border-bottom: 1px black;
+        margin-bottom: 10px;
       }
       .footer_company_info {
-          text-align: left;
-          font-size: 19px;
-          line-height: 1.0;
-      } */
+        text-align: center;
+        line-height: 1.0;
+      }
 }
 
 
@@ -287,7 +285,9 @@ button:hover{
 } ----------------------------------------------*/
 
 @media (min-width: 768px){
-    .head_mobile_nav{ display: none ;}
+    .head_mobile_nav{ display: none; }
+    .modal_button{ display: none; }
+    
     
 
     header {
@@ -309,15 +309,16 @@ button:hover{
         height: 60px;
         justify-content: center;
         white-space : nowrap;
-    }.modal_button{
-        display: none;
-    }.head_main{
+    }
+    .head_main{
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 50px;
-        margin: 30px;
-    }.head_nav {
+        margin: 20px;
+    }.logo_href{
+        font-size: 23px;
+    }
+    .head_nav {
         display: flex;
         min-width: 300px;
         align-items: center;
@@ -380,7 +381,6 @@ button:hover{
     body {
         width: 100%;
         height: 100%;
-        background-color: rgb(2, 2, 2);
     }
 
     .container {
@@ -388,13 +388,9 @@ button:hover{
         min-height: 1000px;
         width: 100%;
         margin: auto;
-        margin-top: 80px;
-        /* margin-top: 80px; */
-        padding: 20px; */
+        margin-top: 60px;
+        padding: 20px; 
         border-radius: 8px;
-
-        background-color: aqua;
-    
         justify-content:center;
 
         font-family: "Gowun Dodum", serif;
@@ -440,28 +436,18 @@ button:hover{
         margin: 10px;
         justify-content: center;
         align-items: center;
+        
+        font-size: 17px;
     }#page_box_center{
         width: 80%;
-        font-size: 17px;
         text-align: center;
+    }#page_box_center a{
+        margin-right: 5px;
+    }#page_box_center span{
+        margin-right: 5px;
+        font-size: 22px;
+        color: #4CAF50;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     footer {
         bottom: 0;
@@ -489,10 +475,15 @@ button:hover{
     
       .footer_company_logo {
           width: 200px;
-          height: 80%;
           text-align: center;
           margin-right: 10px ;
           border-right: 1px solid rgba(122, 122, 122, 0.877);
+
+          font-family: "Playwrite CO Guides", serif;
+          font-weight: 400;
+          font-style: normal;
+      }.footer_logo{
+        font-size: 25px;
       }
       .footer_company_info_cate {
           width: 500px;

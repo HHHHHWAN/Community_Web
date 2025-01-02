@@ -40,7 +40,7 @@
                 </div>
             <% } %>
             <div class="forum_detail_ctl_return">           
-                <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록 돌아가기</button></a>
+                <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록</button></a>
             </div>
         </div>
 
@@ -146,8 +146,9 @@
             <%; break; case 'info': %> 정보
             <%; break; case 'life': %> 생활
             <%; break; default : %>	인기
-            <%}%>게시판 
-            목록 </h5>
+            <%}%>
+        </h3> 게시판 목록 
+            
         <div>
             <ul id="content_list">
             </ul>

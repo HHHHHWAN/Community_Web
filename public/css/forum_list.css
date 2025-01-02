@@ -1,5 +1,18 @@
 
-/* 컨테이너 박스 분할 */
+@media (max-width: 768px){
+    .page_top_ctl{
+        display: none !important; 
+    }.forum_describe{
+        display: none !important; 
+    }
+}@media (min-width: 768px){
+
+    .forum_describe{
+        min-width: 120px;
+    }
+}
+
+
 .forum_box {
     min-height: 100px;
     margin: 10px;
@@ -13,7 +26,6 @@
 
 }
 
-/* 컨테이너 상위 게시판 박스 */
 .forum_list_box{
     min-height: 900px;
     margin: 10px;
@@ -24,7 +36,7 @@
     border-radius: 4px;
 }
 
-/* 게시물 정보 박스 */
+
 .forum_list_box_info{
     display: flex;
     height: 70px;
@@ -40,8 +52,6 @@
 .forum_info_top{
     display: grid;
     width: 100%;
-}.forum_describe{
-    min-width: 120px;
 }.forum_info_page_ctl{
     width: 100%;
     justify-content: right;

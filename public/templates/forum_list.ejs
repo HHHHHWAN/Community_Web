@@ -30,12 +30,12 @@
 				</div>
 
 				<div class= "forum_info_page_ctl">
-					<div style="font-size: 15px;">
+					<div class="page_top_ctl" style="font-size: 12px;">
 						<div>
 							<% if ( page !== 1 ) {%>
 								<a class="page_a_button_current" data-setting_page = "<%= page - 1 %>"> ◀&nbsp;&nbsp; </a>
 							<% } else { %>
-								<span> ◁&nbsp;&nbsp; </span>
+								<span> ◁&nbsp; </span>
 							<% } %>
 						</div>
 						<div style="border: 2px solid rgba(64, 77, 67, 0.144); height: 25px; padding: 5px; border-radius: 5px;">
@@ -45,10 +45,9 @@
 							<% if ( page !== count ) {%>
 								<a class="page_a_button_current" data-setting_page = "<%= page + 1 %>"> &nbsp;&nbsp;▶ </a>
 							<% } else { %>
-								<span> &nbsp;&nbsp;▷ </span>
+								<span> &nbsp;▷ </span>
 							<% } %>
 						</div>	
-
 					</div>
 
 					<div class="filter_div" style="position:relative">
