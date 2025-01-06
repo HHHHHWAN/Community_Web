@@ -56,16 +56,16 @@ function showPosition(position) {
 function showError(error) {
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            console.log("User denied the request for Geolocation.");
+            console.log("사용자가 위치 정보 접근을 거부");
             break;
         case error.POSITION_UNAVAILABLE:
-            console.log("Location information is unavailable.");
+            console.log("위치 정보를 사용할 수 없음");
             break;
         case error.TIMEOUT:
-            console.log("The request to get user location timed out.");
+            console.log("위치 정보를 가져오는 데 시간이 초과");
             break;
         case error.UNKNOWN_ERROR:
-            console.log("An unknown error occurred.");
+            console.log("알 수 없는 오류가 발생");
             break;
     }
 }
