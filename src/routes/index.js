@@ -20,8 +20,8 @@ const upload = require('../middleware/upload_multer');
 // 로그인 관련
 router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
-router.post('/login',user_Controller.setLogin_page); // 로그인 요청 
-router.post('/signup',user_Controller.setSignUp_page); // 회원가입 요청
+router.post('/login',user_Controller.setLogin_page); 
+router.post('/signup',user_Controller.setSignUp_page); 
 
 router.get('/logout',user_Controller.getLogout);
 

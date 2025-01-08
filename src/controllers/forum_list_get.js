@@ -139,15 +139,24 @@ exports.getCreateContent = (req, res) => {
 
 exports.get_SearchContents = (req, res) => {
     const search_keyword = req.query.search_keyword;
-    const front_page = parseInt(req.query.pageF) || 1;
-    const back_page = parseInt(req.query.pageB) || 1;
+    const top_page = parseInt(req.query.pageF) || 1;
+    const bottom_page = parseInt(req.query.pageB) || 1;
 
-    Content_Service.get_search_post(search_keyword,front_page,back_page, (err, post_contents, post_comments, contents_count, comments_count) => {
+    Content_Service.get_search_post( search_keyword, top_page, bottom_page, ( err, Search_result ) => {
         if(err){
             return res.status(500).render('forum_error.ejs',{ layout : false });
         }
 
-        res.render('forum_search', {search_keyword, post_contents, post_comments, front_page, back_page, contents_count, comments_count});
+        res.render('forum_search', 
+            { 
+                search_keyword,
+                Contents_list : Search_result.Contents_list,
+                Comments_list : Search_result.Comments_list,
+                Content_total : Search_result.Content_total,
+                Comment_total : Search_result.Comment_total,
+                top_page,
+                bottom_page
+            });
     });
 };
 

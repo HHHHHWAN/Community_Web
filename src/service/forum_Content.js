@@ -248,7 +248,7 @@ const Content = {
         });
     },
 
-    get_search_post :  async (search_text,front_page, back_page, callback) => { 
+    get_search_post :  async (search_text, top_page, bottom_page, callback) => { 
         const query_contents = `select * from Content where ( title like ? or text like ? ) and visible = 1 limit 5 offset ?`;
         const query_comments = `select A.*, Content.content_type as content_type, Content.title as content_title from ( select * from Comment where comment like ? and visible = 1 limit 5 offset ?) A left join Content on Content.id = A.content_id`;
 
@@ -257,43 +257,36 @@ const Content = {
         const query_comments_count = `select count(*) as count from Comment where comment like ? and visible = 1`;
 
         const wild_text = `%${search_text}%`;
-        const front_offset = (front_page - 1)* 5;
-        const back_offset = (back_page - 1) * 5;
+        const top_offset = (top_page - 1)* 5;
+        const bottom_offset = (bottom_page - 1) * 5;
 
         // promise 형식으로 반환
         const read_DB_promise = read_DB.promise();
 
         try{
-            const result_contents  = await read_DB_promise.query(query_contents,[wild_text, wild_text, front_offset]);
-            const result_comments  = await read_DB_promise.query(query_comments,[wild_text, back_offset]);
-            const result_contents_count  = await read_DB_promise.query(query_contents_count,[wild_text, wild_text]);
-            const result_comments_count  = await read_DB_promise.query(query_comments_count,[wild_text]);
+            const [ result_contents ]  = await read_DB_promise.query(query_contents,[wild_text, wild_text, top_offset]);
+            const [ result_comments ]  = await read_DB_promise.query(query_comments,[wild_text, bottom_offset]);
 
-            const contents_page = Math.ceil(result_contents_count[0][0].count / 5);
-            const comments_page = Math.ceil(result_comments_count[0][0].count / 5);
-            result_contents_count[0][0].page = contents_page;
-            result_comments_count[0][0].page = comments_page;
+            const [result_contents_count]  = await read_DB_promise.query(query_contents_count,[wild_text, wild_text]);
+            const [result_comments_count]  = await read_DB_promise.query(query_comments_count,[wild_text]);
 
-            // promise 형식 반환시 [rows, fields]로 반환하게 됨 
-            callback(null,result_contents[0], result_comments[0], result_contents_count[0][0], result_comments_count[0][0]);
+            const contents_page = Math.ceil(result_contents_count[0].count / 5);
+            const comments_page = Math.ceil(result_comments_count[0].count / 5);
+            result_contents_count[0].page = contents_page;
+            result_comments_count[0].page = comments_page;
+
+            callback(null, {
+                    Contents_list : result_contents,
+                    Comments_list : result_comments,
+                    Content_total : result_contents_count[0],
+                    Comment_total : result_comments_count[0]
+                }
+            );
 
         }catch(err){ // query 함수 err 캐치
-            return callback(err,null,null,null,null);
+            console.log(" ( get_search_post ) query Error : ", err);
+            return callback(err, null);
         }
-
-        // callback 함수 처리경우
-        // read_DB.query(query_contents, [wild_text, wild_text, front_offset] , (err,result_contents) => {
-        //     if(err){
-        //         return callback(err,null,null,null);
-        //     }
-
-        //     read_DB.query(query_comments, [wild_text, back_offset] , (err,result_comments) => {
-        //         if(err){
-        //             return callback(err,null,null);
-        //         }
-        //         callback(null,result_contents,result_comments);
-        //     });
-        // });
     }
 };
 
