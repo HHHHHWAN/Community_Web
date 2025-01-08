@@ -58,13 +58,14 @@ function get_user_activity(user_id){
                 post_li_div.innerHTML = `
                 <div class='post_li_div_info'>
                     <div>
-                        <a href='/user/${row.content_user_id}'>${row.nickname}</a>님의 
+                        <a href='/user/${row.content_user_id}' class='user_nickname_href'></a>님의 
                         <a href='/${row.content_type}/${row.content_id}'>게시물</a>에 댓글을 작성했습니다. 
                     </div>
                     <div>${row.date_now}</div>
                 </div>
                 <div class='post_li_div_title'></div>                
                 `;
+                post_li_div.querySelector('.user_nickname_href').textContent = row.nickname;
                 post_li_div.querySelector('.post_li_div_title').textContent = row.comment;
                 post_li.appendChild(post_li_div);
                 post_dom.appendChild(post_li);
