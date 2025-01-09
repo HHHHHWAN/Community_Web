@@ -252,11 +252,11 @@ const User_model = {
         const query = `select id, nickname from User where id = ?`;
 
         read_DB.query(query, [user_id] ,(err, result) => {
-            if(!result){
-                return callback(null);
+            if(!result || err){
+                return callback(err, result);
             }
 
-            callback(result[0]);
+            callback(null, result[0]);
         });
     },
 

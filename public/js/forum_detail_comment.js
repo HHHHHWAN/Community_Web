@@ -39,13 +39,14 @@ document.addEventListener('click', function(event){
         
         div_comment.innerHTML = `
             <form action='/reply/edit/${comment_id}' method=POST>
-                <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required>${comment.textContent}</textarea> 
+                <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
                 <div style = "display : flex; width : 100%; justify-content : right;">
                     <button type='button' class="button_comment_cancel">취소</button>
                     <button type='submit' class="forum_button_2">작성</button>
                 </div>
             </form>
-        `; 
+        `;
+        div_comment.querySelector('.comment_text').textContent = comment.textContent;
 
         div_comment.querySelector('.button_comment_cancel').addEventListener('click',function() {
             div_comment.innerHTML = origin;

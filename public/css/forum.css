@@ -276,14 +276,6 @@ button:hover{
       }
 }
 
-
-/* body {
-    justify-content: center;
-    
-    font-size: 30px;
-    margin: 0;
-} ----------------------------------------------*/
-
 @media (min-width: 768px){
     .head_mobile_nav{ display: none; }
     .modal_button{ display: none; }
@@ -356,26 +348,18 @@ button:hover{
         cursor: pointer;
     }.search_button:hover {
         color: #4CAF50;
-    }
-
-    .head_mobile_ctl_search{
-        display: none;
-    }.head_mobile_ctl_user{
-        display: none;
-    }
-
-
-
-    .head_ctl_user{
+    }.head_ctl_user{
         font-size: 20px;
-        margin-left: 20px;
-        padding-left: 15px;
-        padding-right: 15px;
+        margin-left: 10px;
         min-width: 130px;
         background-color: rgb(191, 238, 209);
         text-align: center;
 
         border-radius: 10px;
+    }.head_mobile_ctl_search{
+        display: none;
+    }.head_mobile_ctl_user{
+        display: none;
     }
 
     body {

@@ -8,7 +8,7 @@ function session_config(){
     return session({
         secret : process.env.SESSION_SECRET, // 세션 암호값 설정
         resave : false, //세션 데이터가 변경되지 않았을 때도 저장할지 여부
-        saveUninitialized: true, 
+        saveUninitialized: false, 
             // 초기화되지 않은 세션도 저장할지 여부
             // true -> 세션이 없는 첫 요청이 들어올 때, 세션 객체가 고정, 생성 ( 즉 앱에 접근한 이후 고정됨)
             // false -> 세션 데이터가 수정될 때, 세션 객체가 생성, 고정 ( 즉, req.session 객체에 수정점이 있을경우)
@@ -16,7 +16,7 @@ function session_config(){
             client : redis_client,
             prefix : 'user:'
         }),
-        cookie: { // 쿠키 설정
+        cookie: { // 쿠키에 저장할 경우, 설정
             httpOnly : true, // JavaScript로 쿠키 접근을 방지
             sameSite : 'lax', // 안전한 크로스 사이트 요청만 허용 ( 새 탭 )
             // 'strict' - 크로스 사이트에서 쿠키 전송 차단

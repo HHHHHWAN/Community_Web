@@ -127,12 +127,11 @@ exports.getLogout = (req , res) => {
     });
 };
 
-
-// 유저 정보 get
 exports.getUserinfo = (req, res) => {
     const user_id = req.params.user_id;
     const user_category = req.params.user_category || undefined;
 
+    // 응답시, 렌더링 포함 유무
     if(user_category) {
         if (user_category === "post"){
             //유저 작성 게시물
@@ -150,10 +149,13 @@ exports.getUserinfo = (req, res) => {
             });
         }
     } else {
-        // 유저 id, nickname 반환
-        user_DB.get_userinfo(user_id, (result) => {
+        user_DB.get_userinfo(user_id, (err, result) => {
             if(!result){
-                return res.status(404).render('forum_error.ejs',{layout:false});
+                return res.status(404).render('forum_error.ejs',{ layout:false, returnStatus : "404"  });
+            }
+            if(err){
+                console.error(err);
+                return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : "500" });
             }
 
             
