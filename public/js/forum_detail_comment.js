@@ -42,7 +42,7 @@ document.addEventListener('click', function(event){
                 <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
                 <div style = "display : flex; width : 100%; justify-content : right;">
                     <button type='button' class="button_comment_cancel">취소</button>
-                    <button type='submit' class="forum_button_2">작성</button>
+                    <button type='submit' class="button_comment_edit">수정</button>
                 </div>
             </form>
         `;
@@ -61,7 +61,6 @@ document.addEventListener('click', function(event){
             if(!Response.ok){
                 throw new Error('failed get api');
             }
-            
             return Response.json();
         })
         .then(data => {

@@ -79,11 +79,12 @@
                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                 <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
                                                     <button type="button" class="comment_edit">수정</button></a>
+                                                    <span>&nbsp;<b>·</b>&nbsp;</span>
                                                     <button type="button" class="comment_delete">삭제</button>
                                                 <%}%>        
                                             </div>
                                         </div>
-                                        <div style='margin-bottom : 20px;'><pre class="pre_comment"><%= row.comment %></pre></div>
+                                        <div><pre class="pre_comment"><%= row.comment %></pre></div>
                                     </div>
                                     <% if (userId) {%>
                                         <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
@@ -95,7 +96,7 @@
                                     </div>
                                 </div>
                                 <% if (row.children.length) { %>
-                                    <ul style="margin-left : 30px;">
+                                    <ul style="margin-left : 20px;">
                                         <% row.children.forEach( children => {%>
                                             <li>
                                                 <div>
@@ -111,6 +112,7 @@
                                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                                 <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
                                                                     <button type='button' class="comment_edit">수정</button></a>
+                                                                    <span>&nbsp;<b>·</b>&nbsp;</span>
                                                                     <button type='button' class="comment_delete">삭제</button>
                                                                 <%}%>        
                                                             </div>
@@ -118,7 +120,7 @@
                                                         <div style='margin-bottom : 2px;'><pre class="pre_comment"><%= children.comment %></pre></div>
                                                     </div>
                                                     <% if (userId) {%>
-                                                        <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
+                                                    <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
                                                     <% } %>
                                                     <div class="create_subcomment_div">
                                                         <input type='hidden' name='comment_nickname' value='<%= children.nickname %>' >

@@ -1,4 +1,31 @@
 
+.comment_label{
+    margin-top: 10px;
+    font-weight: bold;
+    color: #868585;
+    font-size: 13px;
+}
+
+.comment_container{
+    padding-top: 10px;
+    margin-bottom: 15px;
+
+}.comment_container div{
+    margin-bottom: 5px;
+}
+
+/* 목록 스타일 */
+ul {
+    list-style-type: square;
+}
+
+ul li {
+    font-size: 13px;
+    min-height: 30px;
+    list-style-type: none ;
+    border-top: 2px solid rgba(167, 163, 163, 0.521);
+}
+
 
 
 @media (max-width: 768px){
@@ -85,12 +112,7 @@
     justify-content: right;
 }
 
-.comment_label{
-    margin-top: 10px;
-    font-weight: bold;
-    color: #868585;
-    font-size: 13px;
-}
+
 
 #page_box button {
     font-size: 13px;
@@ -117,13 +139,19 @@
 
 
 .button_comment_cancel{
-    height: 30px;
+    padding: 5px;
     font-size: 13px;
     background-color: rgb(226, 231, 228);
     border-radius: 5px;
     border: none;
-    white-space : nowrap;
-    margin-right: 10px;
+    margin-right: 5px;
+}.button_comment_edit{
+    padding: 5px;
+    font-size: 13px;
+    background-color: rgb(191, 238, 209);
+    border-radius: 5px;
+    border: none;
+    margin-right: 5px;
 }
 
 .comment_text{
@@ -132,19 +160,7 @@
     max-height: 800px;
 
 }	
-/* 목록 스타일 */
-ul {
-    list-style-type: square;
-    padding: 5px;
-}
 
-ul li {
-    padding: 5px;
-    font-size: 13px;
-    min-height: 30px;
-    list-style-type: none ;
-    border-top: 2px solid rgba(167, 163, 163, 0.521);
-}
 
 
 /* 게시물 li 내부 박스 */

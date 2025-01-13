@@ -30,9 +30,9 @@
                     <a href='/user/<%= userId %>'><%= nickname %></a>님 / 
                     <a href="/logout">로그아웃</a> 
                 <% } else {%>
-                    <a href="/login?returnUrl=%2">로그인</a> 
+                    <a href="" class="login_href">로그인</a> 
                     / 
-                    <a href="/signup?returnUrl=%2">회원가입</a>
+                    <a href="" class="signup_href">회원가입</a>
                 <%} %>
             </div>
         </div>
@@ -62,56 +62,16 @@
                     <div><a href="/logout">로그아웃</a></div>
                 <% } else {%>
                     <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);">비회원</div>
-                    <div><a href="/login?returnUrl=%2">로그인</a> </div>
-                    <div><a href="/signup?returnUrl=%2">회원가입</a></div>
+                    <div><a href="" class="login_href">로그인</a> </div>
+                    <div><a href="" class="signup_href">회원가입</a></div>
                 <%} %>
             </div>
         </div>
     </nav>
 </header>
 
-<script>
+<script src="/public/js/header_nav.js">
 
-window.addEventListener('resize', function(){
-    const mobile_search_box = document.querySelector('.head_mobile_ctl_search');
-    const mobile_user_box = document.querySelector('.head_mobile_ctl_user');
-    const mobile_nav_box = document.querySelector('.head_mobile_nav');
-
-    mobile_search_box.setAttribute('style','display: none;');
-    mobile_user_box.setAttribute('style','display: none;');
-    mobile_nav_box.setAttribute('style','display: none;');
     
-});  
-
-document.addEventListener('click',function(event){
-
-    if(event.target.classList.contains('mobile_nav_button')){
-        const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_nav').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_nav').style.display = "none";
-        }else{
-            parent_div.querySelector('.head_mobile_nav').style.display = "block";
-        }
-    }
-
-    if(event.target.classList.contains('mobile_search_button') || event.target.classList.contains('search_cancel_button') ){
-        const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_ctl_search').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_ctl_search').style.display = "none";
-        }else{
-            parent_div.querySelector('.head_mobile_ctl_search').style.display = "block";
-        }
-    }
-
-    if(event.target.classList.contains('mobile_user_button')){
-        const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_ctl_user').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_ctl_user').style.display = "none";
-        }else{
-            parent_div.querySelector('.head_mobile_ctl_user').style.display = "block";
-        }
-    }
-
-});
 
 </script>
