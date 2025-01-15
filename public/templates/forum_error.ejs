@@ -2,22 +2,31 @@
 
 <body>
         <div class="box_error_status">
+            <% if(returnStatus === 500){ %>
+            <div class="status_div"> <%= returnStatus %> !</div>
             <div class="box_error_status_1">
-                <div> <%= returnStatus %> </div>
-                <% if(returnStatus){%>
-                    <div> 서버가 혼잡 합니다.</div>
-                    <div> 잠시후 요청 부탁드립니다.</div>
-                <% } else{%>
-                    <div> This page does not exist</div>
-                    <div> 존재하지 않은 페이지입니다.</div>
-                <% } %>
+                <div>페이지가 작동하질 않습니다.</div>
+                <div>Internal Server Error</div>
             </div>
+            <% } else if (returnStatus === 401) {%>
+            <div class="status_div"> <%= returnStatus %> !</div>
+            <div class="box_error_status_1">
+                <div> 올바른 접근 방법이 아닙니다.</div>
+                <div> Unauthorized Response </div>
+            </div>
+            <% } else {%>
+            <div class="status_div"> <%= returnStatus %> !</div>
+            <div class="box_error_status_1">
+                <div> 존재하지 않은 페이지입니다.</div>
+                <div> Undefined Response </div>
+            </div>
+            <% } %>
             <div class="box_error_status_2">
                 <div><a href="/popular">인기</a></div>
                 <div><a href="/info">정보</a></div>
                 <div><a href="/qa">질문</a></div>
                 <div><a href="/life">생활</a></div>
-                <div><a href="/">메인으로 돌아가기</a></div>
+                <div style=" border-top: 4px solid rgba(255, 255, 255, 0.797)"><a href="/">메인으로 돌아가기</a></div>
             </div>
         </div>
 </body>
@@ -25,41 +34,51 @@
 
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&family=Playwrite+CO+Guides&display=swap');
+
     body{
         display: flex;
 
         align-items: center;
         justify-content: center;
+
+        font-family: "Gowun Dodum", serif;
+        font-weight: 400;
+        font-style: normal;
+
     }
+
     .box_error_status{
-        background-color: rgb(178, 224, 193);
-        display: grid;
-        grid-template-rows: 40% 60%;
         border-radius: 10px;
         width: 500px;
-        height: 500px;
-
-        padding: 20px;
-
-    }
-    .box_error_status_1{
-        border-radius: 10px;
-        display: block;
 
     }.box_error_status_1 div{
         display: flex;
-        height: 50px;
         justify-content: center;
         font-weight:bolder;
         font-size: 24px;
-        color: rgb(28, 59, 42);
+    }.status_div{
+        display: flex;
+
+        font-size: 80px;
+        justify-content: center;
+        color: rgb(178, 224, 193);
+
+        margin-bottom: 20px;
     }
     
     .box_error_status_2{
-        background-color: rgb(246, 246, 247);
+        background-color: rgb(178, 224, 193);
         border-radius: 10px;
         display: grid;
         grid-gap: 10px;
+        padding: 10px;
+        margin-top: 10px;
+
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+        font-size: 25px;
+
     }.box_error_status_2 div{
         display: flex;
         justify-content: center;
@@ -70,6 +89,8 @@
         color: black;
         font-weight: bolder;
         text-decoration:none;
+    }a:hover{
+        color: rgb(255, 255, 255);
     }
 
 

@@ -11,22 +11,31 @@ function get_Contents(pagetype, page, callback, order_type = "newest_order") {
     if (pagetype === "popular"){
         Content_Service.get_popular_contents(10, offset, order_type, (err, results, counts) => { //pagetype 인수 생략 
             if (err) {
-                return res.status(500).send('query output error');
+                console.error("( get_Contents ) => ( get_popular_contents ) : ",err);
+
+                return callback(err, results, null);
             } 
             const count = Math.ceil(counts.popular_count / 10 );  
 
-            callback(results,count);
+            callback(null, results, count);
         });  
     }else {
         Content_Service.get_type(pagetype, offset, order_type, (err,results) => {
             if (err) {
-                return res.status(500).send('query output error');
+                console.error("( get_Contents ) => ( get_type ) : ",err);
+
+                return callback(err, results, null);
             }
 
             // page 전체 수 확인
             Content_Service.get_page_count(pagetype,(err,count) => {
+                if (err) {
+                    console.error("( get_Contents ) => ( get_page_count ) : ",err);
 
-                callback(results,count);
+                    return callback(err, results, count);
+                }
+
+                callback(null, results, count);
             });
         });
     }   
@@ -37,7 +46,11 @@ exports.api_getContents = (req, res) => {
     const pagetype = req.params.pagetype; // url 파라미터 취득
     const page = parseInt(req.query.page) || 1; //?page= url 전송 값 취득  
 
-    get_Contents(pagetype, page, (results, count ) => {
+    get_Contents(pagetype, page, (err, results, count ) => {
+        if (err) {
+            return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
+        }
+
         res.json({
             contents: results,
             page: page,
@@ -52,7 +65,10 @@ exports.getTypeContents = (req, res) => {
     const order_type = req.query.order || "newest_order";
     const page = parseInt(req.query.page) || 1; //?page= url 전송 값 취득  
     
-    get_Contents(pagetype, page, (results, count) => {
+    get_Contents(pagetype, page, (err, results, count) => {
+        if (err) {
+            return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
+        }
         res.render('forum_list.ejs' , { Contents : results, pagetype, page, count, order_type });
     }, order_type);
 };
@@ -70,12 +86,14 @@ exports.getDetailContents = (req, res) => {
     const content_id = req.params.id; 
 
     Content_Service.get_record(content_id, "view", (err,results) => {
-        if (err) { // 서버 에러
-            return res.status(500).send('query output error');
+        if (err) {
+            console.error("( getDetailContents ) => ( get_record ) : ", err );
+
+            return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
         }
 
-        if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
-            return res.status(404).render('forum_error.ejs',{layout:false});
+        if (!results) {
+            return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400 });
         }
 
         //get Content Comments
@@ -90,8 +108,8 @@ exports.getDetailPost = ( req, res) => {
     const content_id = req.params.Content_id;
 
     Content_Service.get_record(content_id, "view", (err,results) => {
-        if (err) { // 서버 에러
-            console.log(err);
+        if (err) { 
+            console.error("( getDetailPost ) => ( get_record ) : ",err);
             return res.status(500).json({
                 Message : 'query output error',
                 Content_object : results
@@ -99,7 +117,7 @@ exports.getDetailPost = ( req, res) => {
         }
 
         if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
-            return res.status(404).json({
+            return res.status(400).json({
                 Message : 'invaild Post',
                 Content_object : results
             });
@@ -114,18 +132,22 @@ exports.getDetailPost = ( req, res) => {
 
 
 
-//게시물 작성 페이지
+//'/:pagetype/edit'
 exports.getCreateContent = (req, res) => {
-    const { pagetype } = req.params;
-    const content_id = req.query.contentid || '';
+    const pagetype = req.params.pagetype;
+    const content_id = req.params.content_id;
 
     if (content_id){
-        Content_Service.get_record(content_id,"edit",(err, post_info) =>{
+        Content_Service.get_record(content_id, "edit" ,(err, post_info) =>{
            
             if(err){
-                res.status(500).send("게시물 불러오기 실패");
+                console.error("( getCreateContent ) => ( get_record ) : ", err );
+
+                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
+
             } else if ( !post_info || (post_info.user_id != req.session.user.user_id ) ){
-                return res.status(404).render('forum_error.ejs',{ layout : false });
+
+                return res.status(400).render('forum_error.ejs',{ layout : false });
             }
     
             res.render('forum_upload.ejs', { pagetype , content_id , post_info });
@@ -144,7 +166,9 @@ exports.get_SearchContents = (req, res) => {
 
     Content_Service.get_search_post( search_keyword, top_page, bottom_page, ( err, Search_result ) => {
         if(err){
-            return res.status(500).render('forum_error.ejs',{ layout : false });
+            console.error("( get_SearchContents ) => ( get_search_post ) : ", err );
+
+            return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
         }
 
         res.render('forum_search', 

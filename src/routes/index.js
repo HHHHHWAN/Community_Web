@@ -63,33 +63,35 @@ router.get('/testpage', (req, res) => {
 });
 
 
-//user info
+// userinfo
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
-// get forum contents list 
+// postlist
 router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 
-
-// 게시글 삭제, 비활성 처리
+// delete post
 router.delete('/delete/:content_id', set_Controller.setInvisiblyctl);
 
-// Post edit get
-router.get('/:pagetype/edit', login_Check, urlType_Check, get_Controller.getCreateContent);
 
-// edit Post upload  
-router.post('/:pagetype/edit' , login_Check, urlType_Check, set_Controller.setCreateContent);
+//comment 
+router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
+router.post('/reply/:contents_id/:comment_id?', login_Check ,set_Controller.setCreateComment);
+
+//image upload
 router.post('/image/upload' , login_Check, upload.single('image'), (req, res) => {
     res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
 });
 
+// Post edit get
+router.get('/:pagetype/edit/:content_id?', login_Check, urlType_Check, get_Controller.getCreateContent);
+
+// edit Post upload  
+router.post('/:pagetype/edit/:content_id?' , login_Check, urlType_Check, set_Controller.setCreateContent);
+
+
 // 게시글 내용
 router.get('/:pagetype/:id', urlType_Check, get_Controller.getDetailContents);
 
-router.post('/reply/edit/:comment_id',login_Check, set_Controller.setCreateComment);
-router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
-
-// 게시글 코멘트 작성
-router.post('/reply/:contents_id/:comment_id?', login_Check ,set_Controller.setCreateComment);
 
 
 

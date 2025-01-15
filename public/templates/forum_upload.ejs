@@ -51,7 +51,7 @@
 <div class="box">
     <div class="forum_list_box">
         <div id="Content_text_box">
-            <form action="/<%= pagetype%>/edit<%= content_id ? '?contentid='+ content_id : '' %>" method="POST" id="post_form">
+            <form action="/<%= pagetype%>/edit<%= content_id ? '/'+ content_id : '' %>" method="POST" id="post_form">
                 <label class="update_label" for="title">제목</label>
                 <input type="text" id="title" name="title" value="<%= post_info ? post_info.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
 

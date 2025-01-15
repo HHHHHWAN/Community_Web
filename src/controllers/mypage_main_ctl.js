@@ -6,13 +6,18 @@ const Content_db = require('../service/forum_Content');
 exports.getMyPagelist = (req, res) => {
     Content_db.get_mainpage_contents((err, result ) => {
         if(err){
-            return res.status(500).send('mainpage read error');
+            console.error("( getMyPagelist ) => ( get_mainpage_contents ) : ", err );
+
+            return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
         }
 
         // popular contents load
         Content_db.get_popular_contents(5,0,'',(err, result_popular) => {
             if(err){
-                return res.status(500).send('mainpage_popular query READ error');
+
+                console.error("( getMyPagelist ) => ( get_popular_contents ) : ", err );
+
+                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }
             
 
