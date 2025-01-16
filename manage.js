@@ -43,16 +43,22 @@ app.use(express.urlencoded({ extended : true }));
 app.use(expressLayouts) // layouts 상속기능 적용 ( SSR 기준 )
 app.set('layout','layout/forum') // views 설정 경로 기준  모든 ejs는 forum_main 레이아웃 적용
 
-// 라우터 설정
-app.use('/', indexRoutes) // main URLconf 
+
+app.use('/', indexRoutes) 
+
+// undefine endpoint
+app.use((req, res) => {
+    res.status(404).render('forum_error.ejs',{ returnStatus : 404 , layout : false })
+});
+
 
 async function startserver(){
 	const port = 33003;
 
 	// 웹 서버 ip port 세팅 
-	await app.listen(port, () => {
+	await app.listen(port, '0.0.0.0',() => {
 		console.log('-----------------------------------------------');
-		console.log('Server running at http://localhost:'+ port + '/');
+		console.log('Server running at http://0.0.0.0:'+ port + '/');
 		console.log('-----------------------------------------------');
 	});
 }

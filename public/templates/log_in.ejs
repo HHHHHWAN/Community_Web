@@ -71,7 +71,7 @@
             <form class=login action="/login" method="POST">
                 <div class="login_input_div">
                     <div>아이디</div>
-                    <input type="username" id="username" name="username" value="<%= username %>" >   
+                    <input type="username" id="username" name="username" value="<%= history ? history.input_id : '' %>" >   
                     <span class="alert_span" id="error_id"></span> 
                 </div>
 

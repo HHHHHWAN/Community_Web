@@ -1,7 +1,10 @@
 
 const user_login_check = (req,res,next) => {
     if(!req.session.user){
-        return res.redirect('/login');
+        if(req.method === 'GET'){
+            return res.redirect('/login');
+        }
+        return res.status(401).render('forum_error.ejs',{layout: false, returnStatus : 401 });
     }
     next();
 };

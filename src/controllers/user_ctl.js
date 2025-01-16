@@ -11,26 +11,32 @@ require('dotenv').config();
 //login get
 exports.getLogin_page = ( req , res ) => {
     const returnUrl = req.query.returnUrl || ''; 
-    const username = req.query.username || ''; //입력아이디 기억
+    const history = req.session.login || {}; 
+    delete req.session.login;
+
     const error = req.query.error || ''; 
     const request = req.query.request || ''; 
+
     const signup  = req.query.signup || ''; 
     const social_signup  = req.query.social_signup || ''; 
 
-    res.render('log_in.ejs', { layout : false , username, error, returnUrl, request, signup, social_signup});
+    res.render('log_in.ejs', { layout : false , history, error, returnUrl, request, signup, social_signup});
 };
 
 
 //login post
 exports.setLogin_page = async ( req , res ) => {
-    const { username, password} = req.body;
+    const username = req.body.username;
+    const password = req.body.password;
     const request = req.body.request || '';
 
     if( username && password){
         user_DB.set_loginUser( req, (status, issue) => {
             if(status){
-                // 아이디 없음
-                return res.redirect(`/login?error=${issue}&username=${username}&request=${request}`);
+                // unknown
+                req.session.login.input_ID = username;
+
+                return res.redirect(`/login?error=${issue}&request=${request}`);
             }
             res.redirect(`/`);
         }, username, password , request);
@@ -41,7 +47,7 @@ exports.setLogin_page = async ( req , res ) => {
 };
 
 
-// 회원가입 페이지
+// signup get
 exports.getSignUp_page = ( req , res ) => {
     const returnUrl  = req.query.returnUrl || ''; 
     const issue  = req.query.issue || ''; 
@@ -56,7 +62,7 @@ exports.getSignUp_page = ( req , res ) => {
     res.render('sign_up.ejs', { layout : false , issue, request, history});
 };
 
-// 회원가입 post
+// signup post
 exports.setSignUp_page = async ( req , res ) => {
 
     req.session.sign = {

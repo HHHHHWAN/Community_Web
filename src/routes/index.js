@@ -1,16 +1,14 @@
 const express = require('express');
-const router = express.Router(); // url 넘기기용 
+const router = express.Router();
 require('dotenv').config();
 
-//view controller 객체 생성
+
 const main_Controller = require('../controllers/mypage_main_ctl'); 
 
-//게시판 컨트롤러
 const user_Controller = require('../controllers/user_ctl');
 const get_Controller = require('../controllers/forum_list_get');
 const set_Controller = require('../controllers/forum_list_set');
 
-//미들웨어
 const urlType_Check = require('../middleware/url_content_check');
 const login_Check = require('../middleware/user_check');
 const upload = require('../middleware/upload_multer');
@@ -18,6 +16,10 @@ const upload = require('../middleware/upload_multer');
 // ------------------------------------------------------------
 
 // 로그인 관련
+// router.get((req, res) => {
+//     res.status(404).render('forum_error.ejs',{ returnStatus : 404 , layout : false })
+// });
+
 router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
 router.post('/login',user_Controller.setLogin_page); 
