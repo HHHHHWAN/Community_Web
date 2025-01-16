@@ -59,7 +59,7 @@
         - 일반 로그인
           - 일반 회원가입 지원
 
-4. API 명세서
+4. 명세서
     1. 응답 코드
     
         | 응답 코드 | 의미     | 설명                      | *특수 페이지 반환여부   | 패턴 | 비고         |
@@ -74,7 +74,21 @@
 
         - *렌더링 반환시
 
-    2. 명세서
+    2. 페이지 명세서
+
+        | NO. | 페이지명            | HTTP Method | REST API        | 요청헤더              | 세션 필요여부 | 접근 권한 | 비고      |
+        |-----|-----------------|-------------|-----------------|-------------------|---------|-------|--------------|
+        | 1   | 메인              | GET         | /               | Accept: text/html | ⨉       | ALL   | SSR 요청|
+        | 2   | 로그인             | GET         | /login          | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+        | 3   | 회원가입            | GET         | /signup         | Accept: text/html | ⨉       | ALL   | SSR 요청   |
+        | 4   | 인기 카테고리         | GET         | /popular        | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+        | 5   | 검색 결과           | GET         | /search         | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+        | 6   | 질문, 생활, 정보 카테고리 | GET         | /:pagetype      | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+        | 7   | 게시글 작성          | GET         | /:pagetype/edit | Accept: text/html | ◯       | USER  | SSR 요청    |
+        | 8   | 게시글 본문          | GET         | /:pagetype/:id  | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+        | 9   | 유저 정보           | GET         | /user/:user_id  | Accept: text/html | ⨉       | ALL   | SSR 요청    |
+
+    3. API 명세서
 
 5. MySql
    1. ERD
