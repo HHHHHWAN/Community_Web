@@ -63,9 +63,7 @@
 								</div>
 							</button>
 						</div>
-						
-
-						<div class="filter_modal" style="display: none; width: 80px;height: 120px;">
+						<div class="filter_modal" style="display:none; min-width: 80px; height: 120px;">
 							<button class="newest_order">최신순</button>
 							<button class="oldest_order">과거순</button>
 							<button class="view_count_order">조회순</button>
@@ -88,12 +86,12 @@
 								<%= content.date_create %> 
 							</div>
 							<div class="forum_list_box_detail">
-								<div>
+								<div class="post_title">
 								<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>"><%= content.title %></a>
 								</div>
 								
-								<div style="justify-content: right; display:flex ; font-size: 14px; align-items: center;" >
-									<span style="font-weight: bold; font-size: 12px; color: rgba(77, 78, 76, 0.623);">댓글</span>&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+								<div class="post_count_info" style="justify-content: right; display:flex ; align-items: center;" >
+									<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 									&nbsp;<span><b>·</b></span>&nbsp;
 									<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
 								</div>

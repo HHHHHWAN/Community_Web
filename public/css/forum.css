@@ -86,21 +86,37 @@ button:hover{
         margin-right: 10px;
     }.logo_href{
         font-size: 18px;
-    }.mobile_nav_button{
+    }
+    
+    .head_nav {
+        display: none;
+    }.head_ctl{
+        display: none;
+    }
+    
+    
+    
+    .modal_div{
+        display: flex;
+        align-items: center;
+        position: relative;
+    }.modal_button{
         background-color: #00000000;
         border: none;
-        width: 50px;
+        min-width: 40px;
         height: 40px;
-    }.head_mobile_nav {
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+    }.modal_nav_button_div {
         display: none;
         border-radius: 3px;
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
         background-color: white;
         position:absolute;
         top: 95%;
-        left: 0%;
+        left: -50%;
         padding: 3px;
-    }.head_mobile_nav div{
+    }.modal_nav_button_div div{
         display: flex;
         justify-content: center;
         margin: 10px;
@@ -108,27 +124,29 @@ button:hover{
         height: 40px;
     }
 
-    .header_mobile_ctl{
+    .head_mobile_ctl{
         display: flex;
         justify-content: right;
+        align-items: center;
         width: 100%;
-    }
-    .head_mobile_ctl_search{
+    }.modal_search_button_div{
         display: none;
         border-radius: 3px;
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
-        background-color: white;
+
+        border: 2px solid rgb(161, 201, 176);
+        background-color: rgb(255, 255, 255);
+
         position:absolute;
-        top: 90%;
+        top: 95%;
         right: 0%;
         padding: 5px;
         border-radius: 20px;
-        border: 3px solid rgb(191, 238, 209);
     }.head_ctl_search{
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 5px;
+
         border-top: 2px solid rgba(82, 82, 82, 0.392);
         min-width: 170px;
     }.search_box {
@@ -142,7 +160,7 @@ button:hover{
         background-color: #00000000;
         height: 40px;
     }
-    .head_mobile_ctl_user{
+    .modal_user_button_div{
         display: none;
         position:absolute;
         top: 80%;
@@ -154,8 +172,8 @@ button:hover{
         padding-left: 15px;
         padding-right: 15px;
         min-width: 130px;
-        border: 2px solid rgb(87, 86, 86);
-        background-color: rgb(191, 238, 209);
+        border: 2px solid rgb(161, 201, 176);
+        background-color: rgb(255, 255, 255);
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
         text-align: center;
         border-radius: 10px;
@@ -163,43 +181,33 @@ button:hover{
         margin-bottom: 10px;
     }
     
-    
-    
-    .head_nav {
-        display: none;
-    }.header_ctl{
-        display: none;
-    }
 
     body {
         line-height: 1.6;
+        
     }
 
     .container {
         min-height: 1000px;
-        margin-top: 80px;
-        margin-bottom: 30px;
+        margin-top: 50px;
+        margin-bottom: 60px;
         border-radius: 8px;
         justify-content:center;
 
         font-family: "Gowun Dodum", serif;
         font-weight: 400;
         font-style: normal;
-
     }
     .sidebox {
         width: 100%;
         margin-bottom: 10px;
-        /* border: 1px solid black; */
     }
 
     .box {
         max-width: 768px;
-        background-color: rgba(255, 255, 255, 0.911);
     
         font-size: 12px;
         color: #333;
-    
         padding: 10px;
         
         justify-content: center;
@@ -266,8 +274,7 @@ button:hover{
 
 @media (min-width: 768px){
     .head_mobile_nav{ display: none; }
-    .modal_button{ display: none; }
-    
+    .head_mobile_ctl{ display: none; }
     
 
     header {
@@ -310,7 +317,7 @@ button:hover{
     }.head_nav_button {
         margin: 20px;
         text-align: center;
-    }.header_ctl{
+    }.head_ctl{
         padding: 20px;
         display: flex;
         width: auto;
@@ -344,10 +351,6 @@ button:hover{
         text-align: center;
 
         border-radius: 10px;
-    }.head_mobile_ctl_search{
-        display: none;
-    }.head_mobile_ctl_user{
-        display: none;
     }
 
     body {
@@ -382,7 +385,7 @@ button:hover{
     .box {
         width: 800px;
         min-width: 500px;
-        background-color: rgba(239, 253, 238, 0.911);
+        background-color: rgb(191, 238, 209);
     
         font-size: 14px;
         color: #333;

@@ -5,7 +5,7 @@ function callWeatherApi(lat,lon) {
     fetch(`/api/weather?lat=${lat}&lon=${lon}`)
     .then( Response => {
         if(!Response.ok){
-            console.error(`fail weather api Connect Status : ${Response.status}`);
+            throw new error(`fail weather api Connect Status : ${Response.status}`);
         }
         return Response.json();
     })
@@ -35,6 +35,10 @@ function callWeatherApi(lat,lon) {
     })
     .catch(err => {
         console.log(err);
+        const weatherBox = document.getElementById('weather_box');
+        weatherBox.innerHTML = `
+            <div> 오늘의 날씨를 불러올 수 없어요.. </div>
+        `;
     });
 }
 
@@ -68,6 +72,7 @@ function showError(error) {
             console.log("알 수 없는 오류가 발생");
             break;
     }
+    callWeatherApi(37.6,126.9);
 }
 
 document.addEventListener('DOMContentLoaded',function(){

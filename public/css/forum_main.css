@@ -4,16 +4,14 @@
         min-height: 250px;
         margin: 10px;
         padding: 10px;
-        background-color: rgb(255, 255, 255);
 
-        border-bottom: 3px solid rgba(155, 223, 172, 0.616);
+        border-radius: 10px;
     }
     .weather_info_box{
-        min-width: 200px;
+        min-width: 150px;
         background-color: white;
-        padding: 30px;
+        padding: 20px;
         border-radius: 20px;
-
 
         font-family: 'Dongle', sans-serif;
         font-weight: 400;
@@ -25,12 +23,12 @@
     }.weather_icon{
         display: flex;
         min-width: 120px;
-        margin: 10px;
+        margin-right: 10px;
         align-items: center;
         justify-content: center;
 
         border-radius: 20px;
-        border: 2px solid rgba(44, 44, 44, 0.644);
+        border: 1px solid rgba(44, 44, 44, 0.644);
 
     }.weather_img{
         width: 130px;
@@ -39,7 +37,7 @@
         line-height: 0.8;
         font-size: 30px;
     }.weather_detail div{
-        border-bottom: 2px solid rgb(135, 211, 141);
+        border-bottom: 1px solid rgb(135, 211, 141);
         margin-top: 5px;
     }
 

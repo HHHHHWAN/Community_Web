@@ -141,7 +141,7 @@ exports.getUserinfo = (req, res) => {
     if(user_category) {
         if (user_category === "post"){
             //유저 작성 게시물
-            user_DB.get_userinfo_post(user_id,(results) => {
+            user_DB.get_userinfo_post( user_id, (results) => {
                 return res.json({
                     post_list : results
                 });
@@ -155,13 +155,14 @@ exports.getUserinfo = (req, res) => {
             });
         }
     } else {
+        // GET ejs, user info
         user_DB.get_userinfo(user_id, (err, result) => {
             if(!result){
-                return res.status(404).render('forum_error.ejs',{ layout:false, returnStatus : "404"  });
+                return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400  });
             }
             if(err){
                 console.error(err);
-                return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : "500" });
+                return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : 500 });
             }
 
             

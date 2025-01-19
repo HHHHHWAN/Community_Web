@@ -3,7 +3,6 @@
         <div class="head_main"> 
             <button type="button" style="border: none; background-color: rgba(255, 255, 255, 0);"><a href="/" class="logo_href" style="font-family: 'Playwrite CO Guides', serif; font-weight: 400; font-style: normal;">MyPage</a></button>
         </div>
-        <div class="modal_button"><button class="mobile_nav_button" type="button">메뉴</button></div>
         <div class="head_nav"> 
             <div class="head_nav_button" id="popular"><a href="/popular"> 인기 </a></div>
             <div class="head_nav_button" id="info"><a href="/info"> 정보 </a></div>
@@ -11,13 +10,7 @@
             <div class="head_nav_button" id="life"><a href="/life">생활 </a></div>
             <div class="head_nav_blank" style="width: 300px;"></div>
         </div>
-        <div class="head_mobile_nav"> 
-            <div class="head_mobile_nav_button" id="mobile_popular"><a href="/popular"> 인기 </a></div>
-            <div class="head_mobile_nav_button" id="mobile_info"><a href="/info"> 정보 </a></div>
-            <div class="head_mobile_nav_button" id="mobile_qa"><a href="/qa">Q&A </a></div>
-            <div class="head_mobile_nav_button" id="mobile_life"><a href="/life">생활 </a></div>
-        </div>
-        <div class="header_ctl">
+        <div class="head_ctl">
             <div class="head_ctl_search">
                 <form action="/search" method="get">
                     <img src="../public/img/search-icon.png" class="search-icon" style="width: 12px; object-fit: contain; margin-right: 5px;" alt="검색">
@@ -36,37 +29,64 @@
                 <%} %>
             </div>
         </div>
-        <div class="header_mobile_ctl">
-            <div class="modal_button"><button class="mobile_search_button" type="button">검색</button></div>
-            <div class="modal_button"><button class="mobile_user_button" type="button">계정</button></div>
+
+        <div class="head_mobile_nav">
+            <div class="modal_div">
+                <button class="modal_button" id="modal_nav_button" type="button">
+                    <img src="../public/img/menu-icon.png" class="menu-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="메뉴">
+                </button>
+
+                <div class="modal_nav_button_div"> 
+                    <div class="head_mobile_nav_button" id="mobile_popular"><a href="/popular"> 인기 </a></div>
+                    <div class="head_mobile_nav_button" id="mobile_info"><a href="/info"> 정보 </a></div>
+                    <div class="head_mobile_nav_button" id="mobile_qa"><a href="/qa">Q&A </a></div>
+                    <div class="head_mobile_nav_button" id="mobile_life"><a href="/life">생활 </a></div>
+                </div>
+            </div>
         </div>
 
-        <div class="head_mobile_ctl_search"> 
-            검색
-            <div class="head_ctl_search">
-                <form action="/search" method="get">
-                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 12px; object-fit: contain; margin-right: 5px;" alt="검색">
-                    <input type="text" name="search_keyword" class="search_box" placeholder="검색" required>
-                    <div style="width: 100%; justify-content: right;">
-                        <button class="search_button" type="submit">검색</button>
-                        <button class="search_cancel_button" type="button">취소</button>
+        <div class="head_mobile_ctl">
+            <div class="modal_div">
+                <button class="modal_button" id="modal_search_button" type="button">
+                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 18px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="검색">
+                </button>
+
+                <div class="modal_search_button_div">
+                    검색
+                    <div class="head_ctl_search">
+                        <form action="/search" method="get">
+                            <img src="../public/img/search-icon.png" class="search-icon" style="width: 12px; object-fit: contain; margin-right: 5px;" alt="검색">
+                            <input type="text" name="search_keyword" class="search_box" placeholder="검색" required>
+                            <div style="display:flex; width: 100%; justify-content: right;">
+                                <button class="search_button" type="submit">검색</button>
+                                <button class="search_cancel_button" type="button">취소</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            <div class="modal_div">
+                <button class="modal_button" id="modal_user_button" type="button">
+                    <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="유저">
+                </button>
+
+                <div class="modal_user_button_div">
+                    <div class="head_ctl_user">
+                        <% if (nickname) {%>
+                            <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
+                            <div><a href="/logout">로그아웃</a></div>
+                        <% } else {%>
+                            <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);">비회원</div>
+                            <div><a href="" class="login_href">로그인</a> </div>
+                            <div><a href="" class="signup_href">회원가입</a></div>
+                        <%} %>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="head_mobile_ctl_user"> 
-            <div class="head_ctl_user">
-                <% if (nickname) {%>
-                    <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
-                    <div><a href="/logout">로그아웃</a></div>
-                <% } else {%>
-                    <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);">비회원</div>
-                    <div><a href="" class="login_href">로그인</a> </div>
-                    <div><a href="" class="signup_href">회원가입</a></div>
-                <%} %>
-            </div>
-        </div>
+
     </nav>
 </header>
 

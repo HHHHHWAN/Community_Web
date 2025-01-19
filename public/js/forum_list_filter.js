@@ -22,11 +22,11 @@ document.addEventListener('click',function(event){
 
     if(event.target.classList.contains('filter_button')){
         const parent_div = event.target.closest('.filter_div');
-        if(parent_div.querySelector('.filter_modal').style.display === "block" ){
+        if(parent_div.querySelector('.filter_modal').style.display === "flex" ){
             parent_div.querySelector('.filter_modal').style.display = "none";
             parent_div.querySelector('.filter_arrow').textContent = "↓";
         }else{
-            parent_div.querySelector('.filter_modal').style.display = "block";
+            parent_div.querySelector('.filter_modal').style.display = "flex";
             parent_div.querySelector('.filter_arrow').textContent = "↑";
         }
     }

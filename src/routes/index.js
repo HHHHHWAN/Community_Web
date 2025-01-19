@@ -16,9 +16,6 @@ const upload = require('../middleware/upload_multer');
 // ------------------------------------------------------------
 
 // 로그인 관련
-// router.get((req, res) => {
-//     res.status(404).render('forum_error.ejs',{ returnStatus : 404 , layout : false })
-// });
 
 router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
@@ -32,7 +29,8 @@ router.get('/login/:social_url/callback',user_Controller.setSocialLogin);
 
 //api 호출 라우터
 router.get('/api/weather', async (req, res) => {
-    const { lat, lon } = req.query;
+    const lat = parseInt(req.query.lat);
+    const lon = parseInt(req.query.lon);
 
     try{
         const api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`);
@@ -45,6 +43,7 @@ router.get('/api/weather', async (req, res) => {
 
         res.json(data);
     }catch (err){
+        console.error("('/api/weather') api.openweather Response Error : ",err.message);
         res.status(500).json({error: err.message});
     }
 });

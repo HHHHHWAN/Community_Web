@@ -1,7 +1,7 @@
 window.addEventListener('resize', function(){
     const mobile_search_box = document.querySelector('.head_mobile_ctl_search');
     const mobile_user_box = document.querySelector('.head_mobile_ctl_user');
-    const mobile_nav_box = document.querySelector('.head_mobile_nav');
+    const mobile_nav_box = document.querySelector('.modal_nav_button_div');
 
     mobile_search_box.setAttribute('style','display: none;');
     mobile_user_box.setAttribute('style','display: none;');
@@ -10,31 +10,19 @@ window.addEventListener('resize', function(){
 });  
 
 document.addEventListener('click',function(event){
+    const event_id = event.target.id;
+    const modal_button_list = ['modal_nav_button','modal_search_button','modal_user_button'];
 
-    if(event.target.classList.contains('mobile_nav_button')){
+    // test 
+    if(modal_button_list.some(name => event_id)){
+        const modal_content = '.' + event_id + '_div'
         const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_nav').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_nav').style.display = "none";
-        }else{
-            parent_div.querySelector('.head_mobile_nav').style.display = "block";
-        }
-    }
+        console.log(modal_content);
 
-    if(event.target.classList.contains('mobile_search_button') || event.target.classList.contains('search_cancel_button') ){
-        const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_ctl_search').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_ctl_search').style.display = "none";
+        if(parent_div.querySelector(modal_content).style.display === "block" ){
+            parent_div.querySelector(modal_content).style.display = "none";
         }else{
-            parent_div.querySelector('.head_mobile_ctl_search').style.display = "block";
-        }
-    }
-
-    if(event.target.classList.contains('mobile_user_button')){
-        const parent_div = event.target.closest('.head_body');
-        if(parent_div.querySelector('.head_mobile_ctl_user').style.display === "block" ){
-            parent_div.querySelector('.head_mobile_ctl_user').style.display = "none";
-        }else{
-            parent_div.querySelector('.head_mobile_ctl_user').style.display = "block";
+            parent_div.querySelector(modal_content).style.display = "block";
         }
     }
 
