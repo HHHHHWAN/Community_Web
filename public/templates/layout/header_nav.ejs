@@ -55,8 +55,7 @@
                     검색
                     <div class="head_ctl_search">
                         <form action="/search" method="get">
-                            <img src="../public/img/search-icon.png" class="search-icon" style="width: 12px; object-fit: contain; margin-right: 5px;" alt="검색">
-                            <input type="text" name="search_keyword" class="search_box" placeholder="검색" required>
+                            <input class="search_box" type="text" name="search_keyword"  placeholder="내용을 입력해주세요." required>
                             <div style="display:flex; width: 100%; justify-content: right;">
                                 <button class="search_button" type="submit">검색</button>
                                 <button class="search_cancel_button" type="button">취소</button>
@@ -74,10 +73,10 @@
                 <div class="modal_user_button_div">
                     <div class="head_ctl_user">
                         <% if (nickname) {%>
-                            <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
+                            <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
                             <div><a href="/logout">로그아웃</a></div>
                         <% } else {%>
-                            <div style="font-weight: bolder; border-bottom: 2px solid rgba(70, 69, 69, 0.74);">비회원</div>
+                            <div style="font-weight: bolder; border-bottom: 1px solid black; color: rgb(118, 145, 129); ;">비회원</div>
                             <div><a href="" class="login_href">로그인</a> </div>
                             <div><a href="" class="signup_href">회원가입</a></div>
                         <%} %>
@@ -91,7 +90,5 @@
 </header>
 
 <script src="/public/js/header_nav.js">
-
-    
 
 </script>

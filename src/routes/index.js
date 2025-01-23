@@ -16,7 +16,6 @@ const upload = require('../middleware/upload_multer');
 // ------------------------------------------------------------
 
 // 로그인 관련
-
 router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
 router.post('/login',user_Controller.setLogin_page); 
@@ -27,13 +26,17 @@ router.get('/logout',user_Controller.getLogout);
 router.get('/login/:social_url',user_Controller.getSocialLogin);
 router.get('/login/:social_url/callback',user_Controller.setSocialLogin);
 
-//api 호출 라우터
+//openWeatherApi
 router.get('/api/weather', async (req, res) => {
     const lat = parseInt(req.query.lat);
     const lon = parseInt(req.query.lon);
+    const city = req.query.city || undefined;
 
     try{
-        const api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`);
+        var api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API_KEY}`);
+        if(city){
+            api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}`);
+        }
 
         if(!api_Response.ok){
             throw new Error(`API HTTP error ! status : ${api_Response.status}`)
@@ -74,8 +77,12 @@ router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 router.delete('/delete/:content_id', set_Controller.setInvisiblyctl);
 
 
-//comment 
+//comment delete
 router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
+
+// comment put
+router.post('/reply/edit/:comment_id?', login_Check ,set_Controller.setCreateComment);
+// comment create
 router.post('/reply/:contents_id/:comment_id?', login_Check ,set_Controller.setCreateComment);
 
 //image upload

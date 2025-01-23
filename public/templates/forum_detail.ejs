@@ -1,5 +1,5 @@
 
-<% title = 'post'%>
+<% title = Contents.title %>
 
 <link rel="stylesheet" href="/public/css/forum_detail.css">
 
@@ -168,6 +168,11 @@
         getPostload("<%= pagetype %>","<%= Contents.id %>");
         reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");
     });
+
+    const nav_button = document.getElementById("<%= pagetype %>");
+	const mobile_nav_button = document.getElementById("mobile_<%= pagetype %>");
+	mobile_nav_button.setAttribute('style','border-bottom: 2px solid rgb(161, 201, 176);');
+	nav_button.setAttribute('style','border-bottom: 2px solid rgb(161, 201, 176);');
 </script>
 
 <script src="/public/js/forum_detail_post.js"></script>

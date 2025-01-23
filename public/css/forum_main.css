@@ -27,8 +27,9 @@
         align-items: center;
         justify-content: center;
 
+        background-color: rgb(223, 244, 231);
+
         border-radius: 20px;
-        border: 1px solid rgba(44, 44, 44, 0.644);
 
     }.weather_img{
         width: 130px;
@@ -37,8 +38,8 @@
         line-height: 0.8;
         font-size: 30px;
     }.weather_detail div{
-        border-bottom: 1px solid rgb(135, 211, 141);
-        margin-top: 5px;
+        border-bottom: 1px solid rgb(161, 201, 176);
+        margin-top: 8px;
     }
 
     .list_title_box{
@@ -70,7 +71,7 @@
     .weather_info_box{
 		position: absolute;
 		top: 110px;
-		border: 3px solid rgba(116, 121, 117, 0.712);
+		border: 2px solid rgb(144, 184, 159);
         background-color: white;
 		padding: 10px;
 		border-radius: 15px;
@@ -81,6 +82,8 @@
 	}.weather_icon{
         display: flex;
         justify-content: center;
+        background-color: rgb(223, 244, 231);
+        border-radius: 20px;
     }
     .weather_img{
         width: 80px;
@@ -88,7 +91,7 @@
     .weather_info{
         font-size: 25px;
     }.weather_detail div{
-        border-bottom: 1px solid rgb(135, 211, 141);
+        border-bottom: 1px solid rgb(161, 201, 176);
     }
 
     .list_title_box{

@@ -41,13 +41,14 @@ exports.setCreateContent = (req,res) => {
 
 // reply ctl
 exports.setCreateComment = (req,res) => {
-    const content_id = req.params.contents_id;
-    const comment_id = req.params.comment_id;
+    const content_id = parseInt(req.params.contents_id);
+    const comment_id = parseInt(req.params.comment_id) || null;
     const comment_text = req.body.tag_text || '' + req.body.comment_text ;
     
 
-    if(!comment_id){
-        Content_Service.create_comment(comment_text, req.session.user.user_id, content_id, comment_id,(err) => {
+    if(content_id){
+        //comment create 
+        Content_Service.create_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
             if (err){
                 console.error("( setCreateComment ) => ( create_comment ) : ", err);
 
@@ -57,7 +58,8 @@ exports.setCreateComment = (req,res) => {
             return res.redirect('back');            
         });
     } else {
-        Content_Service.re_create_comment(comment_text, comment_id, req.session.user.user_id,(err, result) => {
+        // comment modify
+        Content_Service.re_create_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
             if (err){
                 console.error("( setCreateComment ) => ( re_create_comment ) : ", err);
 

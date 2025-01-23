@@ -16,7 +16,7 @@ exports.request_token_social_github = async (request_code) => {
                 client_id: process.env.GITHUB_CLIENT_ID,
                 client_secret : process.env.GITHUB_CLIENT_SECRET,
                 code : request_code,
-                redirect_uri : 'http://localhost:2200/login/github/callback',
+                redirect_uri : `${process.env.DOMAIN}/login/github/callback`,
             }),
         });
         

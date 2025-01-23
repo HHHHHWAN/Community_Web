@@ -148,7 +148,6 @@ const User_model = {
         const read_DB_promise = read_DB.promise();
 
         try{
-
             /// setLogin_page -> process
             if (username){
                 const query = `select * from User where username = ? `;
@@ -243,7 +242,7 @@ const User_model = {
             }
         }catch(err){
             // 시스템 에러 
-            console.log(" ( set_loginUser )  : 로그인 처리 에러");
+            console.error(" ( set_loginUser )  : 로그인 처리 에러 ", err);
             callback(true,'login_request_fail');
         }
     },
@@ -323,7 +322,7 @@ const User_model = {
             const config_info = {
                 response_type : 'code',
                 client_id : process.env.NAVER_CLIENT_ID,
-                redirect_uri : 'http://localhost:2200/login/naver/callback',
+                redirect_uri : process.env.DOMAIN + '/login/naver/callback',
                 state: process.env.NAVER_CLIENT_STATE
             }
 

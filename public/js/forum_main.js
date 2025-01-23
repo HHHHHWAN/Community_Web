@@ -1,15 +1,26 @@
 // forum_main.ejs script file
 
+async function callWeatherApi(lat, lon, city) {
+    try{
+        const params = {
+            lat : lat,
+            lon : lon
+        };
 
-function callWeatherApi(lat,lon) {
-    fetch(`/api/weather?lat=${lat}&lon=${lon}`)
-    .then( Response => {
-        if(!Response.ok){
+        if(city){
+            params.city = city;
+        }
+        const endpoint = new URLSearchParams(params).toString();
+        
+        const api_Response = await fetch('/api/weather?' + endpoint );
+
+        if(!api_Response.ok){
             throw new error(`fail weather api Connect Status : ${Response.status}`);
         }
-        return Response.json();
-    })
-    .then( data => {
+
+        const data = await api_Response.json();
+        
+
         const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = '';
         const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
@@ -32,14 +43,14 @@ function callWeatherApi(lat,lon) {
             </div>
         </div>
         `;
-    })
-    .catch(err => {
+
+    }catch(err){
         console.log(err);
         const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = `
             <div> 오늘의 날씨를 불러올 수 없어요.. </div>
         `;
-    });
+    }
 }
 
 function getLocation() {
@@ -54,7 +65,7 @@ function showPosition(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     
-    callWeatherApi(latitude,longitude);
+    callWeatherApi(latitude,longitude,null);
 }
 
 function showError(error) {
@@ -72,7 +83,7 @@ function showError(error) {
             console.log("알 수 없는 오류가 발생");
             break;
     }
-    callWeatherApi(37.6,126.9);
+    callWeatherApi(37.566381,126.977717,'Seoul');  
 }
 
 document.addEventListener('DOMContentLoaded',function(){

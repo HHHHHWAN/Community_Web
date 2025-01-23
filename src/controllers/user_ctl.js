@@ -8,7 +8,7 @@ const user_DB = require("../service/User_Service");
 // env 연동
 require('dotenv').config();
 
-//login get
+//'/login' get
 exports.getLogin_page = ( req , res ) => {
     const returnUrl = req.query.returnUrl || ''; 
     const history = req.session.login || {}; 
@@ -24,7 +24,7 @@ exports.getLogin_page = ( req , res ) => {
 };
 
 
-//login post
+//'/login' post
 exports.setLogin_page = async ( req , res ) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -38,11 +38,11 @@ exports.setLogin_page = async ( req , res ) => {
 
                 return res.redirect(`/login?error=${issue}&request=${request}`);
             }
-            res.redirect(`/`);
+            res.status(201).redirect(`/`);
         }, username, password , request);
 
     }else{
-        res.redirect('back');
+        res.status(400).redirect('back');
     }
 };
 

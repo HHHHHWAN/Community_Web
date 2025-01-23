@@ -1,6 +1,6 @@
 /// Server start js
 const express = require('express');
-
+require('dotenv').config()
 // layouts setting
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
@@ -53,7 +53,7 @@ app.use((req, res) => {
 
 
 async function startserver(){
-	const port = 33003;
+	const port = process.env.EXPRESS_PORT;
 
 	// 웹 서버 ip port 세팅 
 	await app.listen(port, '0.0.0.0',() => {
