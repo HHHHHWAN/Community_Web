@@ -1,9 +1,5 @@
 // js/forum_detail_comment.js
 
-function loadcommentlist(){
-
-};
-
 document.querySelectorAll('.create_subcomment_button').forEach(button => { 
     button.addEventListener('click',function(){
         const sub_comment_div = this.parentElement.nextElementSibling;
@@ -72,13 +68,6 @@ document.addEventListener('click', function(event){
         });
     }
 });
-
-
-// function editcomment(){
-
-
-
-// };
 
 
 

@@ -1,5 +1,5 @@
 
-<% title = Contents.title %>
+<% title = Content.title %>
 
 <link rel="stylesheet" href="/public/css/forum_detail.css">
 
@@ -18,25 +18,31 @@
     <div class="forum_detail_box">
 
         <div id="forum_detail_user">
-            <div><a class="user_href" id="forum_detail_user_nickname"></a></div>
+            <div><a class="user_href" id="forum_detail_user_nickname"><%= Content.nickname%></a></div>
             <div><span><b>·</b></span></div>
-            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"></span></div>
+            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"><%= Content.date_create %></span></div>
             <div><span><b>·</b></span></div>
-            <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count"></span></div>
+            <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count">&nbsp;<%= Content.view_count %></span></div>
         </div>
         
-        <div class="forum_detail_title_box"><h1 id="forum_detail_title"></h1></div>
+        <div class="forum_detail_title_box"><h1 id="forum_detail_title"><%= Content.title %></h1></div>
 
 
         <div class="forum_detail_text_box">
-            <div id="forum_detail_text"></div>
-        </div><br>
+            <div id="forum_detail_text"
+            style="padding: 10px; overflow-y: auto;"
+            role="textbox" aria-multiline="true">
+                <%- Content.text%>
+            </div>
+        </div>
+        
+        <br>
 
         <div class="forum_detail_ctl">
-            <% if (userId == Contents.user_id) {%>
+            <% if (userId == Content.user_id) {%>
                 <div class="forum_detail_ctl_edit">
-                    <a href="/<%= Contents.content_type %>/edit/<%= Contents.id %>"><button type="button" class="forum_button_2">수정</button></a>
-                    <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Contents.content_type%>','<%= Contents.id %>')">삭제</button>
+                    <a href="/<%= Content.content_type %>/edit/<%= Content.id %>"><button type="button" class="forum_button_2">수정</button></a>
+                    <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Content.content_type%>','<%= Content.id %>')">삭제</button>
                 </div>
             <% } %>
             <div class="forum_detail_ctl_return">           
@@ -48,7 +54,7 @@
             
             <div>
                 <% if (userId) {%>
-                    <form action="/reply/<%= Contents.id %>/" method="POST" id="form1">
+                    <form action="/reply/<%= Content.id %>/" method="POST" id="form1">
                         <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
                         <div><button type="submit" class="forum_button_2" form="form1">댓글 작성</button></div>
                     </form> 
@@ -71,7 +77,7 @@
                                         <input type="hidden" class='comment_id_hidden' value="<%= row.id %>">
                                         <div style="display : flex; width: 100%;">
                                             <div style="flex: 3;">
-                                                <% if (Contents.user_id === row.user_id) {%>
+                                                <% if (Content.user_id === row.user_id) {%>
                                                     <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
                                                 <% } %>
                                                 <a class="user_href" href="/user/<%= row.user_id %>"><%= row.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= row.create_at %>
@@ -104,7 +110,7 @@
                                                         <input type="hidden" class="comment_id_hidden" value="<%= children.id %>">
                                                         <div style="display : flex; width: 100%;">
                                                             <div style="flex: 3;">
-                                                                <% if (Contents.user_id === children.user_id) {%>
+                                                                <% if (Content.user_id === children.user_id) {%>
                                                                     <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
                                                                 <% } %>
                                                                 <a class="user_href" href="/user/<%= children.user_id %>"><%= children.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%=children.create_at %>
@@ -165,7 +171,6 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function(){
-        getPostload("<%= pagetype %>","<%= Contents.id %>");
         reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");
     });
 
@@ -175,7 +180,7 @@
 	nav_button.setAttribute('style','border-bottom: 2px solid rgb(161, 201, 176);');
 </script>
 
-<script src="/public/js/forum_detail_post.js"></script>
+<!-- <script src="/public/js/forum_detail_post.js"></script> // getPostload("pagetype ","Content.id");-->
 <script src="/public/js/forum_detail_util.js"></script>
 <script src="/public/js/forum_detail_list.js"></script>
 <script src="/public/js/forum_detail_comment.js"></script>

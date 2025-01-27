@@ -28,8 +28,8 @@ router.get('/login/:social_url/callback',user_Controller.setSocialLogin);
 
 //openWeatherApi
 router.get('/api/weather', async (req, res) => {
-    const lat = parseInt(req.query.lat);
-    const lon = parseInt(req.query.lon);
+    const lat = parseFloat(req.query.lat);
+    const lon = parseFloat(req.query.lon);
     const city = req.query.city || undefined;
 
     try{
@@ -51,8 +51,10 @@ router.get('/api/weather', async (req, res) => {
     }
 });
 
+// API POST LIST GET
 router.get('/api/:pagetype', urlType_Check, get_Controller.api_getContents);
-router.get('/api/:pagetype/:Content_id', urlType_Check, get_Controller.getDetailPost);
+// API POST GET **
+// router.get('/api/:pagetype/:Content_id', urlType_Check, get_Controller.getDetailPost);
 
 
 // ( 요청 url, 실행될 메서드 )
@@ -97,11 +99,8 @@ router.get('/:pagetype/edit/:content_id?', login_Check, urlType_Check, get_Contr
 router.post('/:pagetype/edit/:content_id?' , login_Check, urlType_Check, set_Controller.setCreateContent);
 
 
-// 게시글 내용
+// Post GET
 router.get('/:pagetype/:id', urlType_Check, get_Controller.getDetailContents);
-
-
-
 
 
 

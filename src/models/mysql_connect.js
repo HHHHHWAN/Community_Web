@@ -30,9 +30,9 @@ const write_DB = DB.createConnection({
 
 
 read_DB.connect((err) => {
-if (err) { // promise 값 check 
-    console.error('MySQL 연결 실패 : ', err);
-    return;
+    if (err) { // promise 값 check 
+        console.error('MySQL 연결 실패 : ', err);
+        return;
     }
     console.log('MySql ( read_DB ) Connect Success');   
 });
@@ -41,8 +41,8 @@ write_DB.connect((err) => {
     if (err) { // promise 값 check 
         console.error('MySQL 연결 실패 : ', err);
         return;
-        }
-        console.log('MySql ( write_DB ) Connect Success');   
+    }
+    console.log('MySql ( write_DB ) Connect Success');   
 });
 
 

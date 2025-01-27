@@ -74,9 +74,7 @@ exports.getTypeContents = (req, res) => {
 };
 
 
-
-
-// Detail View 정적 페이지 반환
+// GET POST, EJS 
 exports.getDetailContents = (req, res) => {
     const pagetype = req.params.pagetype; 
     const returnURL = {
@@ -84,11 +82,12 @@ exports.getDetailContents = (req, res) => {
         page : req.query.page || 1
     };
     const content_id = req.params.id; 
+    
+    const view_history = req.session.view_history || [];
 
-    Content_Service.get_record(content_id, "view", (err,results) => {
+    Content_Service.get_record(content_id, view_history, "view", (err, results, view_history_return) => {
         if (err) {
             console.error("( getDetailContents ) => ( get_record ) : ", err );
-
             return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
         }
 
@@ -96,39 +95,41 @@ exports.getDetailContents = (req, res) => {
             return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400 });
         }
 
+        req.session.view_history = view_history_return;
+
         //get Content Comments
         Content_Service.get_comment_list(content_id, (Comment_Info) => {
-
-            res.render('forum_detail.ejs' , { Contents : results, Comment_Info, pagetype , returnURL });
+            res.render('forum_detail.ejs' , { Content : results, Comment_Info, pagetype , returnURL });
         });
     });
 };
 
-exports.getDetailPost = ( req, res) => {
-    const content_id = req.params.Content_id;
+//  API POST
+// exports.getDetailPost = ( req, res) => {
+//     const content_id = req.params.Content_id;
 
-    Content_Service.get_record(content_id, "view", (err,results) => {
-        if (err) { 
-            console.error("( getDetailPost ) => ( get_record ) : ",err);
-            return res.status(500).json({
-                Message : 'query output error',
-                Content_object : results
-            });
-        }
+//     Content_Service.get_record(content_id, "view", (err,results) => {
+//         if (err) { 
+//             console.error("( getDetailPost ) => ( get_record ) : ",err);
+//             return res.status(500).json({
+//                 Message : 'query output error',
+//                 Content_object : results
+//             });
+//         }
 
-        if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
-            return res.status(400).json({
-                Message : 'invaild Post',
-                Content_object : results
-            });
-        }
+//         if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
+//             return res.status(400).json({
+//                 Message : 'invaild Post',
+//                 Content_object : results
+//             });
+//         }
 
-        res.status(200).json({ 
-            Message : "Post Response OK", 
-            Content_object : results
-        });
-    });
-};
+//         res.status(200).json({ 
+//             Message : "Post Response OK", 
+//             Content_object : results
+//         });
+//     });
+// };
 
 
 
@@ -137,8 +138,10 @@ exports.getCreateContent = (req, res) => {
     const pagetype = req.params.pagetype;
     const content_id = req.params.content_id;
 
+    const view_history = req.session.view_history || [] ;
+
     if (content_id){
-        Content_Service.get_record(content_id, "edit" ,(err, post_info) =>{
+        Content_Service.get_record(content_id, view_history, "edit" ,(err, post_info) =>{
            
             if(err){
                 console.error("( getCreateContent ) => ( get_record ) : ", err );
