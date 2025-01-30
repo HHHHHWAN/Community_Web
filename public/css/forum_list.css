@@ -18,8 +18,6 @@
         border-radius: 4px;
     
     }
-
-
     .forum_list_box{
         min-height: 900px;
         margin: 10px;
@@ -34,26 +32,13 @@
         height: 70px;
         background-color: white;
         border-radius: 3px;
-    }.forum_list_box_detail { /* title view count box */
-        display: grid;
-        grid-template-columns: 80% 20%;
-        font-size: 13px;
-        margin-top: 5px;
-    }.post_title{
-        white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
-        overflow: hidden;         /* 넘치는 텍스트를 숨김 */
-        text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
-    }.post_count_info{
-        display: flex;
-        align-items: center;
-        font-size: 10px;
-    }.post_count_info img{
-        width: 11px;
     }
 
+}
 
 
-}@media (min-width: 768px){
+
+@media (min-width: 768px){
 
     .forum_describe{
         min-width: 120px;
@@ -86,22 +71,7 @@
         height: 70px;
         background-color: white;
         border-radius: 3px;
-    }.forum_list_box_detail {
-        display: grid;
-        grid-template-columns: 80% 20%;
-        font-size: 16px;
-        margin-top: 5px;
-    }.post_title{
-        white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
-        overflow: hidden;         /* 넘치는 텍스트를 숨김 */
-        text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
-    }.post_count_info{
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-    }.post_count_info img{
-        /* img size 14px */
-    }       
+    }
 
 
 }
@@ -175,14 +145,13 @@
 /* 목록 스타일 */
 ul {
     list-style-type: square;
-    padding: 5px;
 }
 
 ul li {
-    margin-bottom: 10px;
-    height: 70px;
-    list-style-type: none ;
-    border-top: 1px solid rgba(0, 0, 0, 0.274);
+    min-height: 70px;
+    padding-left: 10px;
+    list-style-type: none;
+    border-top: 2px solid rgba(167, 163, 163, 0.521);
 }
 span {
     color: gray;
@@ -191,3 +160,4 @@ span {
 .page_a_button{
     font-size: large;
 }
+

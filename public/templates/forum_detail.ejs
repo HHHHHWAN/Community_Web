@@ -149,15 +149,32 @@
 
 
     <div class="forum_detail_box">
-        <h3>    
-            <% switch (returnURL.pagetype) { case 'qa': %>  Q & A
-            <%; break; case 'info': %> 정보
-            <%; break; case 'life': %> 생활
-            <%; break; default : %>	인기
-            <%}%>
-        </h3> 게시판 목록 
-            
-        <div>
+        <div style="display: flex;">
+            <div style="min-width: 100px;">
+                <div style="font-size: 20px; font-weight: bold; color:rgb(161, 201, 176);">
+                    <% switch (returnURL.pagetype) { case 'qa': %>  Q & A
+                    <%; break; case 'info': %> 정보
+                    <%; break; case 'life': %> 생활
+                    <%; break; default : %>	인기
+                    <%}%>
+                </div>
+                게시판 목록 
+             </div>
+             <div style="width: 100%; display: flex; align-items: center; justify-content: right;">
+
+                <% if (nickname && (pagetype !== "popular")) { %>
+                    <div>
+                        <a href="<%= Content.content_type %>/edit"><button class="forum_button" >글쓰기</button></a>
+                    </div>
+                <% }else if (pagetype !== "popular") {%>
+                    <div>
+                        <a href="/login"><button class="forum_button">글쓰기</button></a>
+                    </div>
+                <%} else {}%>
+             </div>
+        </div>
+          
+        <div style="margin-top: 15px;">
             <ul id="content_list">
             </ul>
         </div>    

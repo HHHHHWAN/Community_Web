@@ -87,32 +87,39 @@ function reloadPage(pagetype, page){
         })
         .then(data => {
             const contents_list_ul = document.getElementById('content_list');
-            contents_list_ul.innerHTML = ''; // 기존 목록 공백 처리
+            contents_list_ul.innerHTML = ''; 
 
-            // 리스트 업데이트 
             data.contents.forEach(content_row => {
                 const content_list_li = document.createElement('li');
                
                 content_list_li.innerHTML = `
                     <div class="forum_list_box_content">
                         <div><span><a class="user_href" href="/user/${content_row.user_id}">${content_row.nickname}</a><b>&nbsp·&nbsp</b>${content_row.date_create}</span></div>
-                        <div id="forum_list_box_detail">
-                            <div>
-                            <a href="/${content_row.content_type}/${content_row.id}?pagetype=${pagetype}&page=${page}">${content_row.title}</a>
+                        <div class="forum_list_box_detail">
+                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <a href="/${content_row.content_type}/${content_row.id}?pagetype=${pagetype}&page=${page}">${content_row.title}</a>
                             </div>
-                            <div style="justify-content: right; display:flex ; font-size: 14px; align-items: center;">
-                            <img src="../public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp${content_row.view_count}
+                        </div>
+                        <div style="display:flex; width=100%;">
+                            <div></div>
+                            <div style="display: flex; width: 100%; justify-content: right; font-size: 12px;">
+                                <img src="../public/img/comment-icon.png" width="11px" style="object-fit:contain;">&nbsp;${content_row.comment_count ? content_row.comment_count : 0}
+                                &nbsp;<span><b>·</b></span>&nbsp;
+                                <img src="../public/img/eye-icon.png" width="11px" style="object-fit:contain;">&nbsp;${content_row.view_count}
                             </div>
                         </div>
                     </div>
                 `;
-                contents_list_ul.appendChild(content_list_li); // li 추가
+                contents_list_ul.appendChild(content_list_li); 
             });
             // 페이지 업데이트
             page_reload(pagetype, data.page, data.totalPages);
         })
         .catch(error => {
             console.error('error fetching data :', error);
+            const contents_list_ul = document.getElementById('content_list');
+            contents_list_ul.innerHTML = ' 데이터를 불러오는데, 실패했습니다. ';
+
         });
 }
 

@@ -22,7 +22,9 @@ ul {
 ul li {
     font-size: 13px;
     min-height: 30px;
-    list-style-type: none ;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    list-style-type: none;
     border-top: 2px solid rgba(167, 163, 163, 0.521);
 }
 
@@ -35,16 +37,31 @@ ul li {
         align-items: center;
     }
     p::before{
-        border-bottom: 1px solid #4CAF50;
+        border-bottom: 1px solid rgb(161, 201, 176);
         flex: 11;
         content: "";
         margin: 0 10px;
     }
     p::after{
-        border-bottom: 1px solid #4CAF50;
+        border-bottom: 1px solid rgb(161, 201, 176);
         flex: 1;
         content: "";
         margin: 0 10px;
+    }
+
+    .forum_detail_box{
+        margin: 10px;
+        background-color: rgb(255, 255, 255);
+        padding-top: 20px;
+    }
+
+    .forum_comment_box{
+        border-bottom: 1px solid rgb(161, 201, 176);
+    }
+
+    .forum_list_box_detail {
+        font-size: 12px;
+        margin-top: 5px;
     }
 
 }
@@ -56,29 +73,33 @@ ul li {
         align-items: center;
     }
     p::before{
-        border-bottom: 1px solid rgb(99, 98, 98);
+        border-bottom: 1px solid rgba(167, 163, 163, 0.521);
         flex: 11;
         content: "";
         margin: 0 10px;
     }
     p::after{
-        border-bottom: 1px solid rgb(99, 98, 98);
+        border-bottom: 1px solid rgba(167, 163, 163, 0.521);
         flex: 1;
         content: "";
         margin: 0 10px;
     }
 
+    .forum_detail_box{
+        margin: 10px;
+        background-color: rgb(255, 255, 255);
+        padding: 20px;
+    }
+
+    .forum_list_box_detail {
+        width: 100%;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
 }
 
-/* 게시물 내용 전체 */
-.forum_detail_box{
-    margin: 10px;
 
-    background-color: rgb(255, 255, 255);
-    border-radius: 4px;
-    padding: 20px;
-
-}
 
 /* 유저 정보란 */
 #forum_detail_user{
@@ -91,7 +112,7 @@ ul li {
 
 /* 게시물 본문 */
 .forum_detail_text_box{
-    min-height: 800px;
+    min-height: 500px;
 
     padding-top: 20px;
     border-top: 1px solid rgb(99, 98, 98);
@@ -165,23 +186,9 @@ ul li {
 
 /* 게시물 li 내부 박스 */
 .forum_list_box_content {
-    margin-top: 10px;
-    display: block;
-    height: 50px;
-    background-color: rgba(155, 52, 52, 0);
-    border-radius: 3px;
-}
-/* 게시물 제목 라인 박스 */
-#forum_list_box_detail {
-    display: grid;
-    grid-template-columns: 85% 15%;
-    font-size: 16px;
-    margin-top: 5px;
-
-}#forum_list_box_detail div{
-    white-space: nowrap;      /* 텍스트를 한 줄로 유지 */
-    overflow: hidden;         /* 넘치는 텍스트를 숨김 */
-    text-overflow: ellipsis;  /* 넘치는 부분을 '...'으로 표시 */
+    margin: 10px;
+    min-height: 50px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 

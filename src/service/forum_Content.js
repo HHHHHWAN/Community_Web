@@ -15,7 +15,7 @@ async function detail_add_viewcount(content_id){
 }
 
 // XSS check
-function detail_check_textbox(text){
+function XSS_check_string(text){
     const { JSDOM } = require('jsdom');
     const DOMPurify = require('dompurify');
     const window_object = new JSDOM('').window;
@@ -164,7 +164,7 @@ const Content = {
                     detail_add_viewcount(Content_id);
                 }
                 // 날짜 정보 가공
-                results.date_create = data_utils.date_before(content_record.date_create);
+                content_record.date_create = data_utils.date_before(content_record.date_create);
 
                 return callback(null, content_record, view_history); // 배열이 아닌 인덱스 0으로 반환
             }
@@ -218,13 +218,12 @@ const Content = {
     //새 게시물 insert 쿼리
     create_content: (title, text, content_type , user_id , callback) => {
 
-        // XSS 
+        const xss_check_title = XSS_check_string(title);
+        const xss_check_text = XSS_check_string(text);
 
-        const xss_check_title = detail_check_textbox(title);
-        const xss_check_text = detail_check_textbox(text);
         const query = `insert into Content (title, text, content_type , user_id ) values (?, ?, ?, ?)`;
 
-        write_DB.query(query, [xss_check_title, xss_check_text, content_type , user_id ], (err, result) => {
+        write_DB.query(query, [ xss_check_title, xss_check_text, content_type, user_id ], (err, result) => {
             if (err) {
                 return callback(err, null);
             }
@@ -234,8 +233,13 @@ const Content = {
     
     //게시물 수정 
     re_create_content: (title, text , content_id , callback ) => {
+
+        const xss_check_title = XSS_check_string(title);
+        const xss_check_text = XSS_check_string(text);
+
         const query = `update Content set title = ?, text = ? where id = ? `;
-        write_DB.query(query,[ title, text ,content_id ],(err) => {
+
+        write_DB.query(query,[ xss_check_title, xss_check_text, content_id ],(err) => {
             if (err){
                 return callback(err);
             }
@@ -245,15 +249,22 @@ const Content = {
     },
 
     create_comment: ( comment_text, user_id , content_id , comment_id, callback) => {
+
+        const xss_check_comment = XSS_check_string(comment_text);
+
         const query = `insert into Comment (comment, user_id, content_id, parent_id ) values (?, ?, ?, ?)`;
-        write_DB.query(query, [ comment_text, user_id , content_id, comment_id ] , (err) => {
+        write_DB.query(query, [ xss_check_comment, user_id , content_id, comment_id ] , (err) => {
             callback(err);
         });
     },
     
     re_create_comment: ( comment_text, comment_id , user_id , callback) => {
+
+        const xss_check_comment = XSS_check_string(comment_text);
+
         const query = `update Comment set comment = ? where id = ? AND user_id = ? `;
-        write_DB.query(query, [ comment_text, comment_id , user_id ] , (err, result) => {
+
+        write_DB.query(query, [ xss_check_comment, comment_id , user_id ] , (err, result) => {
             callback(err,result);
         });
     },

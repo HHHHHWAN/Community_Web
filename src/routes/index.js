@@ -53,9 +53,6 @@ router.get('/api/weather', async (req, res) => {
 
 // API POST LIST GET
 router.get('/api/:pagetype', urlType_Check, get_Controller.api_getContents);
-// API POST GET **
-// router.get('/api/:pagetype/:Content_id', urlType_Check, get_Controller.getDetailPost);
-
 
 // ( 요청 url, 실행될 메서드 )
 router.get('/' ,main_Controller.getMyPagelist); // app urlconf
@@ -63,11 +60,6 @@ router.get('/' ,main_Controller.getMyPagelist); // app urlconf
 // get popular page 
 router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
-
-router.get('/testpage', (req, res) => {
-    res.render('testpage', { layout : false});
-});
-
 
 // userinfo
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);

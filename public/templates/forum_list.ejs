@@ -9,7 +9,7 @@
 	<div class="forum_list_box">
 		<div class="forum_list_box_info"> 
 
-			<% if (nickname && (pagetype !== "popular")) { %>
+			<% if (userId && (pagetype !== "popular")) { %>
 				<div>
 					<a href="<%= pagetype %>/edit"><button class="forum_button" >글쓰기</button></a>
 				</div>
@@ -17,8 +17,7 @@
 				<div>
 					<a href="/login"><button class="forum_button">글쓰기</button></a>
 				</div>
-			<%} else {%>
-			<% }%>
+			<%} else {}%>
 				
 			<div class="forum_info_top">
 				<div class="forum_describe">		
@@ -85,15 +84,16 @@
 								<span><b>·</b></span>
 								<%= content.date_create %> 
 							</div>
-							<div class="forum_list_box_detail">
-								<div class="post_title">
+							<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
 								<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>"><%= content.title %></a>
-								</div>
-								
-								<div class="post_count_info" style="justify-content: right; display:flex ; align-items: center;" >
-									<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
+							</div>
+
+							<div style="display: flex; width: 100%;">
+								<div></div>
+								<div style="display: flex; width: 100%; justify-content: right; font-size: 12px;">
+									<img src="public/img/comment-icon.png" width="12px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 									&nbsp;<span><b>·</b></span>&nbsp;
-									<img src="public/img/eye-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
+									<img src="public/img/eye-icon.png" width="12px" style="object-fit:contain;">&nbsp;<%= content.view_count %>
 								</div>
 							</div>
 						</div>
