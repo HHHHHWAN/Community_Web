@@ -12,8 +12,11 @@
     - 백엔드에서 사용되는 프레임워크, 도구 학습
     - 실제 CI/CD 배포 작업
 
-4. 기록
-    - [작업 기록](https://evening-adapter-5d0.notion.site/1061a3736ea580208a14e89c080b27fe?v=fff1a3736ea581bcb55d000c37d1d778)
+4. 정리
+    - 기록
+        - [작업 기록](https://evening-adapter-5d0.notion.site/1061a3736ea580208a14e89c080b27fe?v=fff1a3736ea581bcb55d000c37d1d778)
+    - 배포 도메인
+        - [https://mypagehhh.shop](https://mypagehhh.shop)
 
 ## 구성
 1. 환경 ( 프레임 워크 )
@@ -26,8 +29,9 @@
        - Redis
          
     2. 아키텍처
-       - SSR 서버
-         ...
+       - 구조
+         ![구상도](https://github.com/user-attachments/assets/f6f23a1f-9a37-4aee-b503-93619b302d37)
+
 
 3. 커뮤니티 웹 어플리케이션
     - 메인페이지
@@ -92,7 +96,7 @@
 
 5. MySql
    1. ERD
-       - ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
+      ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
    2. 테이블
       - Content
       - User
@@ -116,5 +120,4 @@
            - Docker Hub Image 배포
            - docker-compose 작성
            - 환경변수 파일 작성
-    2. PROD 환경 구축
 
