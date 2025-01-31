@@ -1,5 +1,7 @@
 //  utils/dateUtils.js
 
+const e = require("connect-flash");
+
 
 const data_utils = {
 
@@ -48,7 +50,21 @@ const data_utils = {
                 row.comment = "사용자에 의해 삭제된 댓글입니다.";
             });
         return comments;
+    },
+
+    content_count_change : (value) => {
+        var result;
+
+        if( 1000 <= value ){
+            const count_k = Math.trunc( value / 1000 * 10 );
+            result = count_k / 10 + 'k';
+        }else{
+            result = value;
+        }
+        
+        return result;
     }
+
 }
 
 

@@ -35,11 +35,29 @@ const Content = {
     // main_page_listView
     get_mainpage_contents : ( callback ) => {
         const query = ` 
-            (select A.*, User.nickname from (select * from Content where content_type = 'qa' and visible = 1  order by date_create desc limit 5) A left join User on A.user_id = User.id)
-            union all
-            (select A.*, User.nickname from (select * from Content where content_type = 'life' and visible = 1  order by date_create desc limit 5)  A left join User on A.user_id = User.id) 
-            union all
-            (select A.*, User.nickname from (select * from Content where content_type = 'info' and visible = 1  order by date_create desc limit 5) A left join User on A.user_id = User.id) 
+            ( Select POST.*, User.nickname from (
+                select * from (
+                    Select * from Content where content_type = 'life' and visible = 1  order by date_create desc limit 5 ) POST 
+                    left join (
+                        Select content_id, count(*) as comment_count from Comment group by content_id) COMMENT
+                        on POST.id = COMMENT.content_id) POST 
+                        left join User on POST.user_id = User.id )
+            UNION ALL
+            ( Select POST.*, User.nickname from (
+                select * from (
+                    Select * from Content where content_type = 'info' and visible = 1  order by date_create desc limit 5 ) POST 
+                    left join (
+                        Select content_id, count(*) as comment_count from Comment group by content_id) COMMENT
+                        on POST.id = COMMENT.content_id) POST 
+                        left join User on POST.user_id = User.id )
+            UNION ALL
+            ( Select POST.*, User.nickname from (
+                select * from (
+                    Select * from Content where content_type = 'qa' and visible = 1  order by date_create desc limit 5 ) POST 
+                    left join (
+                        Select content_id, count(*) as comment_count from Comment group by content_id) COMMENT
+                        on POST.id = COMMENT.content_id) POST 
+                        left join User on POST.user_id = User.id )
         `;
         read_DB.query(query, (err, results) => {
             if (err) {
@@ -48,6 +66,9 @@ const Content = {
 
             results.forEach(row => {
                 row.date_create = data_utils.date_before(row.date_create);
+                // COUNT
+                row.view_count = data_utils.content_count_change(row.view_count);
+                row.comment_count = data_utils.content_count_change(row.comment_count);
             });
 
             return callback(null, results);
@@ -94,6 +115,9 @@ const Content = {
 
             results.forEach( row => {
                 row.date_create = data_utils.date_before(row.date_create);
+                // COUNT
+                row.view_count = data_utils.content_count_change(row.view_count);
+                row.comment_count = data_utils.content_count_change(row.comment_count);
             });
             
             read_DB.query(query_count, (err, results_2) => {
@@ -106,12 +130,13 @@ const Content = {
         });
     },
 
-    // 카테고리 게시판 페이지 리스트 호출
+    // 게시판 페이지 리스트 호출
     get_type: (pagetype, offset, order_type, callback) => {
 
         var order_column = 'date_create';
         var order_rule = 'DESC';
 
+        // Sort check
         switch(order_type){
             case "oldest_order" :
                 order_rule = 'ASC';
@@ -125,6 +150,8 @@ const Content = {
             default :
         }
 
+        // view count -> default column
+        // comment_count 
         const query = `
         select A.*, User.nickname from (
         select * from Content left join (
@@ -139,8 +166,14 @@ const Content = {
                 return callback(err, null);
             }
 
+            
             results.forEach( row => {
+                // DATE String 
                 row.date_create = data_utils.date_before(row.date_create);
+                // COUNT
+                row.view_count = data_utils.content_count_change(row.view_count);
+                row.comment_count = data_utils.content_count_change(row.comment_count);
+
             });
 
             return callback(null, results);

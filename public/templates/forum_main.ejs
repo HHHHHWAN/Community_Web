@@ -35,7 +35,7 @@
 
 	<div class="endbox">
 		<a href="/info"><h2>정보</h2></a>
-		<% const Info_Contents = Contents.filter( content => content.content_type === "info") %>
+		<% const Info_Contents = Contents.filter( content => content.content_type === 'info' ) %>
 		<% if ( Info_Contents.length){%>
 		<ul>
 			<% Info_Contents.forEach( content => { %>
@@ -61,7 +61,7 @@
 	
 	<div class="endbox">
 		<a href="/qa"><h2>Q&A</h2></a>
-		<% const Qa_Contents = Contents.filter( content => content.content_type === "qa") %>
+		<% const Qa_Contents = Contents.filter( content => content.content_type === 'qa' ) %>
 		<% if ( Qa_Contents.length){%>
 		<ul>
 			<% Qa_Contents.forEach( content => { %>
@@ -87,7 +87,7 @@
 
 	<div class="endbox">
 		<a href="/life"><h2>생활</h2></a>
-		<% const Life_Contents = Contents.filter( content => content.content_type === "life") %>
+		<% const Life_Contents = Contents.filter( content => content.content_type === 'life' ) %>
 		<% if ( Life_Contents.length){%>
 		<ul>
 			<% Life_Contents.forEach( content => { %>
