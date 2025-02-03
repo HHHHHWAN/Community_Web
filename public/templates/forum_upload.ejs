@@ -9,29 +9,30 @@
         padding: 10px;
         margin-bottom: 10px;
     }
+    .title_input{
+        font-size: 12px;
+        border: 1px solid black;
+    }
 
     .textbox{
         background-color: white;
         border-radius: 5px;
-        padding: 10px;
+        border: 1px solid black;
         width: 100%;
-        height: 800px;
+        padding: 8px;
+        margin: 8px;
+        height:800px;
+        overflow-y: auto;
+
+    }.textbox:hover{
+        cursor:text;
     }
-    #Content_text_box{
+    .forum_post_box{
         margin: 10px;
-    }
-    .Content_image_box{
-        display: flex;
-        min-height: 20px;
-        align-items: center;
         padding: 5px;
-        border-radius: 5px;
-        background-color: white;
-        border : 1px solid black
     }
-
-    .file_input{
-
+    .selected_category:hover{
+        cursor: pointer;
     }
 
     .update_label{
@@ -41,6 +42,7 @@
     }
     .text_length_display{
         display: flex;
+        justify-content: right;
         padding: 5px;
         font-size: small;
         color: rgba(83, 83, 83, 0.918);
@@ -50,34 +52,51 @@
 
 <div class="box">
     <div class="forum_list_box">
-        <div id="Content_text_box">
+        <div class="forum_post_box">
             <form action="/<%= pagetype%>/edit<%= content_id ? '/'+ content_id : '' %>" method="POST" id="post_form">
-                <label class="update_label" for="title">제목</label>
-                <input type="text" id="title" name="title" value="<%= post_info ? post_info.title : '' %>" required placeholder=" 제목을 입력하세요.." maxlength="100">
-
-                <label class="update_label">첨부</label>
-                <div class="Content_image_box">
-                    <input class="file_input" type="file" id="imageInput" accept="image/*">
+                <label>- 게시판 종류
+                <div style="margin: 8px; width: 100%;">
+                    <select id="selected_category" name="selected_category" class="selected_category" style="font-size: 12px; padding: 5px; margin-bottom: 5px;">
+                        <option value="qa">QA</option>
+                        <option value="life">생활</option>
+                        <option value="info">정보</option>
+                    </select>
                 </div>
+                </label>
 
-                <br>
-                <label class="update_label" for="text">본문</label>
-                <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" translate="no" aria-multiline="true" spellcheck="true" ></div>
+                <label for="title">- 제목
+                    <div style="margin: 8px; width: 100%;">
+                        <input type="text" id="title" name="title" class="title_input" value="<%= post_info ? post_info.title : '' %>" required  aria-required="true" placeholder=" 제목을 입력하세요.." maxlength="100">
+                    </div>
+                </label>
+
+                <label>- 첨부
+                    <div style="display: flex; align-items: center; border: 1px solid black; border-radius: 5px; margin: 8px; width: 100%; background-color: white;">
+                        <input class="file_input" type="file" id="imageInput" accept="image/*">
+                    </div>
+                </label>
+                
+                <label>- 본문
+                    <div class="textbox" id="text" contenteditable="true" aria-required="true" aria-placeholder="글쓰기" aria-multiline="true" spellcheck="true"></div>
+                </label>
                 <input type="hidden" id="text_input" name="text_input" value="<%= post_info ? post_info.text : '' %>">
-                <div class="text_length_display"> 
-                    <div>1000</div>&nbsp;/&nbsp;
-                    <div id="text_length_div">1</div>
-                </div>
 
-                <br>
+                <div class="text_length_display"> 
+                    <div id="text_length_div">1</div>
+                    &nbsp;/&nbsp;
+                    <div>1000</div>
+                </div>
+                
                 <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
             </form>
-
         </div>
+
     </div>
 </div>
 
 <script src="/public/js/forum_upload.js"></script>
-
+<script>
+    document.getElementById('selected_category').value = "<%= pagetype %>"
+</script>
 
 

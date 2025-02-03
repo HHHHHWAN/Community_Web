@@ -265,14 +265,14 @@ const Content = {
     },
     
     //게시물 수정 
-    re_create_content: (title, text , content_id , callback ) => {
+    re_create_content: (title, text , content_id, category, callback ) => {
 
         const xss_check_title = XSS_check_string(title);
         const xss_check_text = XSS_check_string(text);
 
-        const query = `update Content set title = ?, text = ? where id = ? `;
+        const query = `update Content set title = ?, text = ?, content_type = ?  where id = ? `;
 
-        write_DB.query(query,[ xss_check_title, xss_check_text, content_id ],(err) => {
+        write_DB.query(query,[ xss_check_title, xss_check_text, category, content_id ],(err) => {
             if (err){
                 return callback(err);
             }

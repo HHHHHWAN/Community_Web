@@ -133,39 +133,65 @@ exports.getLogout = (req , res) => {
     });
 };
 
+
+// GET USER INFO 
 exports.getUserinfo = (req, res) => {
     const user_id = req.params.user_id;
     const user_category = req.params.user_category || undefined;
 
-    // 응답시, 렌더링 포함 유무
+    const page = parseInt(req.query.page) || 1;
+    const limit = page * 10;
+    const offset = (page - 1) * 10;
+
+    // SSR REQUEST CHECK ( DEFAULT "EDIT POST")
     if(user_category) {
-        if (user_category === "post"){
+        // API REQUEST CHECK
+        if (user_category === 'post'){
             //유저 작성 게시물
-            user_DB.get_userinfo_post( user_id, (results) => {
-                return res.json({
+            user_DB.get_userinfo_post( user_id, limit, offset, ( err, results ) => {
+                if(err){
+                    console.error("( getUserinfo => get_userinfo_post ) : " ,err);
+                    return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : 500 });
+                }
+
+                if(!results){
+                    return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400  });
+                }
+
+                res.json({
                     post_list : results
                 });
             });
-        } else{
+        } else if (user_category === 'activity'){
             //유저 활동
-            user_DB.get_userinfo_activity(user_id,(results) => {
-                return res.json({
+            user_DB.get_userinfo_activity(user_id, limit, offset,(err, results) => {
+                if(err){
+                    console.error("( getUserinfo => get_userinfo_activity ) : " ,err);
+                    return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : 500 });
+                }
+                if(!results){
+                    return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400  });
+                }
+
+                res.json({
                     activity_list : results
                 });
             });
+        } else{
+            res.status(400).render('forum_error.ejs',{layout:false, returnStatus:400});
         }
     } else {
-        // GET ejs, user info
+        // GET EJS, USER POST
         user_DB.get_userinfo(user_id, (err, result) => {
-            if(!result){
-                return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400  });
-            }
             if(err){
                 console.error(err);
                 return res.status(500).render('forum_error.ejs',{ layout:false, returnStatus : 500 });
             }
 
-            
+            if(!result){
+                return res.status(400).render('forum_error.ejs',{ layout:false, returnStatus : 400  });
+            }
+
             res.render('forum_user.ejs' , { user_info : result});
         });
     }

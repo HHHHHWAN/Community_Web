@@ -18,15 +18,28 @@
                     <button class="search_button" type="submit">검색</button>
                 </form>
             </div>
-            <div class="head_ctl_user">
-                <% if (nickname) {%>
-                    <a href='/user/<%= userId %>'><%= nickname %></a>님 / 
-                    <a href="/logout">로그아웃</a> 
-                <% } else {%>
-                    <a href="" class="login_href">로그인</a> 
-                    / 
-                    <a href="" class="signup_href">회원가입</a>
-                <%} %>
+            <div class="modal_pc_div">
+                <button class="modal_pc_button" id="modal_pc_button" type="button">
+                    <% if (userId) {%>
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
+                    <% } else {%>
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; pointer-events: none; " alt="유저">
+                    <%} %>
+                </button>
+
+                <div class="modal_pc_button_div">
+                    <div class="head_ctl_user">
+                        <% if (userId) {%>
+                            <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a> &nbsp;님</div>
+                            <div><a href="/user/settings">회원정보</a></div>
+                            <div><a href="/logout">로그아웃</a></div>
+                        <% } else {%>
+                            <div style="font-weight: bolder; border-bottom: 1px solid black; color: rgb(118, 145, 129); ;">비회원</div>
+                            <div><a href="" class="login_href">로그인</a> </div>
+                            <div><a href="" class="signup_href">회원가입</a></div>
+                        <%} %>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -67,13 +80,19 @@
 
             <div class="modal_div">
                 <button class="modal_button" id="modal_user_button" type="button">
-                    <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="유저">
+                    <% if (userId) {%>
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
+                    <% } else {%>
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="유저">
+                    <%} %>
+                    
                 </button>
 
                 <div class="modal_user_button_div">
                     <div class="head_ctl_user">
-                        <% if (nickname) {%>
-                            <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a>님 </div>
+                        <% if (userId) {%>
+                            <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a>&nbsp;님 </div>
+                            <div><a href="/user/settings">회원정보</a></div>
                             <div><a href="/logout">로그아웃</a></div>
                         <% } else {%>
                             <div style="font-weight: bolder; border-bottom: 1px solid black; color: rgb(118, 145, 129); ;">비회원</div>

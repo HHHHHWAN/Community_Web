@@ -143,13 +143,11 @@
 
 
 /* 목록 스타일 */
-ul {
-    list-style-type: square;
-}
 
 ul li {
     min-height: 70px;
     padding-left: 10px;
+    padding-right: 10px;
     list-style-type: none;
     border-top: 2px solid rgba(167, 163, 163, 0.521);
 }

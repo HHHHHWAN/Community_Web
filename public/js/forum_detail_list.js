@@ -119,7 +119,6 @@ function reloadPage(pagetype, page){
             console.error('error fetching data :', error);
             const contents_list_ul = document.getElementById('content_list');
             contents_list_ul.innerHTML = ' 데이터를 불러오는데, 실패했습니다. ';
-
         });
 }
 

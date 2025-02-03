@@ -25,7 +25,7 @@
             <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count">&nbsp;<%= Content.view_count %></span></div>
         </div>
         
-        <div class="forum_detail_title_box"><h1 id="forum_detail_title"><%= Content.title %></h1></div>
+        <div class="forum_detail_title_box" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;" ><%= Content.title %></div>
 
 
         <div class="forum_detail_text_box">
@@ -164,7 +164,7 @@
 
                 <% if (nickname && (pagetype !== "popular")) { %>
                     <div>
-                        <a href="<%= Content.content_type %>/edit"><button class="forum_button" >글쓰기</button></a>
+                        <a href="/<%= Content.content_type %>/edit"><button class="forum_button" >글쓰기</button></a>
                     </div>
                 <% }else if (pagetype !== "popular") {%>
                     <div>

@@ -2,8 +2,9 @@
 const mobile_nav_box = document.querySelector('.modal_nav_button_div');
 const mobile_user_box = document.querySelector('.modal_user_button_div');
 const mobile_search_box = document.querySelector('.modal_search_button_div');
+const pc_user_box = document.querySelector('.modal_pc_button_div');
 
-const modal_button_list = ['modal_nav_button','modal_search_button','modal_user_button'];
+const modal_button_list = ['modal_nav_button','modal_search_button','modal_user_button', 'modal_pc_button'];
 
 
 window.addEventListener('resize', function(){
@@ -19,13 +20,15 @@ document.querySelector('.head_body').addEventListener('click', function(event){
         const modal_content = '.' + event_id + '_div'
         const parent_div = event.target.closest('.head_body');
 
-        if(parent_div.querySelector(modal_content).style.display === "block" ){
-            parent_div.querySelector(modal_content).style.display = "none";
+        if(parent_div.querySelector(modal_content).style.display === 'block' ){
+            parent_div.querySelector(modal_content).style.display = 'none';
         }else{
-            mobile_search_box.setAttribute('style','display: none;');
-            mobile_user_box.setAttribute('style','display: none;');
-            mobile_nav_box.setAttribute('style','display: none;');
-            parent_div.querySelector(modal_content).style.display = "block";
+            mobile_search_box.style.display = 'none';
+            mobile_user_box.style.display = 'none';
+            mobile_nav_box.style.display = 'none';
+            pc_user_box.style.display = 'none';
+            console.log("dd");
+            parent_div.querySelector(modal_content).style.display = 'block';
             
             setTimeout(()=>{
                 document.addEventListener('click', (event) => close_menu(event, modal_content));
@@ -65,8 +68,7 @@ function close_menu(event, modal_content){
     const modal_div = document.querySelector(modal_content);
     if(modal_div.style.display === "block"){
         if(!event.target.closest(modal_content)){
-            console.log('test');
-            modal_div.setAttribute('style','display: none;');
+            modal_div.style.display = 'none';
             document.removeEventListener('click', close_menu);
         }
     }

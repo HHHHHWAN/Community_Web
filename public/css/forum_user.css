@@ -1,32 +1,43 @@
+button:hover{
+    color: #4CAF50;
+    cursor: pointer;
+}
+
+@media (max-width:768px){
+    
+}
+
+@media (min-width:768px){
+    
+}
+.more_button{
+    color: #030303;
+    font-size: 13px;
+    color: rgb(92, 91, 91);
+    border: none;
+    background-color: white;
+}.more_button:disabled{
+    color: #7e817e;
+    cursor:default;
+}
+
+
+
 .user_info_box{
     display: flex;
     flex-direction: column;
-
-    min-height: 100px;
-    margin: 10px;
-    border-radius: 5px;
-    background-color: rgb(255, 255, 255);
-    
 }.user_info_box_text{
     flex: 4;
-
     display: flex;
-
     align-items: center;
     padding: 20px;
 
 }.user_info_box_ctl{
     flex: 1;
-    margin-top: auto;
-
-    border-top: 1px solid rgba(121, 119, 119, 0.582);
     display: flex;
     align-items: center;
-}
-
-nav{
-    margin: 0;
-    padding: 0; 
+    border-top: 1px solid rgba(102, 101, 101, 0.24);
+    padding: 10px;
 }
 nav ul {
     display: flex;
@@ -34,23 +45,21 @@ nav ul {
 
     margin: 0;
     padding: 0;
-} nav li button{
+}nav li button{
     font-size: medium;
-    
     width: 100px;
     margin-right: 5px;
     background-color: white;
     border: none;
-}nav li button:hover{
-    cursor: pointer;
+}nav li button.active{
+    color: #4CAF50;
+    transition: color 0.3s ease;
 }
 
 .user_list_box{
-    min-height: 800px;
-    margin: 10px;
-    border-radius: 5px;
-    padding: 20px;
-    background-color: rgb(255, 255, 255);
+    /* min-height: 800px; */
+    margin-top: 10px;
+    padding: 10px;
 }
 
 .user_list_box_dom{
@@ -62,24 +71,11 @@ nav ul {
 } .user_list_box_dom li {
     padding: 5px;
     min-height: 50px;
-    border-top: 2px solid rgba(102, 101, 101, 0.24);
-} 
-.post_li_div_info{
-    display: flex;
-}.post_li_div_info div{
-    flex : 1;
-    
+    border-bottom: 2px solid rgba(102, 101, 101, 0.24);
 }
 
-.post_li_div_title {
-    display: flex;
-    height: 50px;
-    width: 600px;
-    align-items: center;
-
-    white-space: nowrap;     
-    text-overflow:ellipsis;   
-    overflow: hidden;         
-}
+/* .post_li_div_title {
+    height: 50px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;
+} */
 
 

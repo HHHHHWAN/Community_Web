@@ -1,0 +1,214 @@
+<% title = ( nickname ? nickname : "설정" )%>
+
+
+<style>
+
+    @media(max-width:768px){
+    
+        .box{
+            border: 2px solid rgb(161, 201, 176);
+            border-radius: 15px;
+            margin: 10px;
+            margin-top: 90px;
+        }
+    
+        .setting_box{
+            background-color: white;
+            height: 100%;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    
+        .setting_box_nav{
+            display: flex;
+            justify-content: lef;
+            width: 100%;
+            min-height: 30px;
+            border-bottom: 2px solid rgba(145, 145, 145, 0.76); 
+        }
+        .setting_box_main{
+            width: 100%;
+            padding: 10px
+        }
+    
+        ul{
+            display: flex;
+        }li{
+            margin-right: 20px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }li button{
+            color:  rgb(81, 79, 79);
+            border-radius: 15px;
+            font-size: 13px;
+            width: 60px;
+            height: 30px;
+            background-color: white;
+            border: none;
+    
+        }li button:hover{
+            cursor: pointer;
+            background-color: rgb(223, 244, 231);
+        }
+    
+    }
+    /* ------------------------------------------------------------------- */
+    
+    @media(min-width:768px){
+    
+        .setting_box{
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            height: auto;
+            margin: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    
+        .setting_box_nav{
+            display: flex;
+            justify-content: center;
+            width: 20%;
+            min-height: 30px;
+            border-right: 2px solid rgba(145, 145, 145, 0.76); 
+        }
+        .setting_box_main{
+            width: 100%;
+            padding: 10px;
+            padding-left: 20px;
+    
+    
+            font-size: 15px;
+        }
+        li{
+            margin-right: 20px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }li button{
+            color: rgb(81, 79, 79);;
+            border-radius: 15px;
+            font-size: 12px;
+            width: 80px;
+            height: 30px;
+            background-color: white;
+            border: none;
+        }li button:hover{
+            cursor: pointer;
+            background-color: rgb(223, 244, 231);
+        }
+    }
+
+    .setting_social button{
+        width: 200px;
+        height: 20px;
+        font-size: 12px;
+    }
+    
+    .label_div{
+            margin-top: 20px;
+            margin-bottom: 10px;
+    }
+    input{
+            font-size: 13px;
+            height: 25px;
+            width: 200px;
+            padding: 10px;
+    }
+    
+    </style>
+
+<div class="box">
+    <div class="setting_box">
+        <div class="setting_box_nav">
+            <nav id="setting_nav">
+                <ul>
+                    <li id="info_li">
+                        <button type="button" id="setting_info_button">회원정보</button>
+                    </li>
+                    <li id="config_li">
+                        <button type="button" id="setting_config_button">계정관리</button>                    
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="setting_box_main" id="setting_box_main">
+        </div>
+    </div>
+</div>
+
+<script>
+const nav_object = document.getElementById('setting_nav');
+const main_object = document.getElementById('setting_box_main');
+const info_object = document.getElementById('setting_info_button');
+const config_object = document.getElementById('setting_config_button');
+
+const get_setting_info = ()=>{
+    info_object.style.background = 'rgb(223, 244, 231)';
+    main_object.innerHTML = `
+            <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>회원정보</b></div>
+            <form>
+            <div>
+                <div class="label_div">&middot; 아이디 </div>
+                <div style="color: rgba(120, 117, 117, 0.814);"> 현재 설정 이름 data </div>
+            </div>
+
+            <div>
+                <div class="label_div">&middot; 이메일 </div>
+                <div style="color: rgba(120, 117, 117, 0.814);"> 현재 설정 이메일 data </div>
+            </div>
+            
+            <div>
+                <div class="label_div">&middot; 닉네임 2~15 특수문자 제외</div>
+                <input>
+            </div>
+            
+            <div style="margin-top: 15px;"><button type="button" style="width: 50px; height: 30px;" disabled> 저장 </button></div>
+            </form>
+        `;
+};
+
+const get_setting_config = ()=>{
+    config_object.style.background = 'rgb(223, 244, 231)';
+    main_object.innerHTML = `
+            <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>계정관리</b></div>
+
+            <div class="setting_social">
+                <div class="label_div">&middot; 소셜연동 관리 </div>
+                <div style="margin-bottom: 5px;"><button type="button" id="setting_github" disabled>GitHub</button> </div>
+                <div><button type="button" id="setting_naver" disabled>Naver</button> </div>
+            </div>
+            
+            <form>
+                <div style="margin-bottom: 20px;">
+                    <div class="label_div">&middot; 비밀번호 변경 </div>
+                    <div style="color: rgba(120, 117, 117, 0.814);"> 현재 설정 이름 data </div>
+                </div>
+
+                <div style="margin-top: 15px;"><button type="button" style="width: 50px; height: 30px;" disabled> 저장 </button></div>
+            </form>
+        `;
+};
+
+get_setting_info();
+
+nav_object.addEventListener('click', (event)=>{
+    
+
+    if(event.target.tagName === 'BUTTON'){
+        main_object.innerHTML = ``;
+        info_object.style.background = '';
+        config_object.style.background = '';
+    }
+        
+    if(event.target.id === 'setting_info_button'){
+        get_setting_info();
+    }else if(event.target.id === 'setting_config_button'){
+        get_setting_config();
+    }
+
+});
+
+
+
+</script>

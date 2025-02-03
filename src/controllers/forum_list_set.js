@@ -8,13 +8,15 @@ const Content_Service = require('../service/forum_Content');
 
 // '/:pagetype/edit'  POST
 exports.setCreateContent = (req,res) => {
-    const pagetype = req.params.pagetype;
+    // const pagetype = req.params.pagetype;
     const content_id = req.params.content_id;
-    const { title, text_input } = req.body;
+    const title = req.body.title;
+    const text_input = req.body.text_input; 
+    const category = req.body.selected_category;
 
-    // 수정인지, 새 작성인지 id 쿼리 스트링으로 체크
     if (content_id){
-        Content_Service.re_create_content(title,text_input,content_id,(err) => {
+        // MODIFY
+        Content_Service.re_create_content(title, text_input, content_id, category, (err) => {
 
             if (err) {
                 console.error("( setCreateContent ) => ( re_create_content ) : ", err);
@@ -22,10 +24,11 @@ exports.setCreateContent = (req,res) => {
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }
             
-            res.redirect(`/${pagetype}/${content_id}`);
+            res.redirect(`/${category}/${content_id}`);
         });
     } else {
-        Content_Service.create_content(title, text_input, pagetype, req.session.user.user_id, (err,result) => {
+        // NEW EDIT
+        Content_Service.create_content(title, text_input, category, req.session.user.user_id, (err,result) => {
             if(err){
                 console.error("( setCreateContent ) => ( create_content ) : ", err);
 
@@ -34,7 +37,7 @@ exports.setCreateContent = (req,res) => {
 
             const newContentId = result.insertId;
 
-            res.redirect(`/${pagetype}/${newContentId}`);
+            res.redirect(`/${category}/${newContentId}`);
         });
     }
 };

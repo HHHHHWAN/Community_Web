@@ -259,12 +259,12 @@ const User_model = {
         });
     },
 
-    get_userinfo_post : ( user_id , callback ) => {
-        const query = `select * from Content where user_id = ? and visible = 1`;
+    get_userinfo_post : ( user_id, limit, offset, callback ) => {
+        const query = `select * from Content where user_id = ? and visible = 1 limit ? offset ?`;
 
-        read_DB.query(query, [user_id] ,(err, result) => {
-            if(!result){
-                return callback(null);
+        read_DB.query(query, [user_id, limit, offset] ,(err, result) => {
+            if(err){
+                return callback(err, null);
             }
             
             result = data_utils.content_type_string(result);
@@ -273,21 +273,21 @@ const User_model = {
                 row.date_now = data_utils.date_before(row.date_create);
             });
 
-            callback(result);
+            callback(null, result);
         });
     },
     
-    get_userinfo_activity : ( user_id , callback ) => {
+    get_userinfo_activity : ( user_id, limit, offset, callback ) => {
         const query = `
             select A.*, User.nickname from
             ( select Post.comment as comment, Post.create_at as comment_create_at, Content.id as content_id, Content.user_id as content_user_id, Content.content_type as content_type from 
-            ( select * from Comment where user_id = ? and visible = 1 ) Post left join Content on Post.content_id = Content.id ) 
+            ( select * from Comment where user_id = ? and visible = 1 limit ? offset ?) Post left join Content on Post.content_id = Content.id ) 
             A left join User on A.content_user_id  = User.id;
         `;
 
-        read_DB.query(query, [user_id] ,(err, result) => {
-            if(!result){
-                return callback(null);
+        read_DB.query(query, [user_id,  limit, offset] ,(err, result) => {
+            if(err){
+                return callback(err,null);
             }
 
             result = data_utils.content_type_string(result);
@@ -296,7 +296,7 @@ const User_model = {
                 row.date_now = data_utils.date_before(row.comment_create_at);
             });
 
-            callback(result);
+            callback(null, result);
         });
     },
 

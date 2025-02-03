@@ -30,8 +30,8 @@ const data_utils = {
     },
 
 
-    content_type_string : (result) => {
-        result.forEach(row => {
+    content_type_string : (record) => {
+        record.forEach(row => {
             switch (row.content_type) {
                 case 'qa'   :  row.post_name ='질문';
                 break;
@@ -40,16 +40,16 @@ const data_utils = {
                 default     :  row.post_name ='생활';
             }
         });
-        return result
+        return record;
     },
 
-    change_delete_comment_text : (comments) => {
-        comments
+    change_delete_comment_text : (record) => {
+        record
             .filter( row => row.visible.toString('hex') === '00' )
             .forEach( row => {
                 row.comment = "사용자에 의해 삭제된 댓글입니다.";
             });
-        return comments;
+        return record;
     },
 
     content_count_change : (value) => {

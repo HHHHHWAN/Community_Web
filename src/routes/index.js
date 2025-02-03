@@ -62,6 +62,9 @@ router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
 
 // userinfo
+router.get('/user/settings', (req,res)=>{
+    res.render('forum_setting.ejs');
+});
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
 // postlist
@@ -71,7 +74,7 @@ router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 router.delete('/delete/:content_id', set_Controller.setInvisiblyctl);
 
 
-//comment delete
+// comment delete
 router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
 
 // comment put
@@ -84,10 +87,10 @@ router.post('/image/upload' , login_Check, upload.single('image'), (req, res) =>
     res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
 });
 
-// Post edit get
+// EDIT EJS GET
 router.get('/:pagetype/edit/:content_id?', login_Check, urlType_Check, get_Controller.getCreateContent);
 
-// edit Post upload  
+// EIDT UPLOAD POST  
 router.post('/:pagetype/edit/:content_id?' , login_Check, urlType_Check, set_Controller.setCreateContent);
 
 

@@ -28,6 +28,10 @@ a {
     font-weight: 500;
 }
 
+li{
+    list-style-type: none;
+}
+
 .forum_button{
     padding: 10px;
     font-size: 13px;
@@ -61,6 +65,9 @@ button:hover{
 
 @media (max-width: 768px){
 
+    .head_nav { display: none;}
+    .head_ctl{ display: none; }
+
     header {
         background-color: #ffffff;
         color: rgb(43, 63, 55);
@@ -88,14 +95,7 @@ button:hover{
         font-size: 18px;
     }
     
-    .head_nav {
-        display: none;
-    }.head_ctl{
-        display: none;
-    }
-    
-    
-    
+
     .modal_div{
         display: flex;
         align-items: center;
@@ -105,8 +105,6 @@ button:hover{
         border: none;
         min-width: 40px;
         height: 40px;
-        font-family: 'Dongle', sans-serif;
-        font-weight: 400;
     }.modal_nav_button_div {
         display: none;
         border-radius: 3px;
@@ -173,9 +171,9 @@ button:hover{
         position:absolute;
         top: 80%;
         right: 1%;
-        
-        font-size: 20px;
     }.head_ctl_user{
+
+        font-size: 16px;
         margin-left: 20px;
         padding-left: 15px;
         padding-right: 15px;
@@ -185,6 +183,8 @@ button:hover{
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
         text-align: center;
         border-radius: 10px;
+    }.head_ctl_user a{
+        font-size: 18px;
     }.head_ctl_user div{
         margin-bottom: 10px;
     }
@@ -355,14 +355,36 @@ button:hover{
         cursor: pointer;
     }.search_button:hover {
         color: #4CAF50;
+    }.modal_pc_div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 50px;
+
+    }.modal_pc_button{
+        border: none;
+        background-color: #00000000;
+        min-width: 40px;
+        height: 40px;
+        padding: 0;
+    }.modal_pc_button_div{
+        display: none;
+        border-radius: 3px;
+        box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+        background-color: white;
+        position:absolute;
+        top: 45px;
+        right: -10%;
+        padding: 3px;
     }.head_ctl_user{
-        font-size: 20px;
+        font-size: 17px;
         margin-left: 10px;
         min-width: 130px;
-        background-color: rgb(223, 244, 231);
         text-align: center;
-
         border-radius: 10px;
+    }.head_ctl_user a{
+        font-size: 20px;
     }
 
     body {
@@ -372,10 +394,11 @@ button:hover{
 
     .container {
         display: flex;
-        min-height: 1000px;
+        min-height: 900px;
         width: 100%;
         margin: auto;
         margin-top: 60px;
+        margin-bottom: 60px;
         padding: 20px; 
         border-radius: 8px;
         justify-content:center;
@@ -390,13 +413,10 @@ button:hover{
         background-color: #af1e1ef4;
         min-width: 200px;
         height: 100%;
-        /* border: 1px solid black; */
-        /* position:relative; */
     }
 
     .box {
         width: 800px;
-        min-width: 500px;
         background-color: rgb(223, 244, 231);
     
         font-size: 14px;
