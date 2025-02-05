@@ -19,7 +19,13 @@ const upload = require('../middleware/upload_multer');
 router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
 router.post('/login',user_Controller.setLogin_page); 
-router.post('/signup',user_Controller.setSignUp_page); 
+router.post('/signup', (req,res,next) =>{
+    if( process.env.HTTPS ){
+        res.redirect('log_in.ejs');
+    }
+
+    next();
+}, user_Controller.setSignUp_page); 
 
 router.get('/logout',user_Controller.getLogout);
 
@@ -62,9 +68,7 @@ router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
 
 // userinfo
-router.get('/user/settings', (req,res)=>{
-    res.render('forum_setting.ejs');
-});
+router.get('/user/settings', login_Check, user_Controller.getSettinginfo);
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
 // postlist

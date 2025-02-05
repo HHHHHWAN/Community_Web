@@ -18,9 +18,9 @@ function session_config(){
         }),
         cookie: { // 쿠키에 저장할 경우, 설정
             httpOnly : true, // JavaScript로 쿠키 접근을 방지
-            sameSite : 'lax', // 안전한 크로스 사이트 요청만 허용 ( 새 탭 )
-            // 'strict' - 크로스 사이트에서 쿠키 전송 차단
-            secure: false,  // HTTPS 환경에서는 true로 설정
+            sameSite : 'lax', // 안전한 크로스 사이트 요청만 허용 ( 같은 브라우저 쿠키만 허용 )
+            // 'strict' - 모든 외부 크로스 사이트에서 쿠키 전송 차단
+            secure: process.env.HTTPS,  // HTTPS 환경에서는 true로 설정
             maxAge: 1000 * 60 * 30 // 쿠키 유지 시간
         }
     });

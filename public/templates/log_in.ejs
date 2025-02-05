@@ -71,7 +71,7 @@
             <form class=login action="/login" method="POST">
                 <div class="login_input_div">
                     <div>아이디</div>
-                    <input type="username" id="username" name="username" value="<%= history ? history.input_id : '' %>" >   
+                    <input type="username" id="username" name="username" value="<%= history ? history.input_ID : '' %>" >   
                     <span class="alert_span" id="error_id"></span> 
                 </div>
 
@@ -91,6 +91,12 @@
             </form>
             <div>아직 회원이 아니신가요? <a href="/signup">회원가입</a></div>
         </div> 
+        <div style="margin-top: 5px; padding: 5px; border-radius: 10px; border: 1px solid rgb(0, 0, 0); width: 150px;">
+            <p> 테스트 계정 </p> 
+            ID: test1
+            <br>
+            PW : Ghkstest1!
+        </div>
     </div>
 </body>
 

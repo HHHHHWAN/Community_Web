@@ -34,7 +34,9 @@ exports.setLogin_page = async ( req , res ) => {
         user_DB.set_loginUser( req, (status, issue) => {
             if(status){
                 // unknown
-                req.session.login.input_ID = username;
+                req.session.login = {
+                    input_ID : username
+                } ;
 
                 return res.redirect(`/login?error=${issue}&request=${request}`);
             }
@@ -195,4 +197,13 @@ exports.getUserinfo = (req, res) => {
             res.render('forum_user.ejs' , { user_info : result});
         });
     }
+};
+
+exports.getSettinginfo = (req, res) => {
+    // req.session.user = {
+    //     user_id : check_user_info[0].id,
+    //     nickname : check_user_info[0].nickname
+    // };
+
+    res.render('forum_setting.ejs');
 };

@@ -1,7 +1,6 @@
 
-//foam 전송 submit 처리시  function 실행 
 document.getElementById('signin').addEventListener('submit' , function(event){  
-	// 체크 폼 항목 
+	
 	const Check_foam = [
 		{ id: 'username', errorspan: 'error_id', massage: '아이디를 입력해주세요' },
 		{ id: 'email', errorspan: 'error_email', massage: '이메일을 입력해주세요' },            

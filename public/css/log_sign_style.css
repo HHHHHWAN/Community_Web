@@ -51,13 +51,6 @@ body{
         border: 1.2px solid rgb(214, 212, 212);
     }
     
-    /* .login_box div{
-        padding: 3px;
-        min-width: 350px;
-        min-height: 80px;
-        justify-content: center;
-    } */
-
     
     .alertbox{
         width: 300px;
@@ -153,4 +146,6 @@ input{
     margin-top: 9px;
     margin-bottom: 9px;
     height: 30px;
+    font-size: 13px;
+    padding-left: 5px;
 }
