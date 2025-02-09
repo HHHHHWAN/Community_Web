@@ -15,7 +15,7 @@ async function callWeatherApi(lat, lon, city) {
         const api_Response = await fetch('/api/weather?' + endpoint );
 
         if(!api_Response.ok){
-            throw new error(`fail weather api Connect Status : ${Response.status}`);
+            throw new Error(`fail weather api Connect Status : ${Response.status}`);
         }
 
         const data = await api_Response.json();

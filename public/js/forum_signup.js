@@ -17,7 +17,7 @@ document.getElementById('signin').addEventListener('submit' , function(event){
 	const password_check = document.getElementById('password_check').value;
 
 	const regex_username = /^[a-zA-Z0-9]{3,15}$/; // 대, 소문자 숫자 조합 최소 길이 3자, 최대길이 15자
-	const regex_nickname = /^.{2,15}$/; // 2자 이상 15이하
+	const regex_nickname = /^[a-zA-Z0-9가-힣]{2,15}$/; // 영문 한글 2자 이상 15이하
 	const regex_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=-]{8,}$/;
 										// 소문자, 대문자, 특수문자 (!@#$%^&*()_+=-) 하나씩 포함하여 8 자 이상
 	

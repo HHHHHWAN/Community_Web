@@ -27,7 +27,6 @@ document.querySelector('.head_body').addEventListener('click', function(event){
             mobile_user_box.style.display = 'none';
             mobile_nav_box.style.display = 'none';
             pc_user_box.style.display = 'none';
-            console.log("dd");
             parent_div.querySelector(modal_content).style.display = 'block';
             
             setTimeout(()=>{

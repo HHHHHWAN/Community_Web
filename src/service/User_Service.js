@@ -4,7 +4,7 @@ require('dotenv').config();
 const { read_DB , write_DB } = require("../models/mysql_connect");
 const redis_client = require('../models/redis_connect');
 const data_utils = require('../utils/dataUtils');
-const { response } = require('express');
+const { response, query } = require('express');
 
 
 // email, nickname used check
@@ -109,7 +109,7 @@ const User_model = {
                 // DB 접속전 해쉬화 처리
                 const salt = await bcrypt.genSalt(10); // salt 생성
                 const hashedPassword = await bcrypt.hash(signup_password, salt);
-                const query = `insert into User (username, email, nickname, password) values ( ?, ?, ?, ?)`;
+                const query = `INSERT INTO User (username, email, nickname, password) VALUES ( ?, ?, ?, ?)`;
 
                 write_DB.query(query, [ req.session.sign.username, req.session.sign.email, req.session.sign.nickname, hashedPassword ] , async (err, result) => {
                     if(err) {
@@ -150,7 +150,7 @@ const User_model = {
         try{
             /// setLogin_page -> process
             if (username){
-                const query = `select * from User where username = ? `;
+                const query = `SELECT * FROM User WHERE username = ? `;
                 //DB check
                 const [ check_user_info ] = await read_DB_promise.query(query,[username]);
                 
@@ -279,10 +279,10 @@ const User_model = {
     
     get_userinfo_activity : ( user_id, limit, offset, callback ) => {
         const query = `
-            select A.*, User.nickname from
-            ( select Post.comment as comment, Post.create_at as comment_create_at, Content.id as content_id, Content.user_id as content_user_id, Content.content_type as content_type from 
-            ( select * from Comment where user_id = ? and visible = 1 limit ? offset ?) Post left join Content on Post.content_id = Content.id ) 
-            A left join User on A.content_user_id  = User.id;
+            SELECT A.*, User.nickname FROM
+            ( SELECT Post.comment AS comment, Post.create_at AS comment_create_at, Content.id AS content_id, Content.user_id AS content_user_id, Content.content_type AS content_type FROM 
+            ( SELECT * FROM Comment where user_id = ? and visible = 1 limit ? offset ?) Post LEFT JOIN Content ON Post.content_id = Content.id ) 
+            A LEFT JOIN User ON A.content_user_id  = User.id;
         `;
 
         read_DB.query(query, [user_id,  limit, offset] ,(err, result) => {
@@ -393,8 +393,62 @@ const User_model = {
             console.log(err);
             callback(true, err);
         }
-    }
+    },
 
+    get_Setting_Social : (user_id, callback) => {
+        const query = `SELECT key_github, key_naver FROM User WHERE id = ?`;
+
+        read_DB.query(query,[user_id],( err, results ) => {
+
+            if(err){
+                return callback(err, null);
+            }
+            
+
+            callback(null,results);
+        });
+    },
+    get_Setting_user_info : (user_id, callback) => {
+        const query = `SELECT username, email FROM User WHERE id = ?`;
+
+        read_DB.query(query,[user_id],( err, results ) => {
+            if(err){
+                return callback(err, null);
+            }
+
+            callback(err,results)
+        });
+    },
+
+    set_Setting_Nickname : ( user_id, input_nickname, callback) => {
+        const query = `UPDATE User SET nickname = ? WHERE id = ?`;
+
+        write_DB.query(query, [ input_nickname, user_id ], ( err, result ) => {
+            if(err){
+                console.error("( set_Setting_Nickname ) 에러 : ", err);
+                return callback(err);
+            }
+
+            if(!result.affectedRows){
+                console.error("( set_Setting_Nickname ) 닉네임 변경 시도, 영향 받은 레코드 존재하지 않음");
+                console.log("요청 데이터 <user_id, input_nickname > : (",user_id,",",input_nickname,")");
+
+                return callback("닉네임 변경 실패");
+            }
+
+            callback(null, result);
+        });
+    },
+
+    get_Nickname : (search_nickname, callback ) => {
+        const query = `SELECT nickname FROM User WHERE nickname = ?`
+        read_DB.query(query, [search_nickname], (err, result) => {
+            if(err){
+                return callback(err, null);
+            }
+            callback(null, result);
+        });
+    }
 };
 
 module.exports = User_model

@@ -211,6 +211,7 @@ pre{
     border: none; 
     background-color: white;
 }
+
 button:hover{
     cursor: pointer;
 }

@@ -21,7 +21,7 @@ router.get('/signup',user_Controller.getSignUp_page);
 router.post('/login',user_Controller.setLogin_page); 
 router.post('/signup', (req,res,next) =>{
     if( process.env.HTTPS ){
-        res.redirect('log_in.ejs');
+        return res.redirect('log_in.ejs');
     }
 
     next();
@@ -58,7 +58,11 @@ router.get('/api/weather', async (req, res) => {
 });
 
 // API POST LIST GET
+router.put('/api/settings/nickname', login_Check, user_Controller.api_setSettingNickname);
+router.get('/api/settings/info', login_Check, user_Controller.api_getSettinginfo);
+router.get('/api/settings', login_Check, user_Controller.api_getSettingConfig);
 router.get('/api/:pagetype', urlType_Check, get_Controller.api_getContents);
+
 
 // ( 요청 url, 실행될 메서드 )
 router.get('/' ,main_Controller.getMyPagelist); // app urlconf
@@ -68,7 +72,9 @@ router.get('/popular', get_Controller.getTypeContents);
 router.get('/search', get_Controller.get_SearchContents);
 
 // userinfo
-router.get('/user/settings', login_Check, user_Controller.getSettinginfo);
+router.get('/user/settings', login_Check, (req, res) => {
+    res.render('forum_setting.ejs');
+});
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
 // postlist

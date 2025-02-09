@@ -1,8 +1,8 @@
 <% title = ( nickname ? nickname : "설정" )%>
 
 
-<style>
 
+<style>
     @media(max-width:768px){
     
         .box{
@@ -21,14 +21,22 @@
     
         .setting_box_nav{
             display: flex;
-            justify-content: lef;
+            justify-content: left;
             width: 100%;
             min-height: 30px;
             border-bottom: 2px solid rgba(145, 145, 145, 0.76); 
         }
         .setting_box_main{
-            min-width: 300px;
+            min-height: 300px;
             padding: 10px
+        }
+
+        .delete_account_div{
+            width: 100%;
+        }.delete_account_div_title{
+            width: 100%; font-size: 18px; margin-bottom: 20px;
+        }.delete_account_div_text{
+            width: 100%; border: 2px solid rgba(145, 145, 145, 0.76); ; margin-bottom: 10px; padding: 10px; border-radius: 8px; font-size: 10px;
         }
     
         ul{
@@ -74,13 +82,22 @@
             border-right: 2px solid rgba(145, 145, 145, 0.76); 
         }
         .setting_box_main{
-            min-width: 300px;
+            min-height: 300px;
             padding: 10px;
             padding-left: 20px;
-    
-    
             font-size: 15px;
         }
+
+        .delete_account_div{
+        margin: 20px;
+        width: 100%;
+        }.delete_account_div_title{
+            width: 100%; font-size: 18px; margin-bottom: 20px;
+        }.delete_account_div_text{
+            width: 100%; border: 2px solid rgba(145, 145, 145, 0.76); ; margin-bottom: 10px; padding: 10px; border-radius: 8px; font-size: 10px;
+        }
+
+
         li{
             margin-right: 20px;
             margin-bottom: 5px;
@@ -116,7 +133,11 @@
             padding: 10px;
     }
     
-    </style>
+</style>
+
+<script src="/public/js/forum_setting.js"></script>
+<script src="/public/js/forum_setting_info.js"></script>
+<script src="/public/js/forum_setting_config.js"></script>
 
 <div class="box">
     <div class="setting_box">
@@ -136,19 +157,24 @@
         </div>
     </div>
     <div class="setting_box">
-        <div style="margin: 20px; width: 100%;">
-            <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>계정탈퇴</b></div>
-            <div>
-
+        <div class="delete_account_div" id="delete_account_div">
+            <div class="delete_account_div_title"><b>계정탈퇴</b></div>
+            <div class="delete_account_div_text">
+                    회원 탈퇴시 대상 계정은 60일 동안 <b>비활성화</b> 처리되며, 회원가입에 이용된 정보는 모두 보관하게 됩니다. <br>
+                    60일이 지난 후, 계정에 귀속 저장된 아이디, 이메일, 닉네임, 비밀번호는 모두 삭제되어 <b>복구</b>할 수 없습니다. <br><br>
+                    
+                    작성된 게시물은 삭제되지 않으며, 익명처리 후 본 웹서비스에 귀속됩니다.
             </div>
-            <div style="display: flex;">
-                <div style="flex: 3;">
-                    <button type="button" class="signout_button" id="signout_button"
-                     style="width: 60px; height: 30px; font-size: 12px;"> 계정 탈퇴</button>
-                </div>
-                <div style="flex: 4; display: flex; font-size: 11px; justify-content: right; align-items: center;">
-                    <input type="checkbox" style="width: 11px; font-size: 10px;"> 
+            <div>
+                <div style="display: flex; justify-content: right; align-items: center; font-size: 10px;">
+                    <input type="checkbox" id="accept_check" style="width: 11px;"> 
                     &nbsp;계정 탈퇴에 대한 상기 내용을 이해하고, 동의합니다.
+                </div>
+                <div style="display: flex; justify-content: right; align-items: center;">
+                    <form id="delete_account_form">
+                    <button type="submit" class="delete_button"
+                     style="width: 60px; height: 30px; font-size: 12px;"> 계정 탈퇴</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -156,96 +182,27 @@
 </div>
 
 <script>
-alert("준비중 입니다.");
-const nav_object = document.getElementById('setting_nav');
-const main_object = document.getElementById('setting_box_main');
-const info_object = document.getElementById('setting_info_button');
-const config_object = document.getElementById('setting_config_button');
+    const nav_object = document.getElementById('setting_nav');
+    const main_object = document.getElementById('setting_box_main');
+    const info_object = document.getElementById('setting_info_button');
+    const config_object = document.getElementById('setting_config_button');
 
-const get_setting_info = ()=>{
-    info_object.style.background = 'rgb(223, 244, 231)';
-    main_object.innerHTML = `
-            <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>회원정보</b></div>
-            
-            <div>
-                <div class="label_div">&middot; 아이디 </div>
-                <div style="color: rgba(120, 117, 117, 0.814);"> 현재 설정 이름 data </div>
-            </div>
-
-            <div>
-                <div class="label_div">&middot; 이메일 </div>
-                <div style="color: rgba(120, 117, 117, 0.814);"> 현재 설정 이메일 data </div>
-            </div>
-            <form>
-
-            <div>
-                <div class="label_div">&middot; 닉네임 변경</div>
-                <input>
-
-                <span style="font-size:12px">※ 2~15 특수문자 제외 <span>
-            </div>
-            
-            <div style="margin-top: 15px;"><button type="button" style="width: 50px; height: 30px;" disabled> 저장 </button></div>
-            </form>
-        `;
-};
-
-const get_setting_config = ()=>{
-    config_object.style.background = 'rgb(223, 244, 231)';
-    main_object.innerHTML = `
-            <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>계정관리</b></div>
-
-            <div class="setting_social">
-                <div class="label_div">&middot; 소셜연동 관리 </div>
-                <div style="margin-bottom: 5px;"><button type="button" id="setting_github" disabled>GitHub</button> </div>
-                <div><button type="button" id="setting_naver" disabled>Naver</button> </div>
-            </div>
-            
-            <form>
-                <div class="label_div">&middot; 비밀번호 변경 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 13px;">현재 비밀번호
-                        <input type="password" name="passoword" id="passoword" required>
-                    </label>
-                </div>
-
-                <div>
-                    <label style="font-size: 13px;">새로운 비밀번호 
-                        <input type="password" name="new_passoword_check" required>
-                    </label>
-                </div>
-                <div>
-                    <label style="font-size: 13px;"> 새로운 비밀번호 확인 
-                        <input type="password" name="new_passoword" required>
-                    </label>
-                </div>
-
-                <div> </div>
-
-                <div style="margin-top: 15px;"><button type="button" style="width: 50px; height: 30px;" disabled> 저장 </button></div>
-            </form>
-        `;
-};
-
-get_setting_info();
-
-nav_object.addEventListener('click', (event)=>{
+    get_setting_info();
+    document.getElementById('nickname_input').placeholder = "<%=nickname%>";
     
-
-    if(event.target.tagName === 'BUTTON'){
-        main_object.innerHTML = ``;
-        info_object.style.background = '';
-        config_object.style.background = '';
-    }
-        
-    if(event.target.id === 'setting_info_button'){
-        get_setting_info();
-    }else if(event.target.id === 'setting_config_button'){
-        get_setting_config();
-    }
-
-});
-
-
-
+    nav_object.addEventListener('click', (event)=>{
+        if(event.target.tagName === 'Button'){
+            main_object.innerHTML = ``;
+            info_object.style.background = '';
+            config_object.style.background = '';
+        }
+            
+        if(event.target.id === 'setting_info_button'){
+            get_setting_info();
+            document.getElementById('nickname_input').placeholder = "<%=nickname%>";
+        }else if(event.target.id === 'setting_config_button'){
+            get_setting_config();
+        }
+    });
+    
 </script>
