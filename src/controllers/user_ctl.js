@@ -280,7 +280,7 @@ exports.api_getSettinginfo = (req,res) => {
 
 
 // 닉네임 변경 컨트롤
-exports.api_setSettingNickname = (req, res) => {
+exports.api_putSettingNickname = (req, res) => {
     const input_nickname = req.body.nickname_input || undefined;
 
     // 제공되지 않은 루트로 접근
@@ -306,14 +306,14 @@ exports.api_setSettingNickname = (req, res) => {
             });
         }
 
-        if(check){
+        if(check.length){
             return res.status(409).json({
                 message : "이미 사용중인 닉네임입니다.",
                 returnStatus : 409
             });
         }
 
-        user_DB.set_Setting_Nickname(req.session.user.user_id, input_nickname , (err) => {
+        user_DB.put_Setting_Nickname(req.session.user.user_id, input_nickname , (err) => {
             if(err){
                 return res.json({
                     message : "서버에서 요청을 처리하지 못했습니다.",
@@ -329,6 +329,31 @@ exports.api_setSettingNickname = (req, res) => {
             });
         });
     });
+};
 
+exports.api_putSettingSocial = (req, res ) => {
+    const social_list = ['github', 'naver'];
+    let request_social_name = req.body.social_name;
 
+    if(social_list.some(row => row === request_social_name)){
+        request_social_name = "key_" + request_social_name;
+        user_DB.put_Social_Unconnect(req.session.user.user_id, request_social_name, ( err )=> {
+            if(err){
+                return res.status(500).json({
+                    message : "요청을 처리하는 도중, 문제가 발생했습니다.",
+                    result : false
+                });
+            }
+
+            res.json({
+                message : "성공적으로 소셜 연동을 해제하였습니다.",
+                result : true
+            });
+        });
+    }else{
+        res.status(400).json({
+            message : "잘못된 접근으로, 문제가 발생했습니다.",
+            result : false
+        });
+    }
 };

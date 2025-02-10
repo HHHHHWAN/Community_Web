@@ -4,7 +4,6 @@ require('dotenv').config();
 const { read_DB , write_DB } = require("../models/mysql_connect");
 const redis_client = require('../models/redis_connect');
 const data_utils = require('../utils/dataUtils');
-const { response, query } = require('express');
 
 
 // email, nickname used check
@@ -166,7 +165,7 @@ const User_model = {
                         if(request === 'auth_login_request'){
                             // 이미 가입된 경우
                             if(check_user_info[0][req.session.social.social_key]){
-                                return callback(true,'already_key');
+                                return callback(true, 'already_key');
                             }
                             
                             // social key register
@@ -175,10 +174,9 @@ const User_model = {
                                     
                                     const social_connect = await update_user_social_key( req.session.social.social_key, req.session.social.id, check_user_info[0].id);
         
-                                    if(social_connect){
-                                        // 쿼리 처리문제
+                                    if(!social_connect){
+                                        // 소셜연동 실패 ( 반환 false) 
                                         req.session.social = null;
-                                        // 일반 로그인 처리
                                         console.log("User_model, 147line : Update query err")
                                         return callback(true,'Server account update error');
                                     }
@@ -336,7 +334,7 @@ const User_model = {
     },
 
     //Social Login Token request
-    request_token_social : async (req,callback) => {
+    request_token_social : async (req, callback) => {
 
         const request_code = req.query.code;
         const social_type = req.params.social_url;
@@ -347,15 +345,16 @@ const User_model = {
 
             // Social token request
             if(social_type === 'github'){
-
                 var user_data = await Oauth_modul_object.request_token_social_github(request_code);
             } else if ( social_type === 'naver'){
                 if( req.query.error ){
-                    console.log("소셜 연동 에러 반환 : ", req.query.error_description);
+                    console.log("( request_token_social ) social_type 체크 에러 : ", req.query.error_description);
                     return callback(true, "Social Access Fail");
                 }
-
                 var user_data = await Oauth_modul_object.request_token_social_naver(request_code);
+            } else {
+                console.log("( request_token_social ) social_type 체크 에러  : 존재하지 않는 소셜 정보");
+                return callback(true, "Social Access Fail");
             }
             
             // social email duplicated check
@@ -365,7 +364,7 @@ const User_model = {
             req.session.social = {
                 id : user_data.id,
                 email : user_data.email,
-                social_key : 'key_' + social_type
+                social_key : "key_" + social_type
             }
 
             // 이미 존재하는 이메일인 경우
@@ -420,7 +419,7 @@ const User_model = {
         });
     },
 
-    set_Setting_Nickname : ( user_id, input_nickname, callback) => {
+    put_Setting_Nickname : ( user_id, input_nickname, callback) => {
         const query = `UPDATE User SET nickname = ? WHERE id = ?`;
 
         write_DB.query(query, [ input_nickname, user_id ], ( err, result ) => {
@@ -433,22 +432,44 @@ const User_model = {
                 console.error("( set_Setting_Nickname ) 닉네임 변경 시도, 영향 받은 레코드 존재하지 않음");
                 console.log("요청 데이터 <user_id, input_nickname > : (",user_id,",",input_nickname,")");
 
-                return callback("닉네임 변경 실패");
+                return callback(true);
             }
 
-            callback(null, result);
+            callback(null);
         });
     },
 
     get_Nickname : (search_nickname, callback ) => {
-        const query = `SELECT nickname FROM User WHERE nickname = ?`
+        const query = `SELECT nickname FROM User WHERE nickname = ?`;
         read_DB.query(query, [search_nickname], (err, result) => {
             if(err){
                 return callback(err, null);
             }
             callback(null, result);
         });
+    },
+
+
+    put_Social_Unconnect : ( user_id, social_key , callback ) => {
+        const query = `UPDATE User SET ${social_key} = NULL WHERE id = ?`;
+
+        write_DB.query(query, [ user_id ], (err, result) => {
+
+            if(err){
+                return callback(err);
+            }
+
+            if(!result.affectedRows){
+                console.error("( put_Social_Unconnect ) 소셜 해제 변경 시도, 영향 받은 레코드 존재하지 않음");
+                console.log("요청 데이터 <user_id, social_key > : (",user_id,",",social_key,")");
+
+                return callback(true);
+            }
+
+            callback(null);
+        });
     }
+
 };
 
 module.exports = User_model

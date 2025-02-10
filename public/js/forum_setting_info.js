@@ -18,7 +18,7 @@ const set_setting_info_event = () => {
         if(!regex_nickname.test(name_input_object.value)){
             name_hint_object.style.color='red';
             alert('올바른 조건으로 다시 입력해주세요.');
-            event.preventDefault();
+            return event.preventDefault();
         }
 
         try{
@@ -53,9 +53,10 @@ const set_setting_info_event = () => {
 const get_setting_info = async () => {
     
     try{
-        info_object.style.background = 'rgb(223, 244, 231)';
         info_object.disabled = true;
         config_object.disabled = false;
+        info_object.style.background = 'rgb(223, 244, 231)';
+
         main_object.innerHTML = `
                 <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>회원정보</b></div>
                 

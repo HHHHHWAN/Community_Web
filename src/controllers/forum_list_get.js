@@ -104,35 +104,6 @@ exports.getDetailContents = (req, res) => {
     });
 };
 
-//  API POST
-// exports.getDetailPost = ( req, res) => {
-//     const content_id = req.params.Content_id;
-
-//     Content_Service.get_record(content_id, "view", (err,results) => {
-//         if (err) { 
-//             console.error("( getDetailPost ) => ( get_record ) : ",err);
-//             return res.status(500).json({
-//                 Message : 'query output error',
-//                 Content_object : results
-//             });
-//         }
-
-//         if (!results) { // 클라이언트 잘못된 요청, 존재하지 않은 게시글
-//             return res.status(400).json({
-//                 Message : 'invaild Post',
-//                 Content_object : results
-//             });
-//         }
-
-//         res.status(200).json({ 
-//             Message : "Post Response OK", 
-//             Content_object : results
-//         });
-//     });
-// };
-
-
-
 //'/:pagetype/edit'
 exports.getCreateContent = (req, res) => {
     const pagetype = req.params.pagetype;
@@ -160,7 +131,6 @@ exports.getCreateContent = (req, res) => {
     }
 
 };
-
 
 exports.get_SearchContents = (req, res) => {
     const search_keyword = req.query.search_keyword;
