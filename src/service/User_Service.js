@@ -71,7 +71,7 @@ async function del_redis_dup_user_session(user_id, sessionID) {
             await redis_client.del(`user:${result_value}`);
         }
 
-        // login time setting 
+        // Redis login time setting 
         await redis_client.setEx(`user:${user_id}:session`, 1800, sessionID );
 
         
@@ -468,8 +468,42 @@ const User_model = {
 
             callback(null);
         });
-    }
+    },
 
+    put_Password_change :  async ( user_id, current_password, new_password , callback ) => {
+        const read_DB_promise = read_DB.promise();
+        const write_DB_promise = write_DB.promise();
+
+        const select_query = `SELECT * FROM User WHERE id = ?`;
+        const update_query = `UPDATE User SET password = ? WHERE id=?`;
+
+        try{
+            const [select_result] = await read_DB_promise.query(select_query,[user_id]);
+
+            if(!select_result.length){
+                return callback(403, "잘못된 접근으로, 문제가 발생했습니다.");
+            }
+
+            if(!await bcrypt.compare(current_password, select_result[0].password)){
+                return callback(401, "현재 비밀번호가 불일치 합니다.");
+            }
+
+            const salt = await bcrypt.genSalt(10); // salt 생성
+            const hashedPassword = await bcrypt.hash(new_password, salt);
+
+            const [update_result] = await write_DB_promise.query(update_query,[hashedPassword, user_id]);
+
+            if(update_result.affectedRows > 0 ){
+                return callback(false, "비밀번호 변경이 완료되었습니다.");
+            }
+
+            callback(403, "잘못된 접근으로, 문제가 발생했습니다.");
+
+        }catch(err){
+            console.error("(put_Password_change) catch 발생 : ",err);
+            callback(500, "요청을 처리하는 도중, 문제가 발생했습니다.");
+        }
+    }
 };
 
 module.exports = User_model

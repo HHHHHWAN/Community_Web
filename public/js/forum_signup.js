@@ -48,7 +48,7 @@ document.getElementById('signin').addEventListener('submit' , function(event){
 	}
 
 	if ( !(regex_password.test(password)) ){
-		document.getElementById('error_pw').textContent = "8자 이상 영소문자 + 숫자 + 특수문자 조합";
+		document.getElementById('error_pw').textContent = "8자 이상 영 소,대문자 + 숫자 + 특수문자 조합";
 		foam_check = false;
 	}
 

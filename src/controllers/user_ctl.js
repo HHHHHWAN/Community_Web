@@ -357,3 +357,26 @@ exports.api_putSettingSocial = (req, res ) => {
         });
     }
 };
+
+
+exports.api_putSettingPassword = ( req, res ) => {
+    const current_password = req.body.Current_Password;
+    const new_password = req.body.New_Password;
+    
+    console.log(current_password,new_password);
+    
+    user_DB.put_Password_change(req.session.user.user_id, current_password, new_password, (status,service_message) => {
+
+        if(status){
+            return res.status(status).json({
+                message : service_message,
+                result : false
+            });
+        }
+
+        res.json({
+            message : service_message,
+            result : true
+        });
+    });
+};

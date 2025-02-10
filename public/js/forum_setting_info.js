@@ -72,7 +72,7 @@ const get_setting_info = async () => {
                 <div>
                     <div class="label_div">&middot; 닉네임 변경</div>
                     <input id="nickname_input" name="nickname_input" required >
-                    <span style="font-size:12px" id="nickname_hint">※ 2자 이상, 15자 이하 영어, 한글 문자 <span>
+                    <span style="font-size:11px" id="nickname_hint">※ 2자 이상, 15자 이하 영어, 한글 문자 <span>
                 </div>
                 
                 <div style="margin-top: 15px;"><button type="button" id="nickname_button" style="width: 50px; height: 30px;" disabled> 변경 </button></div>

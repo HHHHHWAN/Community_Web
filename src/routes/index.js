@@ -57,7 +57,8 @@ router.get('/api/weather', async (req, res) => {
     }
 });
 
-// API POST LIST GET
+// API POST LIST GET  
+router.put('/api/settings/password', login_Check, user_Controller.api_putSettingPassword);
 router.put('/api/settings/nickname', login_Check, user_Controller.api_putSettingNickname);
 router.put('/api/settings/social', login_Check, user_Controller.api_putSettingSocial);
 router.get('/api/settings/info', login_Check, user_Controller.api_getSettinginfo);
