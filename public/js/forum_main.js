@@ -14,12 +14,13 @@ async function callWeatherApi(lat, lon, city) {
         
         const api_Response = await fetch('/api/weather?' + endpoint );
 
-        if(!api_Response.ok){
-            throw new Error(`fail weather api Connect Status : ${Response.status}`);
-        }
 
         const data = await api_Response.json();
         
+        if(!api_Response.ok){
+            throw new Error(`fail weather api Connect Status : ${Response.status} \n`);
+        }
+
 
         const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = '';
@@ -45,7 +46,7 @@ async function callWeatherApi(lat, lon, city) {
         `;
 
     }catch(err){
-        console.log(err);
+        console.error(err);
         const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = `
             <div> 오늘의 날씨를 불러올 수 없어요.. </div>

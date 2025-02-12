@@ -78,6 +78,7 @@ router.get('/search', get_Controller.get_SearchContents);
 router.get('/user/settings', login_Check, (req, res) => {
     res.render('forum_setting.ejs');
 });
+
 router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
 
 // postlist

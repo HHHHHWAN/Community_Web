@@ -2,15 +2,21 @@
 const post_dom = document.querySelector('.user_list_box_dom');
 const more_button = document.getElementById('more_button');
 
-function get_user_contents(user_id, page){
-    fetch(`/user/${user_id}/post?page=${page}`)
-    .then( res => {
-        if(!res.ok){
-            throw new error("서버 요청 실패");
+const get_user_contents = async (user_id, page) => {
+    try{
+        const api_response = await fetch(`/user/${user_id}/post?page=${page}`, {
+            method : 'GET',
+            headers : {
+                'Accept' : 'application/json'
+            }
+        });
+ 
+        const data = await api_response.json();
+
+        if(!api_response.ok){
+            throw new Error(data.message);
         }
-        return res.json();
-    })
-    .then((data) => {
+
         if(data.post_list.length){
             data.post_list.forEach(row => {
                 const post_li = document.createElement('li');
@@ -37,22 +43,28 @@ function get_user_contents(user_id, page){
              <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 작성한 게시물이 없습니다.<div>
             `;
         }
-    }).catch((err) => {
-        request_error(err);
-    });
+        
+    }catch(err){
+        alert(err);
+    }
 };
 
 
-function get_user_activity(user_id, page){
-    fetch(`/user/${user_id}/activity?page=${page}`)
-    .then( res => {
-        if(!res.ok){
-            throw new error("서버 요청 실패");
+const get_user_activity = async (user_id, page) => {
+    try{
+        const api_response = await fetch(`/user/${user_id}/activity?page=${page}`, {
+            method : 'GET',
+            headers : {
+                'Accept' : 'application/json'
+            }
+        });
+ 
+        const data = await api_response.json();
+
+        if(!api_response.ok){
+            throw new Error(data.message);
         }
 
-        return res.json();
-    })
-    .then((data) => {
         if(data.activity_list.length){
             data.activity_list.forEach(row => {
                 const post_li = document.createElement('li');
@@ -84,15 +96,10 @@ function get_user_activity(user_id, page){
              <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 작성한 게시물이 없습니다.<div>
             `;
         }
-
-    }).catch((err) => {
-        request_error(err);
-    });
-};
-
-function request_error(err){
-    console.error(err);
-    alert("잠시후 다시 시도해주세요.");
+    }catch(err){
+        alert(err);
+    }
+    
 };
 
 

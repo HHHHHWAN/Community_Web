@@ -88,17 +88,16 @@ const get_setting_info = async () => {
         const data = await api_Response.json();
 
         if(!api_Response.ok){
-            throw new Error(data);
+            throw new Error(data.message);
         }
 
         document.getElementById('user_info_id').textContent = data.setting_username;
         document.getElementById('user_info_email').textContent = data.setting_email;
 
         set_setting_info_event();
+
     }catch(err){
-        
-        console.error("returnStatus : ", err.returnStatus);
-        alert(err.err);
+        alert(err);
     }
 
 

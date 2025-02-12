@@ -4,8 +4,7 @@ require('dotenv').config();
 exports.request_token_social_github = async (request_code) => {
 
     try{
-        // api 통신으로 토큰 발행
-        // 필수 정보 post body 형식으로 제시
+
         const token_response = await fetch('https://github.com/login/oauth/access_token',{
             method : 'POST',
             headers : {
@@ -19,8 +18,13 @@ exports.request_token_social_github = async (request_code) => {
                 redirect_uri : `${process.env.DOMAIN}/login/github/callback`,
             }),
         });
-        
+    
         const token_data = await token_response.json();
+
+        if(!token_response.ok){
+            throw new Error(token_response);
+        }
+
         const access_token = token_data.access_token;
 
         const user_response = await fetch('https://api.github.com/user',{
@@ -31,11 +35,15 @@ exports.request_token_social_github = async (request_code) => {
 
         const user_data = await user_response.json();
 
+        if(!user_response.ok){
+            throw new Error(user_response);
+        }
+
         return user_data;
 
     }catch(err){
 
-        console.log(" GitHub Connect Fail ");
+        console.error("( request_token_social )  GitHub Connect Fail \n", err);
         
         return null;
     }
@@ -60,6 +68,10 @@ exports.request_token_social_naver = async (request_code) => {
         
         const token_data = await token_response.json();
 
+        if(!token_response.ok){
+            throw new Error(token_response);
+        }
+
         const access_token = token_data.access_token;
 
         const user_response = await fetch('https://openapi.naver.com/v1/nid/me',{
@@ -71,14 +83,14 @@ exports.request_token_social_naver = async (request_code) => {
         const user_data = await user_response.json();
 
         if(user_data.message != 'success' ){
-            throw new Error('Social Connect Fail');
+            throw new Error(user_data);
         }
 
         return user_data.response;
 
     }catch(err){
 
-        console.log(" Naver Connect Fail ");
+        console.error(" ( request_token_social_naver ) Naver Connect Fail : \n", err);
         
         return null;
     }

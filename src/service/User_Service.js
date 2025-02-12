@@ -245,12 +245,18 @@ const User_model = {
         }
     },
 
+    // 유저 정보 반환
     get_userinfo : ( user_id , callback ) => {
-        const query = `select id, nickname from User where id = ?`;
+        const query = `SELECT id, nickname FROM User WHERE id = ?`;
 
         read_DB.query(query, [user_id] ,(err, result) => {
-            if(!result || err){
-                return callback(err, result);
+            if(err){
+                console.error("( getUserinfo => get_userinfo ) ", err.stack);
+                return callback(500, null);
+            }
+
+            if(!result.length){
+                return callback(400, null);
             }
 
             callback(null, result[0]);
@@ -258,20 +264,21 @@ const User_model = {
     },
 
     get_userinfo_post : ( user_id, limit, offset, callback ) => {
-        const query = `select * from Content where user_id = ? and visible = 1 limit ? offset ?`;
+        const query = `SELECT * FROM Content WHERE user_id = ? AND visible = 1 LIMIT ? OFFSET ?`;
 
-        read_DB.query(query, [user_id, limit, offset] ,(err, result) => {
+        read_DB.query(query, [user_id, limit, offset] ,(err, DB_results) => {
             if(err){
-                return callback(err, null);
+                console.error("( getUserinfo => get_userinfo_post ) : \n" ,err.stack);
+                return callback(500, null);
             }
             
-            result = data_utils.content_type_string(result);
+            DB_results = data_utils.content_type_string(DB_results);
             
-            result.forEach(row => {
+            DB_results.forEach(row => {
                 row.date_now = data_utils.date_before(row.date_create);
             });
 
-            callback(null, result);
+            callback(null, DB_results);
         });
     },
     
@@ -283,18 +290,20 @@ const User_model = {
             A LEFT JOIN User ON A.content_user_id  = User.id;
         `;
 
-        read_DB.query(query, [user_id,  limit, offset] ,(err, result) => {
+        // 리스트 출력
+        read_DB.query(query, [user_id,  limit, offset] ,(err, DB_results) => {
             if(err){
-                return callback(err,null);
+                console.error("( getUserinfo => get_userinfo_activity ) : \n" , err.stack);
+                return callback(500, null);
             }
 
-            result = data_utils.content_type_string(result);
+            DB_results = data_utils.content_type_string(DB_results);
 
-            result.forEach(row => {
+            DB_results.forEach(row => {
                 row.date_now = data_utils.date_before(row.comment_create_at);
             });
 
-            callback(null, result);
+            callback(null, DB_results);
         });
     },
 
@@ -342,19 +351,25 @@ const User_model = {
         const Oauth_modul_object = require('./User_Service_Oauth');
 
         try{
-
-            // Social token request
+            let user_data;
+            // Social 인가서버 인증
             if(social_type === 'github'){
-                var user_data = await Oauth_modul_object.request_token_social_github(request_code);
+                user_data = await Oauth_modul_object.request_token_social_github(request_code);
             } else if ( social_type === 'naver'){
                 if( req.query.error ){
                     console.log("( request_token_social ) social_type 체크 에러 : ", req.query.error_description);
                     return callback(true, "Social Access Fail");
                 }
-                var user_data = await Oauth_modul_object.request_token_social_naver(request_code);
+                user_data = await Oauth_modul_object.request_token_social_naver(request_code);
             } else {
                 console.log("( request_token_social ) social_type 체크 에러  : 존재하지 않는 소셜 정보");
                 return callback(true, "Social Access Fail");
+            }
+
+            console.error("");
+            // auth err
+            if(!user_data){
+                throw new Error("( request_token_social ) : 소셜 인증 실패");
             }
             
             // social email duplicated check
@@ -389,35 +404,49 @@ const User_model = {
 
         }catch(err){
             // 소셜 토큰 에러
-            console.log(err);
+            console.error(err);
             callback(true, err);
         }
     },
 
+    // 회원 정보 DOM 데이터 -> api_getSettinginfo
+    get_Setting_user_info : (user_id, callback) => {
+        const query = `SELECT username, email FROM User WHERE id = ?`;
+
+        read_DB.query(query,[ user_id ],( err, DB_results ) => {
+            if(err){
+                return callback(err, null);
+            }
+
+            callback(err, DB_results)
+        });
+    },
+
+    // 소셜 연동 현황 -> api_getSettingConfig
     get_Setting_Social : (user_id, callback) => {
-        const query = `SELECT key_github, key_naver FROM User WHERE id = ?`;
+        const query = `SELECT 
+            CASE 
+                WHEN key_github IS NULL THEN FALSE
+                ELSE
+                    TRUE
+                END AS key_github,
+            CASE
+                WHEN key_naver IS NULL THEN FALSE
+                ELSE
+                    TRUE
+            END AS key_naver
+            FROM User WHERE id = ?`;
 
-        read_DB.query(query,[user_id],( err, results ) => {
-
+        read_DB.query(query,[user_id],( err, DB_results ) => {
             if(err){
                 return callback(err, null);
             }
             
-
-            callback(null,results);
+            callback(null, DB_results);
         });
     },
-    get_Setting_user_info : (user_id, callback) => {
-        const query = `SELECT username, email FROM User WHERE id = ?`;
 
-        read_DB.query(query,[user_id],( err, results ) => {
-            if(err){
-                return callback(err, null);
-            }
 
-            callback(err,results)
-        });
-    },
 
     put_Setting_Nickname : ( user_id, input_nickname, callback) => {
         const query = `UPDATE User SET nickname = ? WHERE id = ?`;
@@ -481,7 +510,7 @@ const User_model = {
             const [select_result] = await read_DB_promise.query(select_query,[user_id]);
 
             if(!select_result.length){
-                return callback(403, "잘못된 접근으로, 문제가 발생했습니다.");
+                return callback(404, "잘못된 접근으로, 문제가 발생했습니다.");
             }
 
             if(!await bcrypt.compare(current_password, select_result[0].password)){
@@ -497,7 +526,7 @@ const User_model = {
                 return callback(false, "비밀번호 변경이 완료되었습니다.");
             }
 
-            callback(403, "잘못된 접근으로, 문제가 발생했습니다.");
+            callback(404, "잘못된 접근으로, 문제가 발생했습니다.");
 
         }catch(err){
             console.error("(put_Password_change) catch 발생 : ",err);

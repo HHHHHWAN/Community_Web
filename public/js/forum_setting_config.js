@@ -136,7 +136,7 @@ const get_setting_config = async () => {
         const data = await response.json();
 
         if(!response.ok){
-            throw new Error(`사용자 정보 불러오기 실패 :`, data.status , data.err);
+            throw new Error(data.message);
         }
 
         
@@ -193,7 +193,7 @@ const get_setting_config = async () => {
         set_setting_config_event();
 
     }catch(err){
-        console.error(err);
-        alert("잘못된 접근입니다.");
+        alert(err);
+        location.reload();
     }
 };

@@ -4,6 +4,6 @@ document.getElementById('delete_account_form').addEventListener('submit', (event
         alert('이용약관에 동의가 필요합니다.');
         event.preventDefault();
     } else {
-        alert('탈퇴 완료');
+        alert('( 테스트 ) 회원탈퇴 처리 완료');
     }
 });

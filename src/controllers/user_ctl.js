@@ -145,156 +145,152 @@ exports.getUserinfo = (req, res) => {
     const limit = page * 10;
     const offset = (page - 1) * 10;
 
-    // SSR REQUEST CHECK ( DEFAULT "EDIT POST")
+    // text/html 요청 여부
     if(user_category) {
-        // API REQUEST CHECK
+        // 요청 데이터 확인
         if (user_category === 'post'){
             //유저 작성 게시물
-            user_DB.get_userinfo_post( user_id, limit, offset, ( err, results ) => {
-                if(err){
-                    console.error("( getUserinfo => get_userinfo_post ) : " ,err);
+            user_DB.get_userinfo_post( user_id, limit, offset, ( status, service_results ) => {
+                if(status){
                     return res.status(500).json({
-                        err : "Server Internal Error",
-                        returnStatus : 500
+                        message : "서버에서 요청을 처리하지 못했습니다.",
+                        result : false
                     });
                 }
-
-                if(!results){
-                    return res.status(400).json({
-                        err : "Bad Request : Unknown User Request",
-                        returnStatus : 400
-                    });
-                }
-
                 res.json({
-                    post_list : results
+                    post_list : service_results,
+                    result : true
                 });
             });
+
         } else if (user_category === 'activity'){
-            //유저 활동
-            user_DB.get_userinfo_activity(user_id, limit, offset,(err, results) => {
-                if(err){
-                    console.error("( getUserinfo => get_userinfo_activity ) : " ,err);
-                    return res.status(500).json({
-                        err : "Server Internal Error",
-                        returnStatus : 500
-                    });
-                }
-                if(!results){
-                    return res.status(400).json({
-                        err : "Bad Request : Unknown User Request",
-                        returnStatus : 400
+
+            //유저 활동 데이터 반환
+            user_DB.get_userinfo_activity(user_id, limit, offset,(status, service_results) => {
+                if(status){
+                    return res.status(status).json({
+                        message : "서버에서 요청을 처리하지 못했습니다.",
+                        result : false
                     });
                 }
 
                 res.json({
-                    activity_list : results
+                    activity_list : service_results,
+                    result : true
                 });
             });
-        } else{
+
+        }else{
+            // 유효하지 않음
             return res.status(400).json({
-                err : "Bad Request : Unknown User Request",
-                returnStatus : 400
+                message : "잘못된 요청입니다.",
+                result : false
             });
         }
     } else {
-        // GET EJS, USER POST
-        user_DB.get_userinfo(user_id, (err, result) => {
-            if(err){
-                console.error("( getUserinfo => get_userinfo ) ",err);
-                return res.status(500).json({
-                    err : 'Server Internal Error',
-                    returnStatus : 500
-                });
+        // GET 렌더링, USER 정보
+        user_DB.get_userinfo(user_id, (status, result) => {
+            if(status){
+                return res.status(status).render('forum_error.ejs', {layout: false , returnStatus : status});
             }
 
-            if(!result){
-                return res.status(400).json({
-                    err : 'Bad Request : Unknown User Request',
-                    returnStatus : 400
-                });
-            }
-
-            res.render('forum_user.ejs' , { user_info : result});
+            res.render('forum_user.ejs' , { user_info : result });
         });
     }
 };
 
 
-// Config 표시 데이터 호출
-exports.api_getSettingConfig = (req,res) => {
-
-    // Session 정보
-    // req.session.user = {
-    //     user_id : check_user_info[0].id,
-    //     nickname : check_user_info[0].nickname
-    // };
-
-    user_DB.get_Setting_Social( req.session.user.user_id, (err,results) => {
-        if(err){
-            console.error("( api_getSettingConfig => get_Setting_Social ) ",err);
-            return res.status(500).json({
-                err : "Server Internal Error",
-                returnStatus : 500
-            });
-        }
-        if (!results){
-            console.error(err);
-            return res.status(400).json({
-                err : "Bad Request : Unknown User Request",
-                returnStatus : 400
-            });
-        }
-
-        res.json({
-            social_info : results[0]
-        });
-    });    
-};
-
-// User 정보 반환
+// 회원 정보 DOM 데이터 GET
 exports.api_getSettinginfo = (req,res) => {
 
-    user_DB.get_Setting_user_info( req.session.user.user_id, (err,result) => {
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되었습니다.",
+            result : false
+        });
+    }
+
+    user_DB.get_Setting_user_info( req.session.user.user_id, (err, service_result) => {
         if(err){
-            console.error("( api_getSettinginfo => get_Setting_user_info ) ",err);
+            console.error("( api_getSettinginfo => get_Setting_user_info ) : \n", err.stack);
             return res.status(500).json({
-                err : "Server Internal Error",
-                returnStatus : 500
+                message : "서버에서 요청을 처리하지 못했습니다.",
+                result : false
             });
         }
-        if (!result){
-            console.error(err);
-            return res.status(400).json({
-                err : "Bad Request : Unknown User Request",
-                returnStatus : 400
+        if (!service_result.length){
+            return res.status(404).json({
+                message : "요청한 정보를 찾지 못했습니다.",
+                result : false
             });
         }
 
         res.json({
-            setting_username : result[0].username,
-            setting_email : result[0].email
+            setting_username : service_result[0].username,
+            setting_email : service_result[0].email,
+            result : true
         });
     });    
 };
+
+
+// 계정 관리 DOM 데이터 GET
+exports.api_getSettingConfig = (req,res) => {
+
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되었습니다.",
+            result : false
+        });
+    }
+
+    user_DB.get_Setting_Social( req.session.user.user_id, (err, service_result) => {
+        if(err){
+            console.error("( api_getSettingConfig => get_Setting_Social ) : \n",err.stack);
+            return res.status(500).json({
+                message : "서버에서 요청을 처리하지 못했습니다.",
+                result : false
+            });
+        }
+        if (!service_result.length){
+            console.error(err);
+            return res.status(404).json({
+                message : "요청한 정보를 찾지 못했습니다.",
+                result : false
+            });
+        }
+
+        res.json({
+            social_info : service_result[0],
+            result : true
+        });
+    });    
+};
+
 
 
 // 닉네임 변경 컨트롤
 exports.api_putSettingNickname = (req, res) => {
     const input_nickname = req.body.nickname_input || undefined;
 
-    // 제공되지 않은 루트로 접근
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되었습니다.",
+            result : false
+        });
+    }
+
     if(input_nickname === req.session.user.nickname){
         return res.status(400).json({
             message : "현재와 동일한 닉네임",
-            returnStatus : 400
+            result : false
         });
     }
 
     if(!input_nickname){
         return res.status(400).json({
             message : "요청한 값이 존재하지 않음",
-            returnStatus : 400
+            result : false
         });
     }
 
@@ -302,22 +298,22 @@ exports.api_putSettingNickname = (req, res) => {
         if(err){
             return res.status(500).json({
                 message : "서버에서 요청을 처리하지 못했습니다.",
-                returnStatus : 500
+                result : false
             });
         }
 
         if(check.length){
             return res.status(409).json({
                 message : "이미 사용중인 닉네임입니다.",
-                returnStatus : 409
+                result : false
             });
         }
 
         user_DB.put_Setting_Nickname(req.session.user.user_id, input_nickname , (err) => {
             if(err){
-                return res.json({
+                return res.status(500).json({
                     message : "서버에서 요청을 처리하지 못했습니다.",
-                    returnStatus : 500
+                    result : false
                 });
             }
             
@@ -325,15 +321,24 @@ exports.api_putSettingNickname = (req, res) => {
     
             res.json({
                 message : '닉네임이 변경되었습니다.',
-                returnStatus : 200
+                result : true
             });
         });
     });
 };
 
+// 소셜 해제 컨트롤
 exports.api_putSettingSocial = (req, res ) => {
     const social_list = ['github', 'naver'];
     let request_social_name = req.body.social_name;
+
+
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되었습니다.",
+            result : false
+        });
+    }
 
     if(social_list.some(row => row === request_social_name)){
         request_social_name = "key_" + request_social_name;
@@ -358,12 +363,25 @@ exports.api_putSettingSocial = (req, res ) => {
     }
 };
 
-
+// 비밀번호 변경 컨트롤
 exports.api_putSettingPassword = ( req, res ) => {
     const current_password = req.body.Current_Password;
     const new_password = req.body.New_Password;
     
-    console.log(current_password,new_password);
+
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되었습니다.",
+            result : false
+        });
+    }
+
+    if(process.env.SEESION_SECURE){
+        return res.json({
+            message : "( 테스트 ) 비밀번호 변경이 완료되었습니다.",
+            result : false
+        });
+    }
     
     user_DB.put_Password_change(req.session.user.user_id, current_password, new_password, (status,service_message) => {
 
