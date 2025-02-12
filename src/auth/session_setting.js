@@ -16,7 +16,7 @@ function session_config(){
         cookie: { 
             httpOnly : true, 
             sameSite : 'lax', 
-            secure: process.env.HTTPS,  
+            secure: JSON.parse(process.env.HTTPS),  
             maxAge: 1000 * 60 * 30 
         }
     });

@@ -376,7 +376,7 @@ exports.api_putSettingPassword = ( req, res ) => {
         });
     }
 
-    if(process.env.SEESION_SECURE){
+    if(JSON.parse(process.env.HTTPS)){
         return res.json({
             message : "( 테스트 ) 비밀번호 변경이 완료되었습니다.",
             result : false

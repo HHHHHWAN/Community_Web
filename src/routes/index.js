@@ -20,7 +20,7 @@ router.get('/login',user_Controller.getLogin_page);
 router.get('/signup',user_Controller.getSignUp_page);
 router.post('/login',user_Controller.setLogin_page); 
 router.post('/signup', (req,res,next) =>{
-    if( process.env.HTTPS ){
+    if( JSON.parse(process.env.HTTPS) ){
         return res.redirect('log_in.ejs');
     }
 
