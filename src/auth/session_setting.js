@@ -8,7 +8,8 @@ function session_config(){
     return session({
         secret : process.env.SESSION_SECRET, 
         resave : false, 
-        saveUninitialized: false, 
+        saveUninitialized : false,
+        proxy : true,
         store : new RedisStore_object({ 
             client : redis_client,
             prefix : 'user:'
