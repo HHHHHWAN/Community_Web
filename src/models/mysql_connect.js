@@ -1,4 +1,3 @@
-// sql 모듈 가져오기
 const DB = require('mysql2');
 require('dotenv').config();
 
@@ -18,8 +17,6 @@ const read_DB = DB.createConnection({
     password : process.env.DB_USER_PASS,
     database : process.env.DB_DATA_NAME
 });
-
-
 
 const write_DB = DB.createConnection({
     host : 'DB',
@@ -48,19 +45,19 @@ write_DB.connect((err) => {
 
 //  Initialize Table
 read_DB.query(`SHOW TABLES`, (err, query_results) => {
+    if(err){
+        console.error(" ( Initialize Table ) 초기화 체크 실패 : \n", err);
+        return
+    }
+
     if(!query_results.length){
         const TableObject = require('./table_DB');
         TableObject.Comment_Table(write_DB);
         TableObject.Forum_Table(write_DB);
         TableObject.User_Table(write_DB);
+
+        console.log("-- 테이블 초기화 진행 완료 --");
     }
 });
 
-
-
-
-
-
-
-// 현 프로젝트 모듈화 
 module.exports = { read_DB, write_DB };

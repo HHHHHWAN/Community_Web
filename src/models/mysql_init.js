@@ -18,9 +18,9 @@ const createTable = {
 
         write_db.query(query, (err, results) => {
             if(err){
-                console.error('create table err :',err);
+                console.error('create Content table err :',err);
             } else {
-                console.log('create table ok :',results);
+                console.log('create Content table ok :',results);
             }
         });
     },
@@ -40,9 +40,9 @@ const createTable = {
         
         write_db.query(query, (err, results) => {
             if(err){
-                console.error('create table err : ' , err);
+                console.error('create User table err : ' , err);
             } else {
-                console.log('create table ok : ' , results);
+                console.log('create User table ok : ' , results);
             }
         });
     },
@@ -51,7 +51,7 @@ const createTable = {
         const query = `
         CREATE TABLE IF NOT EXISTS Comment (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            comment VARCHAR(255) NOT NULL,
+            comment TEXT NOT NULL,
             user_id INT NOT NULL,
             content_id  INT NOT NULL,
             parent_id INT,
@@ -66,9 +66,9 @@ const createTable = {
         
         write_db.query(query, (err, results) => {
             if(err){
-                console.error('create table err : ' , err);
+                console.error('create Comment table err : ' , err);
             } else {
-                console.log('create table ok : ' , results);
+                console.log('create Comment table ok : ' , results);
             }
         });
     }
