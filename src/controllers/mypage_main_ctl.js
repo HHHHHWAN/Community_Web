@@ -1,10 +1,9 @@
-//forum_main_page
-const Content_db = require('../service/forum_Content');
+const post_get_service = require('../service/post_get_service');
 
 
 // main page contents load
 exports.getMyPagelist = (req, res) => {
-    Content_db.get_mainpage_contents((err, result ) => {
+    post_get_service.get_mainpage_contents(( err, result ) => {
         if(err){
             console.error("( getMyPagelist ) => ( get_mainpage_contents ) : ", err );
 
@@ -12,7 +11,7 @@ exports.getMyPagelist = (req, res) => {
         }
 
         // popular contents load
-        Content_db.get_popular_contents(5,0,'',(err, result_popular) => {
+        post_get_service.get_popular_contents(5,0,'',( err, result_popular ) => {
             if(err){
 
                 console.error("( getMyPagelist ) => ( get_popular_contents ) : ", err );

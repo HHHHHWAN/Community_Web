@@ -1,7 +1,7 @@
 // forum_list_set.js
 
 
-const Content_Service = require('../service/forum_Content');
+const post_set_service = require('../service/post_set_service');
 
 
 
@@ -16,10 +16,10 @@ exports.setCreateContent = (req,res) => {
 
     if (content_id){
         // MODIFY
-        Content_Service.re_create_content(title, text_input, content_id, category, (err) => {
+        post_set_service.put_content(title, text_input, content_id, category, (err) => {
 
             if (err) {
-                console.error("( setCreateContent ) => ( re_create_content ) : ", err);
+                console.error("( setCreateContent ) => ( put_content ) : ", err);
 
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }
@@ -28,9 +28,9 @@ exports.setCreateContent = (req,res) => {
         });
     } else {
         // NEW EDIT
-        Content_Service.create_content(title, text_input, category, req.session.user.user_id, (err,result) => {
+        post_set_service.add_content(title, text_input, category, req.session.user.user_id, (err,result) => {
             if(err){
-                console.error("( setCreateContent ) => ( create_content ) : ", err);
+                console.error("( setCreateContent ) => ( add_content ) : ", err);
 
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }   
@@ -51,9 +51,9 @@ exports.setCreateComment = (req,res) => {
 
     if(content_id){
         //comment create 
-        Content_Service.create_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
+        post_set_service.add_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
             if (err){
-                console.error("( setCreateComment ) => ( create_comment ) : ", err);
+                console.error("( setCreateComment ) => ( add_comment ) : ", err);
 
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }
@@ -62,13 +62,13 @@ exports.setCreateComment = (req,res) => {
         });
     } else {
         // comment modify
-        Content_Service.re_create_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
+        post_set_service.put_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
             if (err){
-                console.error("( setCreateComment ) => ( re_create_comment ) : ", err);
+                console.error("( setCreateComment ) => ( put_comment ) : ", err);
 
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             } else if (!result.changedRows){
-                console.error("( setCreateComment ) => ( re_create_comment ) : ", "권한없음");
+                console.error("( setCreateComment ) => ( put_comment ) : ", "권한없음");
 
                 return res.status(401).render('forum_error.ejs', { layout : false, returnStatus : 401 });
             }
@@ -86,7 +86,7 @@ exports.setInvisiblyctl = (req, res) => {
     const content_id = req.params.content_id;
     const comment_id = req.params.comment_id;
     if(content_id){
-        Content_Service.set_invisibly_content(content_id, req.session.user.user_id , (err, result) => {
+        post_set_service.set_invisibly_content(content_id, req.session.user.user_id , (err, result) => {
             if(err){
                 return res.status(500).json({message : "삭제 처리를 하는 도중 에러가 발생했습니다."});
             }
@@ -99,7 +99,7 @@ exports.setInvisiblyctl = (req, res) => {
             return res.status(200).json({message : "삭제가 완료되었습니다."});
         });
     }else{
-        Content_Service.set_invisibly_comment(comment_id, req.session.user.user_id,(err,result) => {
+        post_set_service.set_invisibly_comment(comment_id, req.session.user.user_id,(err,result) => {
             if(err){
                 return res.status(500).json({message : "삭제 처리를 하는 도중 에러가 발생했습니다."});
             }

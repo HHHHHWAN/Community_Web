@@ -1,4 +1,4 @@
-const user_DB = require("../service/User_Service");
+const user_get_service_object = require("../service/user_get_service");
 
 // env 연동
 require('dotenv').config();
@@ -18,7 +18,7 @@ exports.getUserinfo = (req, res) => {
         // 요청 데이터 확인
         if (user_category === 'post'){
             //유저 작성 게시물
-            user_DB.get_userinfo_post( user_id, limit, offset, ( status, service_results ) => {
+            user_get_service_object.get_userinfo_post( user_id, limit, offset, ( status, service_results ) => {
                 if(status){
                     return res.status(500).json({
                         message : "서버에서 요청을 처리하지 못했습니다.",
@@ -34,7 +34,7 @@ exports.getUserinfo = (req, res) => {
         } else if (user_category === 'activity'){
 
             //유저 활동 데이터 반환
-            user_DB.get_userinfo_activity(user_id, limit, offset,(status, service_results) => {
+            user_get_service_object.get_userinfo_activity(user_id, limit, offset, (status, service_results) => {
                 if(status){
                     return res.status(status).json({
                         message : "서버에서 요청을 처리하지 못했습니다.",
@@ -57,7 +57,7 @@ exports.getUserinfo = (req, res) => {
         }
     } else {
         // GET 렌더링, USER 정보
-        user_DB.get_userinfo(user_id, (status, result) => {
+        user_get_service_object.get_userinfo(user_id, (status, result) => {
             if(status){
                 return res.status(status).render('forum_error.ejs', {layout: false , returnStatus : status});
             }

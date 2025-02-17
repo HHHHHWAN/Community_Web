@@ -151,7 +151,7 @@ const auth_service_object = {
                 // social login access define
                 // used email status
 
-                const query = `select id, nickname from User where email = ? and ${ req.session.social.social_key } = ? `;
+                const query = `SELECT id, nickname FROM User WHERE email = ? AND ${ req.session.social.social_key } = ? `;
                 
                 //User_DB query 
                 const [ check_user_info ] = await read_DB_promise.query(query,[req.session.social.email, req.session.social.id]);
@@ -285,7 +285,7 @@ const auth_service_object = {
         const request_code = req.query.code;
         const social_type = req.params.social_url;
 
-        const Oauth_modul_object = require('./User_Service_Oauth');
+        const Oauth_modul_object = require('./Oauth_service');
 
         try{
             let user_data;

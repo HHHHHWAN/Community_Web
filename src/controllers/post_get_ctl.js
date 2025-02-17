@@ -1,7 +1,6 @@
 // src/controllers/forum_list_get.ctl 
 
-//get DB connnect object
-const Content_Service = require('../service/forum_Content');
+const post_get_service = require('../service/post_get_service');
 
 
 //DB 게시물 리스트 가져오기 ( 10 개 고정 )
@@ -9,7 +8,7 @@ function get_Contents(pagetype, page, callback, order_type = "newest_order") {
     const offset = (page - 1) * 10;
 
     if (pagetype === "popular"){
-        Content_Service.get_popular_contents(10, offset, order_type, (err, results, counts) => { //pagetype 인수 생략 
+        post_get_service.get_popular_contents(10, offset, order_type, (err, results, counts) => { //pagetype 인수 생략 
             if (err) {
                 console.error("( get_Contents ) => ( get_popular_contents ) : ",err);
 
@@ -20,7 +19,7 @@ function get_Contents(pagetype, page, callback, order_type = "newest_order") {
             callback(null, results, count);
         });  
     }else {
-        Content_Service.get_type(pagetype, offset, order_type, (err,results) => {
+        post_get_service.get_type(pagetype, offset, order_type, (err,results) => {
             if (err) {
                 console.error("( get_Contents ) => ( get_type ) : ",err);
 
@@ -28,7 +27,7 @@ function get_Contents(pagetype, page, callback, order_type = "newest_order") {
             }
 
             // page 전체 수 확인
-            Content_Service.get_page_count(pagetype,(err,count) => {
+            post_get_service.get_page_count(pagetype,(err,count) => {
                 if (err) {
                     console.error("( get_Contents ) => ( get_page_count ) : ",err);
 
@@ -85,7 +84,7 @@ exports.getDetailContents = (req, res) => {
     
     const view_history = req.session.view_history || [];
 
-    Content_Service.get_record(content_id, view_history, "view", (err, results, view_history_return) => {
+    post_get_service.get_record(content_id, view_history, "view", (err, results, view_history_return) => {
         if (err) {
             console.error("( getDetailContents ) => ( get_record ) : ", err );
             return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
@@ -98,7 +97,7 @@ exports.getDetailContents = (req, res) => {
         req.session.view_history = view_history_return;
 
         //get Content Comments
-        Content_Service.get_comment_list(content_id, (Comment_Info) => {
+        post_get_service.get_comment_list(content_id, (Comment_Info) => {
             res.render('forum_detail.ejs' , { Content : results, Comment_Info, pagetype , returnURL });
         });
     });
@@ -112,7 +111,7 @@ exports.getCreateContent = (req, res) => {
     const view_history = req.session.view_history || [] ;
 
     if (content_id){
-        Content_Service.get_record(content_id, view_history, "edit" ,(err, post_info) =>{
+        post_get_service.get_record(content_id, view_history, "edit" ,(err, post_info) =>{
            
             if(err){
                 console.error("( getCreateContent ) => ( get_record ) : ", err );
@@ -137,7 +136,7 @@ exports.get_SearchContents = (req, res) => {
     const top_page = parseInt(req.query.pageF) || 1;
     const bottom_page = parseInt(req.query.pageB) || 1;
 
-    Content_Service.get_search_post( search_keyword, top_page, bottom_page, ( err, Search_result ) => {
+    post_get_service.get_search_post( search_keyword, top_page, bottom_page, ( err, Search_result ) => {
         if(err){
             console.error("( get_SearchContents ) => ( get_search_post ) : ", err );
 
