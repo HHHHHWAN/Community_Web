@@ -8,14 +8,20 @@ async function uploadImage() {
     const formData = new FormData();
     formData.append('image', fileInput.files[0]);
 
-    const response = await fetch("/image/upload", { method: 'POST', body: formData });
+    const response = await fetch("/image/upload", {
+        method: 'POST', 
+        headers : {
+            'Accept' : 'application/json',
+        },
+        body: formData 
+    });
     const data = await response.json();
     
     const editor = document.getElementById('text');
     const img_path = document.createElement('img');
     img_path.src = `/public${data.filePath}`;
     img_path.alt = `${data.filePath}`;
-    img_path.setAttribute('style','max-width: 100%;');
+    img_path.setAttribute('style', 'max-width: 100%;');
 
     editor.appendChild(img_path);
 }

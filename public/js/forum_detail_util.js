@@ -8,10 +8,19 @@ function autoheight(textarea){
 
 
 function setContent_delete(content_type, content_id){
-    fetch(`/delete/${content_id}` , { method : 'DELETE'})
+    fetch(`/post/delete`,{
+        method :'DELETE',
+        headers : {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({
+            post_id : content_id
+        })
+    })
     .then(Response => {
         if(!Response.ok){
-            throw new Error('failed get api');
+            throw new Error('Failed API Request');
         }
         
         return Response.json();
@@ -21,6 +30,7 @@ function setContent_delete(content_type, content_id){
         alert(data.message);
     })
     .catch(error => {
-        console.error('error deletubg data',ReferenceError);
+        console.error(error);
+        alert('요청 처리 중, 문제가 발생했습니다.');
     });
 }

@@ -51,7 +51,7 @@ read_DB.query(`SHOW TABLES`, (err, query_results) => {
     }
 
     if(!query_results.length){
-        const TableObject = require('./table_DB');
+        const TableObject = require('./mysql_init');
         TableObject.Comment_Table(write_DB);
         TableObject.Forum_Table(write_DB);
         TableObject.User_Table(write_DB);

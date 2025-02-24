@@ -2,25 +2,38 @@
 
 <body>
         <div class="box_error_status">
-            <% if(returnStatus === 500){ %>
-            <div class="status_div"> <%= returnStatus %> !</div>
-            <div class="box_error_status_1">
-                <div>페이지가 작동하질 않습니다.</div>
-                <div>Internal Server Error</div>
-            </div>
-            <% } else if (returnStatus === 401) {%>
-            <div class="status_div"> <%= returnStatus %> !</div>
-            <div class="box_error_status_1">
-                <div> 올바른 접근 방법이 아닙니다.</div>
-                <div> Unauthorized Response </div>
-            </div>
-            <% } else {%>
-            <div class="status_div"> <%= returnStatus %> !</div>
-            <div class="box_error_status_1">
-                <div> 존재하지 않은 페이지입니다.</div>
-                <div> PAGE NOT FOUND </div>
-            </div>
+            <% switch(returnStatus){ case 500 : %>
+                <div class="status_div"> <%= returnStatus %></div>
+                <div class="box_error_status_1">
+                    <div> 서버 내부에서 오류가 발생했습니다.</div>
+                    <div>Internal Server Error</div>
+                </div>
+            <% break; case 400 : %>
+                <div class="status_div"> <%= returnStatus %></div>
+                <div class="box_error_status_1">
+                    <div> 잘못된 요청 구문, 유효하지 않은 요청</div>
+                    <div> Bad Request </div>
+                </div>
+            <% break; case 401 : %>
+                <div class="status_div"> <%= returnStatus %></div>
+                <div class="box_error_status_1">
+                    <div> 세션, 인증 정보가 만료되었습니다.</div>
+                    <div> Unauthorized Error </div>
+                </div>
+            <% break; case 403 : %>
+                <div class="status_div"> <%= returnStatus %></div>
+                <div class="box_error_status_1">
+                    <div> 접근 권한이 없습니다.</div>
+                    <div> Forbidden Error </div>
+                </div>
+            <% break; default : %>
+                <div class="status_div"> <%= returnStatus %></div>
+                <div class="box_error_status_1">
+                    <div> 존재하지 않은 페이지입니다.</div>
+                    <div> Page Not Found </div>
+                </div>
             <% } %>
+
             <div class="box_error_status_2">
                 <div><a href="/popular">인기</a></div>
                 <div><a href="/info">정보</a></div>

@@ -1,6 +1,5 @@
 <% title = pagetype; %> 
 
-
 <style>
     input{
         width: 100%;
@@ -53,7 +52,7 @@
 <div class="box">
     <div class="forum_list_box">
         <div class="forum_post_box">
-            <form action="/<%= pagetype%>/edit<%= content_id ? '/'+ content_id : '' %>" method="POST" id="post_form">
+            <form action="/edit<%= content_id ? '/'+ content_id : '' %>" method="POST" id="post_form">
                 <label>- 게시판 종류
                 <div style="margin: 8px; width: 100%;">
                     <select id="selected_category" name="selected_category" class="selected_category" style="font-size: 12px; padding: 5px; margin-bottom: 5px;">
@@ -86,8 +85,12 @@
                     &nbsp;/&nbsp;
                     <div>1000</div>
                 </div>
-                
-                <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
+
+                <% if(post_info){ %>
+                    <button type="submit" class="forum_button_2" id="put_submit">수정하기</button>
+                <% } else {%>
+                    <button type="submit" class="forum_button_2" id="post_submit">게시하기</button>
+                <% } %>
             </form>
         </div>
 

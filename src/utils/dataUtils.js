@@ -29,7 +29,6 @@ const data_utils = {
         }
     },
 
-
     content_type_string : (record) => {
         record.forEach(row => {
             switch (row.content_type) {
@@ -43,13 +42,15 @@ const data_utils = {
         return record;
     },
 
-    change_delete_comment_text : (record) => {
-        record
+    change_delete_comment_text : (list) => {
+        let change_count = 0;
+        list
             .filter( row => row.visible.toString('hex') === '00' )
             .forEach( row => {
                 row.comment = "사용자에 의해 삭제된 댓글입니다.";
+                change_count+=1;
             });
-        return record;
+        return { list, change_count };
     },
 
     content_count_change : (value) => {

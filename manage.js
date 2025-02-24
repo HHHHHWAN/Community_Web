@@ -11,12 +11,12 @@ const api_Routes = require('./src/routes/api');
 const user_Routes = require('./src/routes/user'); 
 const auth_Routes = require('./src/routes/auth'); 
 const post_Routes = require('./src/routes/post'); 
-// const indexRoutes = require('./src/routes/index'); 
 
 /// Session setting
 const session_config = require('./src/config/session_setting');
 const local_session = require('./src/middleware/sessions_local');
 
+require('./src/models/mysql_connect');
 
 
 /// Express -----------------------------------------
@@ -60,10 +60,10 @@ app.use((req, res) => {
 });
 
 
-async function startserver(){
+function startserver(){
 	const port = process.env.EXPRESS_PORT;
 
-	await app.listen(port, '0.0.0.0',() => {
+	app.listen(port, '0.0.0.0',() => {
 		console.log('-----------------------------------------------');
 		console.log('Server running at http://0.0.0.0:'+ port + '/');
 		console.log('-----------------------------------------------');

@@ -1,4 +1,3 @@
-
 function getPostload( pagetype, Content_id ){
     fetch(`/api/${pagetype}/${Content_id}`)
     .then(Response => {

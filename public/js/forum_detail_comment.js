@@ -4,7 +4,6 @@ document.querySelectorAll('.create_subcomment_button').forEach(button => {
     button.addEventListener('click',function(){
         const sub_comment_div = this.parentElement.nextElementSibling;
         const form_div = sub_comment_div.querySelector('.comment_form');
-        // const reply_nickname = sub_comment_div.querySelector("input[name='comment_nickname']").value;
         
         if(!form_div){
             console.error("form_class unknown");
@@ -52,10 +51,19 @@ document.addEventListener('click', function(event){
 
     if(event.target.classList.contains('comment_delete')){
         const comment_id = event.target.closest('.comment_container').querySelector('.comment_id_hidden').value;
-        fetch(`/reply/delete/${comment_id}` , { method : 'DELETE'})
+        fetch(`/reply/delete` , { 
+            method : 'DELETE',
+            headers : {
+                'Accept' : 'applicaion/json',
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({
+                comment_id
+            })
+        })
         .then(Response => {
             if(!Response.ok){
-                throw new Error('failed get api');
+                throw new Error('Failed API Request');
             }
             return Response.json();
         })
@@ -64,7 +72,8 @@ document.addEventListener('click', function(event){
             alert(data.message);
         })
         .catch(error => {
-            console.error('error deletubg data',ReferenceError);
+            console.error(error);
+            alert('요청 처리 중, 문제가 발생했습니다.');
         });
     }
 });

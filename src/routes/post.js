@@ -10,7 +10,7 @@ const set_Controller = require('../controllers/post_set_ctl');
 
 //middleware
 const urlType_Check = require('../middleware/url_content_check');
-const login_Check = require('../middleware/user_check');
+const user_check = require('../middleware/user_check');
 const upload = require('../middleware/upload_multer');
 
 
@@ -19,46 +19,43 @@ const upload = require('../middleware/upload_multer');
 
 
 
-// ( 요청 url, 실행될 메서드 )
+// GET MAINPAGE
 router.get('/' ,main_Controller.getMyPagelist); // app urlconf
-
-// get popular page 
+// GET POPULAR LIST
 router.get('/popular', get_Controller.getTypeContents);
+// GET SEARCH RESULT
 router.get('/search', get_Controller.get_SearchContents);
 
 
 
-// comment delete
-router.delete('/reply/delete/:comment_id', login_Check, set_Controller.setInvisiblyctl);
-// comment put
-router.post('/reply/edit/:comment_id?', login_Check ,set_Controller.setCreateComment);
-// comment create
-router.post('/reply/:contents_id/:comment_id?', login_Check ,set_Controller.setCreateComment);
+// DELETE COMMENT
+router.delete('/reply/delete', user_check.check_login, set_Controller.deleteComment);
+// PUT COMMENT
+router.post('/reply/edit/:comment_id?', user_check.check_login ,set_Controller.setCreateComment);
+// ADD COMMENT
+router.post('/reply/:contents_id/:comment_id?', user_check.check_login ,set_Controller.setCreateComment);
 
 
-//image upload
-router.post('/image/upload' , login_Check, upload.single('image'), (req, res) => {
-    res.json({ message: 'success' , filePath : `/upload/${req.file.filename}` }); 
+// ADD,UPLOAD IMAGE
+router.post('/image/upload' , user_check.check_login, upload.single('image'), (req, res) => {
+    res.json({ 
+        message: 'success' ,
+        filePath : `/upload/${req.file.filename}` 
+    }); 
 });
 
-
-// delete post
-router.delete('/delete/:content_id', set_Controller.setInvisiblyctl);
-
-
-// postlist
-router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
-
-
-// EDIT EJS GET
-router.get('/:pagetype/edit/:content_id?', login_Check, urlType_Check, get_Controller.getCreateContent);
-
-// EIDT UPLOAD POST  
-router.post('/:pagetype/edit/:content_id?' , login_Check, urlType_Check, set_Controller.setCreateContent);
+// ADD POST  
+router.post('/edit/:content_id?' , user_check.check_login, set_Controller.setCreateContent);
+// DELETE POST
+router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
+// GET ADD POST EJS
+router.get('/:pagetype/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
 
 
-// POST GET
+// GET POST DETAIL
 router.get('/:pagetype/:id', urlType_Check, get_Controller.getDetailContents);
+// GET POST LIST
+router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 
 
 module.exports = router;

@@ -12,7 +12,7 @@ async function callWeatherApi(lat, lon, city) {
         }
         const endpoint = new URLSearchParams(params).toString();
         
-        const api_Response = await fetch('/api/weather?' + endpoint );
+        const api_Response = await fetch('/api/weather?' + endpoint);
 
 
         const data = await api_Response.json();

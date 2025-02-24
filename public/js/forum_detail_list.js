@@ -76,7 +76,6 @@ function page_reload(pagetype, current_Page, total_Count ){
     page_box.appendChild(nextButton);
 }
 
-// 데이터 반환 api 함수 호출
 function reloadPage(pagetype, page){
     fetch(`/api/${pagetype}?page=${page}`)
         .then(Response => {
@@ -118,7 +117,7 @@ function reloadPage(pagetype, page){
         .catch(error => {
             console.error('error fetching data :', error);
             const contents_list_ul = document.getElementById('content_list');
-            contents_list_ul.innerHTML = ' 데이터를 불러오는데, 실패했습니다. ';
+            contents_list_ul.innerText = " 데이터를 불러오는데, 실패했습니다. ";
         });
 }
 

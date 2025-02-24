@@ -6,15 +6,16 @@ const post_set_service = require('../service/post_set_service');
 
 
 
-// '/:pagetype/edit'  POST
+// '/edit'  POST
 exports.setCreateContent = (req,res) => {
+
     // const pagetype = req.params.pagetype;
     const content_id = req.params.content_id;
     const title = req.body.title;
     const text_input = req.body.text_input; 
     const category = req.body.selected_category;
 
-    if (content_id){
+    if ( content_id ){
         // MODIFY
         post_set_service.put_content(title, text_input, content_id, category, (err) => {
 
@@ -80,37 +81,70 @@ exports.setCreateComment = (req,res) => {
 
 
 // DELETE Method -> invisibly setting
-// '/delete/:content_id'
-// '/reply/delete/:comment_id' 
-exports.setInvisiblyctl = (req, res) => {
-    const content_id = req.params.content_id;
-    const comment_id = req.params.comment_id;
-    if(content_id){
-        post_set_service.set_invisibly_content(content_id, req.session.user.user_id , (err, result) => {
-            if(err){
-                return res.status(500).json({message : "삭제 처리를 하는 도중 에러가 발생했습니다."});
-            }
-    
-            // 제 3자가 삭제요청을 할 경우
-            if(result.changedRows < 1){
-                return res.status(401).json({message : "삭제 권한이 없습니다."});
-            }
-            
-            return res.status(200).json({message : "삭제가 완료되었습니다."});
-        });
-    }else{
-        post_set_service.set_invisibly_comment(comment_id, req.session.user.user_id,(err,result) => {
-            if(err){
-                return res.status(500).json({message : "삭제 처리를 하는 도중 에러가 발생했습니다."});
-            }
-    
-            // 제 3자가 삭제요청을 할 경우
-            if(result.changedRows < 1){
-                return res.status(401).json({message : "삭제 권한이 없습니다."});
-            }
-            
-            res.status(200).json({message : "삭제가 완료되었습니다."});
-        });
+exports.deleteContent = (req, res) => {
 
+    const content_id = req.body.post_id;
+
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되어, 해당 요청을 승인할 수 없습니다.",
+            result : false
+        });
     }
+
+    post_set_service.set_invisibly_content(content_id, req.session.user.user_id , (err, result) => {
+        if(err){
+            return res.status(500).json({
+                message : "서버에서 요청을 처리하지 못했습니다.",
+                result : false
+            });
+        }
+
+        // 제 3자가 삭제요청을 할 경우
+        if(result.changedRows < 1){
+            return res.status(403).json({
+                message : "권한이 없습니다.",
+                result : false
+            });
+        }
+        
+        res.json({
+            message : "삭제가 완료되었습니다.",
+            result : true
+        });
+    });
 };
+
+
+exports.deleteComment = (req, res) => {
+
+    const comment_id = req.body.comment_id;
+
+    if(!req.session.user){
+        return res.status(401).json({
+            message : "세션이 만료되어, 해당 요청을 승인할 수 없습니다.",
+            result : false
+        });
+    }
+
+    post_set_service.set_invisibly_comment(comment_id, req.session.user.user_id,(err,result) => {
+        if(err){
+            return res.status(500).json({message : "삭제 처리를 하는 도중 에러가 발생했습니다."});
+        }
+
+        // 제 3자가 삭제요청을 할 경우
+        if(result.changedRows < 1){
+            return res.status(403).json({
+                message : "권한이 없습니다.",
+                result : false
+            });
+        }
+        
+        res.json({
+            message : "삭제가 완료되었습니다.",
+            result : true
+        });
+    });
+
+};
+
