@@ -34,7 +34,7 @@ jobs:
           port: ${{ secrets.ACTION_SSH_PORT }}
           script: |
             echo "MOVE PROD Directory"
-            CD PROD
+            cd /PROD
             echo "Pulling latest Docker image..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/community_web_images:latest
 
