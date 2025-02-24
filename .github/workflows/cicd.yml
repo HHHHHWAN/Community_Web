@@ -34,7 +34,7 @@ jobs:
           port: ${{ secrets.ACTION_SSH_PORT }}
           script: |
             mkdir test_check
-            echo "connected success"
+            echo "connected success CICD test"
             echo $PWD
 
       - name: Verify Deployment
