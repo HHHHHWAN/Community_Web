@@ -33,9 +33,16 @@ jobs:
           key: ${{ secrets.ACTION_SSH_KEY }}
           port: ${{ secrets.ACTION_SSH_PORT }}
           script: |
-            mkdir test_check
-            echo "connected success CICD test"
-            echo $PWD
+            echo "Pulling latest Docker image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/community_web_images:latest
+
+            echo "Stopping and removing existing containers..."
+            docker-compose down
+
+            echo "Starting application with docker-compose..."
+            docker-compose up -d --build
+
+            echo "Deployment complete."
 
       - name: Verify Deployment
         run: |
