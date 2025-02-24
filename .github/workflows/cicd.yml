@@ -3,7 +3,7 @@ name: CI with docker image build
 on :
  push:
   branches:
-    - master
+    - main
 
 jobs:
   docker-build-and-push:
