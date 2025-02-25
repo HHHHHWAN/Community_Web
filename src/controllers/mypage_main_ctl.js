@@ -4,7 +4,7 @@ const post_get_service = require('../service/post_get_service');
 exports.getMyPagelist = (req, res) => {
     post_get_service.get_mainpage_contents(( err, category_result ) => {
         if(err){
-            console.error("( getMyPagelist ) => ( get_mainpage_contents ) MySQL2 :\n", err );
+            console.error("( getMyPagelist ) => ( get_mainpage_contents ) MySQL2 :\n", err.stack );
 
             return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
         }
@@ -12,7 +12,7 @@ exports.getMyPagelist = (req, res) => {
         // popular contents load
         post_get_service.get_popular_contents(5,0,'',( err, popular_result ) => {
             if(err){
-                console.error("( getMyPagelist ) => ( get_popular_contents )  MySQL2 :\n", err );
+                console.error("( getMyPagelist ) => ( get_popular_contents )  MySQL2 :\n", err.stack );
 
                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
             }

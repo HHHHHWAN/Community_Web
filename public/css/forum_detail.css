@@ -179,6 +179,9 @@ ul li {
     width: 100%;
     min-height: 70px;
     max-height: 800px;
+    padding: 10px;
+    font-size: 13px;
+    resize: none;
 }	
 
 

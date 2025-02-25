@@ -32,6 +32,7 @@ const post_get_service = {
                 LEFT JOIN (
                     SELECT content_id, COUNT(*) AS comment_count 
                     FROM Comment 
+                    WHERE visible = 1
                     GROUP BY content_id) COMMENT
                     ON POST.id = COMMENT.content_id) POST 
             LEFT JOIN User 
@@ -50,6 +51,7 @@ const post_get_service = {
                 LEFT JOIN (
                     SELECT content_id, COUNT(*) AS comment_count 
                     FROM Comment 
+                    WHERE visible = 1
                     GROUP BY content_id) COMMENT
                 ON POST.id = COMMENT.content_id) POST 
             LEFT JOIN User 
@@ -67,7 +69,8 @@ const post_get_service = {
                     LIMIT 5 ) POST 
                 LEFT JOIN (
                     SELECT content_id, COUNT(*) AS comment_count 
-                    FROM Comment 
+                    FROM Comment
+                    WHERE visible = 1 
                     GROUP BY content_id) COMMENT
                 ON POST.id = COMMENT.content_id) POST 
             LEFT JOIN User 
@@ -117,9 +120,11 @@ const post_get_service = {
             LEFT JOIN (
                 SELECT content_id, count(*) AS comment_count 
                 FROM Comment 
+                WHERE visible = 1
                 GROUP BY content_id ) B 
             ON Content.id = B.content_id 
-        WHERE view_count > 3 AND visible = 1  ORDER BY ${order_column} ${order_rule}, date_create DESC LIMIT ? OFFSET ? ) A 
+            WHERE view_count > 3 AND visible = 1  
+            ORDER BY ${order_column} ${order_rule}, date_create DESC LIMIT ? OFFSET ? ) A 
         LEFT JOIN User ON User.id = A.user_id; 
         `; 
 
@@ -138,6 +143,11 @@ const post_get_service = {
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
             });
+
+
+            if ( limit < 6 ){
+                return callback(null, query_select_result);
+            }
             
             read_DB.query(query_count, (err, query_result_count ) => {
                 if (err){
@@ -146,7 +156,7 @@ const post_get_service = {
 
                 const count = Math.ceil(query_result_count[0].popular_count / 10 );  
 
-                callback(err, query_select_result, count);
+                callback(null, query_select_result, count);
             });
         });
     },
