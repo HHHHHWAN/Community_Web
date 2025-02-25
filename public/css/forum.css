@@ -59,8 +59,27 @@ li{
     background-color: rgb(161, 201, 176);
 }
 
+button{
+    font-family: "Gowun Dodum", serif;
+    font-weight: 400;
+    font-style: normal;
+
+    border: none;
+    background-color: #00000000;
+    color: black;
+  }
 button:hover{
     cursor: pointer;
+}
+pre{
+    font-family: "Gowun Dodum", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+textarea{
+    font-family: "Gowun Dodum", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 
@@ -331,9 +350,9 @@ button:hover{
         margin: 20px;
         text-align: center;
     }.head_ctl{
-        padding: 20px;
+        padding: 5px;
         display: flex;
-        width: auto;
+        min-width: 200px;
         justify-content: space-between;
         align-items: center;
     }.head_ctl_search{
@@ -341,19 +360,26 @@ button:hover{
         align-items: center;
         justify-content: center;
         padding: 5px;
-        min-width: 170px;
         border-radius: 20px;
         border: 2px solid rgb(161, 201, 176);
     }.search_box {
         border: none;
-        width: 65%;
+        width: 100px;
         height: 25px;
+        font-size: 13px;
         outline: none;
+        vertical-align: middle;
+    }.search-icon{
+        vertical-align: middle;
     }.search_button{
         border: none;
         margin-right: 5px;
         background-color: #00000000;
-        cursor: pointer;
+
+        font-family: 'Dongle', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+
     }.search_button:hover {
         color: #4CAF50;
     }.modal_pc_div{
@@ -361,14 +387,12 @@ button:hover{
         align-items: center;
         justify-content: center;
         position: relative;
-        width: 50px;
+        width: 70px;
+        height: 60px;
 
     }.modal_pc_button{
-        border: none;
-        background-color: #00000000;
-        min-width: 40px;
-        height: 40px;
-        padding: 0;
+        /* border: none;
+        background-color: #00000000; */
     }.modal_pc_button_div{
         display: none;
         border-radius: 3px;
@@ -504,5 +528,8 @@ button:hover{
           line-height: 1.0;
       }
 }
+
+
+
 
 

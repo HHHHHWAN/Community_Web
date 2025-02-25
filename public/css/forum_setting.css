@@ -84,8 +84,8 @@
     }
 
     .delete_account_div{
-    margin: 20px;
-    width: 100%;
+        margin: 20px;
+        width: 100%;
     }.delete_account_div_title{
         width: 100%; font-size: 18px; margin-bottom: 20px;
     }.delete_account_div_text{
@@ -121,9 +121,33 @@
         margin-top: 20px;
         margin-bottom: 10px;
 }
-input{
+.setting_box input{
         font-size: 13px;
         height: 25px;
         width: 100%;
         padding: 10px;
+}.setting_social button{
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgb(223, 244, 231);
+    color: black;
+}.setting_social button:disabled{
+    cursor:default;
+    background-color: rgb(178, 201, 187);
+}
+.setting_box_main button{
+    border-radius: 5px;
+    background-color: rgb(223, 244, 231);
+    color: black;
+}.setting_box_main button:disabled{
+    cursor:default;
+    background-color: rgb(178, 201, 187);
+}
+
+.delete_button{
+    width: 60px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: rgb(223, 244, 231);
+    color: black;
 }

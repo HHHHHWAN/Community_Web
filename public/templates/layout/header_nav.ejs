@@ -13,7 +13,7 @@
         <div class="head_ctl">
             <div class="head_ctl_search">
                 <form action="/search" method="get">
-                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 12px; object-fit: contain; margin-right: 5px;" alt="검색">
+                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 14px; object-fit: contain;" alt="검색">
                     <input type="text" name="search_keyword" class="search_box" placeholder="검색" required>
                     <button class="search_button" type="submit">검색</button>
                 </form>
@@ -21,9 +21,9 @@
             <div class="modal_pc_div">
                 <button class="modal_pc_button" id="modal_pc_button" type="button">
                     <% if (userId) {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
                     <% } else {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; pointer-events: none; " alt="유저">
+                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; " alt="유저">
                     <%} %>
                 </button>
 
