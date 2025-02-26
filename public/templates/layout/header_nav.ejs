@@ -13,7 +13,7 @@
         <div class="head_ctl">
             <div class="head_ctl_search">
                 <form action="/search" method="get">
-                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 14px; object-fit: contain;" alt="검색">
+                    <img src="/public/img/search-icon.png" class="search-icon" style="width: 14px; object-fit: contain;" alt="검색">
                     <input type="text" name="search_keyword" class="search_box" placeholder="검색" required>
                     <button class="search_button" type="submit">검색</button>
                 </form>
@@ -21,9 +21,9 @@
             <div class="modal_pc_div">
                 <button class="modal_pc_button" id="modal_pc_button" type="button">
                     <% if (userId) {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
+                        <img src="/public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
                     <% } else {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; " alt="유저">
+                        <img src="/public/img/user-icon.png" class="user-icon" style="width: 30px; object-fit: contain; pointer-events: none; " alt="유저">
                     <%} %>
                 </button>
 
@@ -46,7 +46,7 @@
         <div class="head_mobile_nav">
             <div class="modal_div">
                 <button class="modal_button" id="modal_nav_button" type="button">
-                    <img src="../public/img/menu-icon.png" class="menu-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="메뉴">
+                    <img src="/public/img/menu-icon.png" class="menu-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="메뉴">
                 </button>
 
                 <div class="modal_nav_button_div"> 
@@ -61,7 +61,7 @@
         <div class="head_mobile_ctl">
             <div class="modal_div">
                 <button class="modal_button" id="modal_search_button" type="button">
-                    <img src="../public/img/search-icon.png" class="search-icon" style="width: 18px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="검색">
+                    <img src="/public/img/search-icon.png" class="search-icon" style="width: 18px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="검색">
                 </button>
 
                 <div class="modal_search_button_div">
@@ -81,9 +81,9 @@
             <div class="modal_div">
                 <button class="modal_button" id="modal_user_button" type="button">
                     <% if (userId) {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
+                        <img src="/public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none; background-color: rgb(61, 239, 129); border-radius: 15px;" alt="유저">
                     <% } else {%>
-                        <img src="../public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="유저">
+                        <img src="/public/img/user-icon.png" class="user-icon" style="width: 25px; object-fit: contain; margin-right: 5px; pointer-events: none;" alt="유저">
                     <%} %>
                     
                 </button>
@@ -108,6 +108,4 @@
     </nav>
 </header>
 
-<script src="/public/js/header_nav.js">
-
-</script>
+<script src="/public/js/header_nav.js"></script>

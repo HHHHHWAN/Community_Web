@@ -1,3 +1,4 @@
+
 document.getElementById('text').innerHTML = document.getElementById('text_input').value;
 
 async function uploadImage() {
@@ -26,23 +27,47 @@ async function uploadImage() {
     editor.appendChild(img_path);
 }
 
+const limitText = ( function(){
+    const editableDiv = document.getElementById('text');
+    // const maxLength = 21844;  
+    const maxLength = 2000;  
+    const length_display = document.getElementById('text_length_div');
+    
+    length_display.innerHTML = `${editableDiv.innerText.length}`;
+
+    const updateText = () => {
+        if (editableDiv.innerText.length > maxLength) {
+            editableDiv.innerText = editableDiv.innerText.substring(0, maxLength);
+            placeCaretAtEnd(editableDiv);
+            length_display.style.color = 'red';
+            editableDiv.style.border = '2px solid red';
+        } else {
+            length_display.style.color = 'rgba(83, 83, 83, 0.918)';
+            editableDiv.style.border = '1px solid black';
+        }
+
+        length_display.innerHTML = `${editableDiv.innerText.length}`;
+    }
+
+    function placeCaretAtEnd(el) {
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    editableDiv.addEventListener('input', updateText);
+
+    editableDiv.addEventListener('paste', updateText);
+})();
+
+
 document.getElementById('imageInput').addEventListener('change',function(){
     uploadImage();
 });
 
-const editableDiv = document.getElementById('text');
-const maxLength = 21844;  
-const length_display = document.getElementById('text_length_div');
-
-editableDiv.addEventListener('input', function() {
-    
-    length_display.innerHTML = `${editableDiv.innerText.length}`;
-
-    if (editableDiv.innerText.length > maxLength) {
-        
-        editableDiv.innerText = editableDiv.innerText.substring(0, maxLength);
-    }
-});
 
 document.getElementById('post_form').addEventListener('submit', function(event){
     document.getElementById('text_input').value = document.getElementById('text').innerHTML;

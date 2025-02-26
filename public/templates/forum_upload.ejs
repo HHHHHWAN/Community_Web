@@ -1,53 +1,7 @@
 <% title = pagetype; %> 
 
-<style>
-    input{
-        width: 100%;
-        border-radius: 5px;
-        height: 30px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    .title_input{
-        font-size: 12px;
-        border: 1px solid black;
-    }
+<link rel="stylesheet" href="/public/css/forum_upload.css">
 
-    .textbox{
-        background-color: white;
-        border-radius: 5px;
-        border: 1px solid black;
-        width: 100%;
-        padding: 8px;
-        margin: 8px;
-        height:800px;
-        overflow-y: auto;
-
-    }.textbox:hover{
-        cursor:text;
-    }
-    .forum_post_box{
-        margin: 10px;
-        padding: 5px;
-    }
-    .selected_category:hover{
-        cursor: pointer;
-    }
-
-    .update_label{
-        font-size: 13px;
-        font-weight: bolder;
-        color: rgba(3, 3, 3, 0.575);
-    }
-    .text_length_display{
-        display: flex;
-        justify-content: right;
-        padding: 5px;
-        font-size: small;
-        color: rgba(83, 83, 83, 0.918);
-    }
-
-</style>
 
 <div class="box">
     <div class="forum_list_box">
@@ -80,10 +34,10 @@
                 </label>
                 <input type="hidden" id="text_input" name="text_input" value="<%= post_info ? post_info.text : '' %>">
 
-                <div class="text_length_display"> 
+                <div class="text_length_display">
                     <div id="text_length_div">1</div>
                     &nbsp;/&nbsp;
-                    <div>1000</div>
+                    <div>2000</div>
                 </div>
 
                 <% if(post_info){ %>
@@ -93,13 +47,12 @@
                 <% } %>
             </form>
         </div>
-
     </div>
 </div>
 
-<script src="/public/js/forum_upload.js"></script>
 <script>
     document.getElementById('selected_category').value = "<%= pagetype %>"
 </script>
+<script src="/public/js/forum_upload.js"></script>
 
 

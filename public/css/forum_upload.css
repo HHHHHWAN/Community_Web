@@ -1,0 +1,44 @@
+.forum_post_box input{
+    width: 100%;
+    border-radius: 5px;
+    height: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.title_input{
+    font-size: 12px;
+    border: 1px solid black;
+}
+
+.textbox{
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid black;
+    width: 100%;
+    padding: 8px;
+    margin: 8px;
+    height:800px;
+    overflow-y: auto;
+}.textbox:hover{
+    cursor:text;
+}
+.forum_post_box{
+    margin: 10px;
+    padding: 5px;
+}
+.selected_category:hover{
+    cursor: pointer;
+}
+
+.update_label{
+    font-size: 13px;
+    font-weight: bolder;
+    color: rgba(3, 3, 3, 0.575);
+}
+.text_length_display{
+    display: flex;
+    justify-content: right;
+    padding: 5px;
+    font-size: medium;
+    color: rgba(83, 83, 83, 0.918);
+}

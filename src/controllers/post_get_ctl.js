@@ -115,7 +115,6 @@ exports.getCreateContent = (req, res) => {
     const pagetype = req.params.pagetype;
     const content_id = req.params.content_id || null;
 
-
     if ( content_id ){
         post_get_service.get_record(content_id, null , 'edit', (err, post_data) =>{
            
@@ -134,7 +133,6 @@ exports.getCreateContent = (req, res) => {
     } else {
         res.render('forum_upload.ejs', { pagetype , content_id , post_info : null });
     }
-
 };
 
 exports.get_SearchContents = (req, res) => {
