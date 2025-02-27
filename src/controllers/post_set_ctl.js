@@ -1,47 +1,60 @@
 // forum_list_set.js
 
-
 const post_set_service = require('../service/post_set_service');
 
 
 
-
-// '/edit'  POST
-exports.setCreateContent = (req,res) => {
-
-    // const pagetype = req.params.pagetype;
-    const content_id = req.params.content_id;
+// '/post/edit'
+exports.setAddContent = ( req, res ) => {
+    
     const title = req.body.title;
-    const text_input = req.body.text_input; 
-    const category = req.body.selected_category;
+    const text_input = req.body.text; 
+    const category = req.body.category;
 
-    if ( content_id ){
-        // MODIFY
-        post_set_service.put_content(title, text_input, content_id, category, (err) => {
+    post_set_service.add_content(title, text_input, category, req.session.user.user_id, (status, post_id) => {
+        if(status){
+            return res.status(status).json({
+                message : "게시물 작성을 실패했습니다.",
+                post_id,
+                result : false
+            });
+        }   
 
-            if (err) {
-                console.error("( setCreateContent ) => ( put_content ) : ", err);
-
-                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-            }
-            
-            res.redirect(`/${category}/${content_id}`);
+        res.json({
+            message : "게시물 작성을 성공했습니다.",
+            post_id,
+            result : true
         });
-    } else {
-        // NEW EDIT
-        post_set_service.add_content(title, text_input, category, req.session.user.user_id, (err,result) => {
-            if(err){
-                console.error("( setCreateContent ) => ( add_content ) : ", err);
-
-                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-            }   
-
-            const newContentId = result.insertId;
-
-            res.redirect(`/${category}/${newContentId}`);
-        });
-    }
+    });
 };
+
+// '/post/update'
+exports.putUpdateContent = ( req, res ) => {
+
+    const title = req.body.title;
+    const text_input = req.body.text; 
+    const category = req.body.category;
+    const content_id = req.body.post_id;
+    
+    post_set_service.put_content(title, text_input, content_id, category, req.session.user.user_id, ( status, message ) => {
+
+        if (status) {
+            return res.status(status).json({
+                message,
+                post_id : content_id,
+                result : false
+            });
+        }
+
+        res.json({
+            message,
+            post_id : content_id,
+            result : true
+        });
+    });
+};
+
+
 
 // reply ctl
 exports.setCreateComment = (req,res) => {

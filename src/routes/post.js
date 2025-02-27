@@ -14,7 +14,7 @@ const user_check = require('../middleware/user_check');
 const upload = require('../middleware/upload_multer');
 
 
-
+///----------------------------------------------------------------------
 
 
 
@@ -37,15 +37,17 @@ router.post('/reply/:contents_id/:comment_id?', user_check.check_login ,set_Cont
 
 
 // ADD,UPLOAD IMAGE
-router.post('/image/upload' , user_check.check_login, upload.single('image'), (req, res) => {
+router.post('/post/upload' , user_check.check_login, upload.single('image'), (req, res) => {
     res.json({ 
         message: 'success' ,
         filePath : `/upload/${req.file.filename}` 
     }); 
 });
 
-// ADD POST  
-router.post('/edit/:content_id?' , user_check.check_login, set_Controller.setCreateContent);
+// ADD POST, MODIFY
+// router.post('/edit/:content_id?' , user_check.check_login, set_Controller.setCreateContent);
+router.post('/post/edit' , user_check.check_login, set_Controller.setAddContent);
+router.put('/post/update' , user_check.check_login, set_Controller.putUpdateContent);
 // DELETE POST
 router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
 // GET ADD POST EJS

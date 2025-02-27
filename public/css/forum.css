@@ -42,8 +42,11 @@ li{
     border-radius: 5px;
     border: none;
     white-space : nowrap;
-} .forum_button:hover{
+}.forum_button:hover{
     background-color: rgb(161, 201, 176);
+}.forum_button:disabled{
+    background-color: rgb(161, 201, 176);
+    cursor: default;
 }
 
 .forum_button_2{
@@ -57,6 +60,9 @@ li{
     white-space : nowrap;
 }.forum_button_2:hover{
     background-color: rgb(161, 201, 176);
+}.forum_button_2:disabled{
+    background-color: rgb(161, 201, 176);
+    cursor: default;
 }
 
 button{

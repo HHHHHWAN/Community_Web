@@ -27,26 +27,36 @@ const post_set_service = {
 
         write_DB.query(query, [ xss_check_title, xss_check_text, content_type, user_id ], (err, result) => {
             if (err) {
-                return callback(err, null);
+                console.error( "(add_content) mysql2 : ", err.stack);
+
+                return callback(500, null);
             }
-            callback(null, result);
+
+            const newContentId = result.insertId;
+            
+            callback(null, newContentId);
         });
     },
     
     //게시물 수정 
-    put_content: (title, text , content_id, category, callback ) => {
+    put_content: (title, text , content_id, category, request_user_id, callback ) => {
 
         const xss_check_title = XSS_check_string(title);
         const xss_check_text = XSS_check_string(text);
 
-        const query = `UPDATE Content SET title = ?, text = ?, content_type = ?  WHERE id = ? `;
+        const query = `UPDATE Content SET title = ?, text = ?, content_type = ?  WHERE id = ? AND user_id = ?`;
 
-        write_DB.query(query,[ xss_check_title, xss_check_text, category, content_id ],(err) => {
+        write_DB.query(query,[ xss_check_title, xss_check_text, category, content_id, request_user_id],(err, result) => {
             if (err){
-                return callback(err);
+                console.error( "(add_content) mysql2 : ", err.stack);
+                return callback(500, "서버에서 요청을 처리하지 못했습니다.");
             }
 
-            callback(null);
+            if(!result.affectedRows){
+                return callback(403, " 요청 권한이 존재하지 않습니다. ");
+            }
+
+            callback(null, "게시물 수정을 성공했습니다.");
         });
     },
 

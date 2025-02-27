@@ -14,7 +14,6 @@
     margin-bottom: 5px;
 }
 
-/* 목록 스타일 */
 ul {
     list-style-type: square;
 }
@@ -26,6 +25,15 @@ ul li {
     padding-left: 5px;
     list-style-type: none;
     border-top: 2px solid rgba(167, 163, 163, 0.521);
+}
+
+span{
+    color: #868585;;
+}
+
+pre{
+    padding-right: 10px;
+    white-space: pre-wrap;
 }
 
 
@@ -55,7 +63,7 @@ ul li {
         padding-top: 20px;
     }
 
-    .forum_comment_box{
+    .forum_detail_comment{
         border-bottom: 1px solid rgb(161, 201, 176);
     }
 
@@ -175,38 +183,11 @@ ul li {
     margin-right: 5px;
 }
 
-.comment_text{
-    width: 100%;
-    min-height: 70px;
-    max-height: 800px;
-    padding: 10px;
-    font-size: 13px;
-    resize: none;
-}	
 
-
-
-/* 게시물 li 내부 박스 */
 .forum_list_box_content {
     margin: 10px;
     min-height: 50px;
     background-color: rgba(255, 255, 255, 0);
-}
-
-
-.create_subcomment_div{
-    padding: 5px;
-}
-
-
-
-span{
-    color: #868585;;
-}
-
-pre{
-    padding-right: 10px;
-    white-space: pre-wrap;
 }
 
 .comment_delete, .comment_edit{
@@ -218,4 +199,29 @@ pre{
 button:hover{
     cursor: pointer;
 }
+
+.comment_text{
+    width: 100%;
+    min-height: 70px;
+    max-height: 800px;
+    padding: 10px;
+    font-size: 13px;
+    resize: none;
+}	
     
+.textbox{
+    width: 100%;
+    padding: 10px;
+    min-height: 70px;
+    max-height: 800px;
+    margin-bottom: 10px;
+
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid black;
+
+    resize: none;
+    overflow-y: auto;
+}.textbox:hover{
+    cursor:text;
+}

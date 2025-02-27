@@ -16,7 +16,7 @@ const urlType_Check = require('../middleware/url_content_check');
 const user_check = require('../middleware/user_check');
 
 
-///---
+///-----------------------------------------------------------------------
 
 router.get('/settings/info', user_check.check_login, api_Controller.api_getSettinginfo);
 router.get('/settings', user_check.check_login, api_Controller.api_getSettingConfig);
