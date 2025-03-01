@@ -3,12 +3,12 @@ const data_utils = require('../utils/dataUtils');
 const data_recreate = require('../utils/re_structure');
 
 
-// view count    
+// UPDATE 조회수 증가    
 async function detail_add_viewcount(content_id){
     const query = `update Content set view_count = view_count + 1 where id = ?`;
     write_DB.query(query, [content_id], (err) => {
         if (err) {
-            console.log(`Content id : ${content_id}`);
+            console.error(`( detail_add_viewcount ) Content id : ${content_id}`);
             console.error("( detail_add_viewcount ) View Count Error : ", set_view.err);
         }
     });
@@ -16,7 +16,7 @@ async function detail_add_viewcount(content_id){
 
 const post_get_service = {
 
-    // main_page_listView
+    // GET 메인 페이지 정보
     get_mainpage_contents : ( callback ) => {
         const query = ` 
             ( SELECT POST.*, User.nickname 
@@ -95,9 +95,9 @@ const post_get_service = {
 
     get_popular_contents: (limit, offset, order_type, callback) => {
 
-        //popular content list 
-        var order_column = 'date_create';
-        var order_rule = 'DESC';
+        // 요청 정렬 체크
+        let order_column = 'date_create';
+        let order_rule = 'DESC';
 
         switch(order_type){
             case "oldest_order" :
@@ -128,30 +128,33 @@ const post_get_service = {
         LEFT JOIN User ON User.id = A.user_id; 
         `; 
 
-        const query_count = `SELECT COUNT(*) AS popular_count FROM Content WHERE view_count > 3 AND visible = 1 ORDER BY date_create DESC`; 
-        // view_count 3 초과 레코드 출력
+        const query_count = `SELECT COUNT(*) AS popular_count FROM Content WHERE view_count > 15 AND visible = 1 ORDER BY date_create DESC`; 
+        // 조회 15 초과 레코드 출력
 
         read_DB.query(query, [limit, offset], (err, query_select_result ) => {
             
             if (err) {
-                return callback(err, null);
+                console.error(" ( get_popular_contents ) MySql2 : ", err.stack );
+                return callback(500, null);
             }
 
+            // 데이터 UI 수정 ( 날짜, 조회수, 댓글 수 )
             query_select_result.forEach( row => {
                 row.date_create = data_utils.date_before(row.date_create);
-                // COUNT
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
             });
 
 
             if ( limit < 6 ){
-                return callback(null, query_select_result);
+                return callback(null, query_select_result, null);
             }
             
+            // 리스트 페이지 수
             read_DB.query(query_count, (err, query_result_count ) => {
                 if (err){
-                    return callback(err, null);
+                    console.error(" ( get_popular_contents : count ) MySql2 : ", err.stack );
+                    return callback(500, null);
                 }
 
                 const count = Math.ceil(query_result_count[0].popular_count / 10 );  
@@ -165,13 +168,13 @@ const post_get_service = {
     /// --------------------------------------------------------------------------------------
 
 
-    // 게시판 페이지 리스트 호출
+    // GET 게시판 페이지 리스트 
     get_type: (pagetype, offset, order_type, callback) => {
 
-        var order_column = 'date_create';
-        var order_rule = 'DESC';
+        let order_column = 'date_create';
+        let order_rule = 'DESC';
 
-        // Sort check
+        // 요청정렬 체크
         switch(order_type){
             case "oldest_order" :
                 order_rule = 'ASC';
@@ -185,8 +188,6 @@ const post_get_service = {
             default :
         }
 
-        // view count -> default column
-        // comment_count 
         const query = `
         SELECT A.*, User.nickname 
         FROM (
@@ -209,14 +210,14 @@ const post_get_service = {
         read_DB.query(query, [pagetype, offset], (err, results) => {
             
             if (err) {
-                return callback(err, null);
+                console.error("( get_type ) MySql2 : ", err.stack);
+                return callback(500, null);
             }
 
             
+            // 데이터 UI 수정 ( 날짜, 조회수, 댓글 수 )
             results.forEach( row => {
-                // DATE String 
                 row.date_create = data_utils.date_before(row.date_create);
-                // COUNT
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
 
@@ -226,31 +227,66 @@ const post_get_service = {
         });
     },
 
-    // 게시물 내용 GET
-    get_record: ( Content_id, view_history, request_type , callback ) => {
+    // GET 게시물 내용 
+    get_post_detail: ( Content_id, view_history , callback ) => {
 
-        const query = `SELECT A.*, User.nickname FROM (SELECT * FROM Content WHERE id = ? AND visible = 1) A LEFT JOIN User ON User.id = A.user_id`;
+        const query = `
+        SELECT A.*, User.nickname 
+        FROM (
+            SELECT * 
+            FROM Content 
+            WHERE id = ? 
+                AND visible = 1) A 
+        LEFT JOIN User 
+        ON User.id = A.user_id`;
 
         read_DB.query(query, [Content_id], (err, results) => {
             if (err) {
-                return callback(err, null, null);
+                console.error("( get_post_detail ) MySQL2 : \n", err.stack );
+                return callback(500, null);
+            }
+
+            if(!results.length){
+                return callback(404, null);
             }
 
             const content_record = results[0];
 
-            if( request_type === 'view' && results.length){
-                // view count 1 add
-                if(!view_history.some(view_post => view_post === Content_id)){
-                    view_history.push(Content_id);
-                    detail_add_viewcount(Content_id);
-                }
-                // 날짜 정보 가공
-                content_record.date_create = data_utils.date_before(content_record.date_create);
-
-                return callback(null, content_record, view_history); // 배열이 아닌 인덱스 0으로 반환
+            // 조회기록 체크
+            if(!view_history.some(view_post => view_post === Content_id)){
+                view_history.push(Content_id);
+                detail_add_viewcount(Content_id);
             }
 
-            callback(null, content_record, null); // 배열이 아닌 인덱스 0으로 반환
+            // 날짜 정보 가공
+            content_record.date_create = data_utils.date_before(content_record.date_create);
+
+            return callback(null, content_record, view_history); 
+
+        });
+    },
+
+    // GET 게시글 수정
+    get_post_edit: ( content_id, request_user_id, callback ) => {
+
+        const query = `SELECT * FROM Content WHERE id = ? AND user_id = ?  AND visible = 1`;
+
+        read_DB.query(query, [content_id, request_user_id], (err, results) => {
+            if (err) {
+                console.error("( get_post_edit ) MySQL2 : \n", err.stack );
+                
+                return callback(500, null);
+            }
+
+            // 권한 없음
+            if(!results.length){
+                return callback(403, null);
+            }
+
+            const content_record = results[0];
+            
+
+            callback(null, content_record); 
         });
     },
 
@@ -261,7 +297,7 @@ const post_get_service = {
 
         read_DB.query(query, [content_id], ( err, comment_results ) => {
             if (err){
-                console.log("( get_comment_list ) error : " , err);
+                console.error("( get_comment_list ) MySql2 : " , err.stack );
                 return callback (null);
             }
 
@@ -284,15 +320,21 @@ const post_get_service = {
 
     },
 
-    // 게시물 개수 체크
+    // GET 리스트 페이지 수
     get_page_count: (pagetype, callback ) =>{
         const query = `SELECT COUNT(*) AS total_count FROM Content WHERE content_type = ? AND visible = 1 `;
-        // count 함수 사용으로 컬럼 명 정의 필요, alias 활용
+    
         
         read_DB.query(query,[pagetype], (err, [results]) => {
+
+            if (err){
+                console.error("( get_page_count ) MySql2 : " , err.stack );
+                return callback(500);
+            }
+
             const count = Math.ceil(results.total_count / 10 ); // 소수점 반올림 
 
-            callback(null,count); // 배열이 아닌 단일 값으로 반환**
+            callback(null, count); // 배열이 아닌 단일 값으로 반환**
         });
     },
 
@@ -369,9 +411,9 @@ const post_get_service = {
                 }
             );
 
-        }catch(err){ // query 함수 err 캐치
-            console.error(" ( get_search_post ) MySQL2 query Error : ", err);
-            return callback(err, null);
+        }catch(err){ // MySql2 에러 캐치
+            console.error(" ( get_search_post ) MySQL2 query Error : ", err.stack );
+            return callback(500, null);
         }
     }
 

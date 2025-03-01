@@ -41,7 +41,9 @@
         <div class="forum_detail_ctl">
             <% if (userId == Content.user_id) {%>
                 <div class="forum_detail_ctl_edit">
-                    <a href="/<%= Content.content_type %>/edit/<%= Content.id %>"><button type="button" class="forum_button_2">수정</button></a>
+                    <a href="/post/edit/<%= Content.id %>">
+                        <button type="button" class="forum_button_2">수정</button>
+                    </a>
                     <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Content.content_type%>','<%= Content.id %>')">삭제</button>
                 </div>
             <% } %>

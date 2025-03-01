@@ -11,7 +11,7 @@
 
 			<% if (userId && (pagetype !== "popular")) { %>
 				<div>
-					<a href="<%= pagetype %>/edit"><button class="forum_button" >글쓰기</button></a>
+					<a href="/post/edit?pagetype=<%= pagetype %>"><button class="forum_button" >글쓰기</button></a>
 				</div>
 			<% }else if (pagetype !== "popular") {%>
 				<div>

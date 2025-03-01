@@ -36,7 +36,7 @@ router.post('/reply/edit/:comment_id?', user_check.check_login ,set_Controller.s
 router.post('/reply/:contents_id/:comment_id?', user_check.check_login ,set_Controller.setCreateComment);
 
 
-// ADD,UPLOAD IMAGE
+// UPLOAD IMAGE
 router.post('/post/upload' , user_check.check_login, upload.single('image'), (req, res) => {
     res.json({ 
         message: '업로드 성공' ,
@@ -45,18 +45,18 @@ router.post('/post/upload' , user_check.check_login, upload.single('image'), (re
     }); 
 });
 
-// ADD POST, MODIFY
-// router.post('/edit/:content_id?' , user_check.check_login, set_Controller.setCreateContent);
+// ADD POST
 router.post('/post/edit' , user_check.check_login, set_Controller.setAddContent);
+// MODIFY POST
 router.put('/post/update' , user_check.check_login, set_Controller.putUpdateContent);
 // DELETE POST
 router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
-// GET ADD POST EJS
-router.get('/:pagetype/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
+// GET EDIT POST PAGE
+router.get('/post/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
 
 
 // GET POST DETAIL
-router.get('/:pagetype/:id', urlType_Check, get_Controller.getDetailContents);
+router.get('/:pagetype/:content_id', urlType_Check, get_Controller.getDetailContents);
 // GET POST LIST
 router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
 
