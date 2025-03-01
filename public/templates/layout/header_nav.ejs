@@ -32,7 +32,7 @@
                         <% if (userId) {%>
                             <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a> &nbsp;님</div>
                             <div><a href="/user/settings">회원정보</a></div>
-                            <div><a href="/logout">로그아웃</a></div>
+                            <div><a href="#" class="logout">로그아웃</a></div>
                         <% } else {%>
                             <div style="font-weight: bolder; border-bottom: 1px solid black; color: rgb(118, 145, 129); ;">비회원</div>
                             <div><a href="" class="login_href">로그인</a> </div>
@@ -93,7 +93,7 @@
                         <% if (userId) {%>
                             <div style="font-weight: bolder; border-bottom: 1px solid black;"><a href='/user/<%= userId %>'><%= nickname %></a>&nbsp;님 </div>
                             <div><a href="/user/settings">회원정보</a></div>
-                            <div><a href="/logout">로그아웃</a></div>
+                            <div><a href="#" class="logout">로그아웃</a></div>
                         <% } else {%>
                             <div style="font-weight: bolder; border-bottom: 1px solid black; color: rgb(118, 145, 129); ;">비회원</div>
                             <div><a href="" class="login_href">로그인</a> </div>

@@ -124,17 +124,21 @@ exports.setSignUp_page = async ( req , res ) => {
 
 // 로그아웃 처리
 exports.getLogout = (req , res) => {
-    if(!req.session.user){
-        res.redirect('/login');
-    }
-    
     const user_id = req.session.user.user_id || '';
     req.session.destroy( err => {
         if (err) {
-            console.log("logout_error");
+            console.error(" ( getLogout ) : ", err);
+            return res.status(500).json({
+                message : "서버에서 요청을 처리하지 못했습니다.",
+                result : false
+            });
         }
 
         redis_client.del(`user:${user_id}:session`);
-        res.redirect('/login');
+
+        res.json({
+            message : "로그아웃 처리 되었습니다.",
+            result : true
+        });
     });
 };

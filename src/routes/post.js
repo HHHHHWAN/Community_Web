@@ -39,8 +39,9 @@ router.post('/reply/:contents_id/:comment_id?', user_check.check_login ,set_Cont
 // ADD,UPLOAD IMAGE
 router.post('/post/upload' , user_check.check_login, upload.single('image'), (req, res) => {
     res.json({ 
-        message: 'success' ,
-        filePath : `/upload/${req.file.filename}` 
+        message: '업로드 성공' ,
+        filePath : `/upload/${req.file.filename}`,
+        result : true
     }); 
 });
 

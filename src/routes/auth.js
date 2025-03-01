@@ -30,11 +30,10 @@ router.post('/signup', user_check.check_logout, (req,res,next) =>{
     if( JSON.parse(process.env.HTTPS) ){
         return res.redirect(`/login`);
     }
-
     next();
 }, auth_Controller.setSignUp_page); 
 
-router.get('/logout', user_check.check_login, auth_Controller.getLogout);
+router.delete('/logout', user_check.check_login, auth_Controller.getLogout);
 
 
 
