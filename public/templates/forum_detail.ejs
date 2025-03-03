@@ -55,27 +55,19 @@
         <div class='forum_detail_comment'>
             <div>
                 <% if (userId) {%>
+                    <div class="comment_box">
+                        <div class="comment_text" contenteditable="true" 
+                            aria-required="true"  aria-multiline="true" 
+                            spellcheck="true"></div>
+                        <input type="hidden" class="comment_box_content_id" value="<%= Content.id%>">
 
-
-                    <div class="textbox" id="comment_text"
-                     contenteditable="true" aria-required="true" 
-                     placeholder="댓글 작성 ..." aria-multiline="true" 
-                     spellcheck="true">
+                        <div>
+                            <button type="button" 
+                            class="comment_submit">
+                                댓글 작성
+                            </button>
+                        </div>
                     </div>
-
-                    <div>
-                        <button type="button" 
-                        class="forum_button_2" 
-                        id="comment_submit"
-                        form="form1">
-                            댓글 작성
-                        </button>
-                    </div>
-                    <!-- <form action="/reply/<%= Content.id %>/" method="POST" id="form1">
-                        <textarea class="comment_text" name="comment_text" maxlength="250" wrap="hard" placeholder = '댓글 입력...' oninput="autoheight(this)" required></textarea> 
-                        <div><button type="submit" class="forum_button_2" form="form1">댓글 작성</button></div>
-                    </form>  -->
-
                 <% } else { %>
                     <div style="width: 100%; height: 70px; border: 1px solid rgb(148, 148, 148); border-radius: 5px; padding: 10px; ">
                         댓글을 작성하려면 <a href="/login">로그인</a>을 해주세요.
@@ -104,13 +96,19 @@
                                             </div>
                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                 <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
-                                                    <button type="button" class="comment_edit">수정</button></a>
+                                                    <button type="button" class="comment_modify">수정</button></a>
                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
                                                     <button type="button" class="comment_delete">삭제</button>
                                                 <%}%>        
                                             </div>
                                         </div>
-                                        <div><pre class="pre_comment"><%= row.comment %></pre></div>
+                                        <div>
+                                            <div class="pre_comment"
+                                            style="padding-left: 10px; overflow-y: auto;"
+                                            role="textbox" aria-multiline="true">
+                                                <%- row.comment %>
+                                            </div>
+                                        </div>
                                     </div>
                                     <% if (userId) {%>
                                         <div> 
@@ -122,13 +120,13 @@
                                         </div>
                                     <% } %>
                                     <div class="create_subcomment_div" style="padding: 5px;">
-                                        <input type='hidden' class='comment_nickname' value=''>
-                                        <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form">
-                                        </form> 
+                                        <input type="hidden" class="comment_parent_nickname" value="<%= row.nickname %>">
+                                        <input type="hidden" class="comment_parent_id" value="<%= row.id %>">
+                                        <div class="comment_form"></div>
                                     </div>
                                 </div>
                                 <% if (row.children.length) { %>
-                                    <ul style="margin-left : 20px;">
+                                    <ul style="margin-left : 15px;">
                                         <% row.children.forEach( children => {%>
                                             <li>
                                                 <div>
@@ -143,21 +141,32 @@
                                                             </div>
                                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                                 <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
-                                                                    <button type='button' class="comment_edit">수정</button></a>
+                                                                    <button type='button' class="comment_modify">수정</button></a>
                                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
                                                                     <button type='button' class="comment_delete">삭제</button>
                                                                 <%}%>        
                                                             </div>
                                                         </div>
-                                                        <div style='margin-bottom : 2px;'><pre class="pre_comment"><%= children.comment %></pre></div>
+                                                        <div style='margin-bottom : 2px;'>
+                                                            <div class="pre_comment"
+                                                            style="padding-left: 10px;  overflow-y: auto;"
+                                                            role="textbox" aria-multiline="true">
+                                                                <%- children.comment %>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <% if (userId) {%>
-                                                    <div><button type="button" class="create_subcomment_button" style="font-size: 11px; color: #868585; border: none; background-color: white;">+ 댓글 쓰기</button></div>
+                                                    <div>
+                                                        <button type="button" class="create_subcomment_button" 
+                                                        style="font-size: 11px; color: #868585; border: none; background-color: white;">
+                                                            + 댓글 쓰기
+                                                        </button>
+                                                    </div>
                                                     <% } %>
                                                     <div class="create_subcomment_div">
-                                                        <input type='hidden' name='comment_nickname' value='<%= children.nickname %>' >
-                                                        <form action="/reply/<%= row.content_id %>/<%= row.id %>" method="POST" class="comment_form" >
-                                                        </form> 
+                                                        <input type="hidden" class="comment_parent_nickname" value="<%= children.nickname %>">
+                                                        <input type="hidden" class="comment_parent_id" value="<%= row.id %>">
+                                                        <div class="comment_form"></div>
                                                     </div>
                                                 </div>
                                             </li>
@@ -216,7 +225,6 @@
     document.addEventListener('DOMContentLoaded', function(){
         reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");
     });
-
     const nav_button = document.getElementById("<%= pagetype %>");
 	const mobile_nav_button = document.getElementById("mobile_<%= pagetype %>");
 	mobile_nav_button.setAttribute('style','border-bottom: 2px solid rgb(161, 201, 176);');

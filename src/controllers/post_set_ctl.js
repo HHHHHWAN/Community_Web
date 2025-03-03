@@ -4,7 +4,7 @@ const post_set_service = require('../service/post_set_service');
 
 
 
-// '/post/edit'
+// POST 글 작성  ( /post/edit )
 exports.setAddContent = ( req, res ) => {
     
     const title = req.body.title;
@@ -28,7 +28,7 @@ exports.setAddContent = ( req, res ) => {
     });
 };
 
-// '/post/update'
+// POST 글 수정 요청 ( /post/update )
 exports.putUpdateContent = ( req, res ) => {
 
     const title = req.body.title;
@@ -56,42 +56,86 @@ exports.putUpdateContent = ( req, res ) => {
 
 
 
-// reply ctl
-exports.setCreateComment = (req,res) => {
-    const content_id = parseInt(req.params.contents_id);
-    const comment_id = parseInt(req.params.comment_id) || null;
-    const comment_text = req.body.tag_text || '' + req.body.comment_text ;
+// // reply ctl
+// exports.setCreateComment = (req,res) => {
+//     const content_id = parseInt(req.params.contents_id);
+//     const comment_id = parseInt(req.params.comment_id) || null;
+//     const comment_text = req.body.tag_text || '' + req.body.comment_text ;
     
 
-    if(content_id){
-        //comment create 
-        post_set_service.add_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
-            if (err){
-                console.error("( setCreateComment ) => ( add_comment ) : ", err);
+//     if(content_id){
+//         //comment create 
+//         post_set_service.add_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
+//             if (err){
+//                 console.error("( setCreateComment ) => ( add_comment ) : ", err);
 
-                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-            }
+//                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
+//             }
     
-            return res.redirect('back');            
+//             return res.redirect('back');            
+//         });
+//     } else {
+//         // comment modify
+//         post_set_service.put_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
+//             if (err){
+//                 console.error("( setCreateComment ) => ( put_comment ) : ", err);
+
+//                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
+//             } else if (!result.changedRows){
+//                 console.error("( setCreateComment ) => ( put_comment ) : ", "권한없음");
+
+//                 return res.status(401).render('forum_error.ejs', { layout : false, returnStatus : 401 });
+//             }
+
+//             res.redirect('back');            
+//         });
+//     }
+// };
+
+// POST 댓글 작성 요청 ( /reply/edit )
+exports.setAddComment= ( req, res ) => {
+    
+    const comment_text = req.body.text; 
+    const parent_id = req.body.parent_id;
+    const content_id = req.body.content_id;
+
+    post_set_service.add_comment(comment_text, req.session.user.user_id, content_id, parent_id, (status) => {
+        if(status){
+            return res.status(status).json({
+                message : "댓글 작성을 실패했습니다.",
+                result : false
+            });
+        }   
+
+        res.json({
+            message : "댓글 작성을 성공했습니다.",
+            result : true
         });
-    } else {
-        // comment modify
-        post_set_service.put_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
-            if (err){
-                console.error("( setCreateComment ) => ( put_comment ) : ", err);
-
-                return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-            } else if (!result.changedRows){
-                console.error("( setCreateComment ) => ( put_comment ) : ", "권한없음");
-
-                return res.status(401).render('forum_error.ejs', { layout : false, returnStatus : 401 });
-            }
-
-            res.redirect('back');            
-        });
-    }
+    });
 };
 
+// put 댓글 수정 요청 ( /reply/update )
+exports.putUpdateComment = ( req, res ) => {
+
+    const comment_text = req.body.text;
+    const comment_id = req.body.comment_id;
+    
+    post_set_service.put_comment(comment_text, comment_id, req.session.user.user_id, ( status, message ) => {
+        if (status) {
+            return res.status(status).json({
+                message,
+                result : false
+            });
+        }
+
+        res.json({
+            message,
+            result : true
+        });
+    });
+};
+
+///////------- 임시
 
 // DELETE Method -> invisibly setting
 exports.deleteContent = (req, res) => {

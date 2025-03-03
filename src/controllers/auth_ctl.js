@@ -7,7 +7,7 @@ const auth_service_object = require("../service/auth_service");
 
 // 회원가입 렌더링
 exports.getSignUp_page = ( req , res ) => {
-    const returnUrl  = req.query.returnUrl || ''; 
+    req.session.returnURL = req.query.returnUrl || '/'; 
     const issue  = req.query.issue || ''; 
     const request = req.query.request || '';
     const history = req.session.sign || {};
@@ -24,7 +24,7 @@ exports.getSignUp_page = ( req , res ) => {
 
 // 로그인 렌더링
 exports.getLogin_page = ( req , res ) => {
-    const returnUrl = req.query.returnUrl || ''; 
+    req.session.returnURL = req.query.returnUrl || '/'; 
     const history = req.session.login || {}; 
     delete req.session.login;
 
@@ -34,7 +34,7 @@ exports.getLogin_page = ( req , res ) => {
     const signup  = req.query.signup || ''; 
     const social_signup  = req.query.social_signup || ''; 
 
-    res.render('log_in.ejs', { layout : false , history, error, returnUrl, request, signup, social_signup});
+    res.render('log_in.ejs', { layout : false , history, error, request, signup, social_signup});
 };
 
 
@@ -64,8 +64,11 @@ exports.setSocialLogin = async (req, res) => {
                     return res.redirect(`/login?error=${issue}`);
             }
         }
+
+        const return_url = req.session.returnURL;
+        delete req.session.returnURL;
         // 로그인 완료
-        res.redirect(`/`);
+        res.redirect(`${return_url}`);
     });
 };
 
@@ -86,7 +89,11 @@ exports.setLogin_page = async ( req , res ) => {
 
                 return res.redirect(`/login?error=${issue}&request=${request}`);
             }
-            res.status(201).redirect(`/`);
+
+            const return_url = req.session.returnURL;
+            delete req.session.returnURL;
+
+            res.redirect(`${return_url}`);
         }, username, password , request);
 
     }else{

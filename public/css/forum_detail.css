@@ -31,10 +31,10 @@ span{
     color: #868585;;
 }
 
-pre{
-    padding-right: 10px;
+/* pre{
+    padding-left: 10px;
     white-space: pre-wrap;
-}
+} */
 
 
 
@@ -70,6 +70,9 @@ pre{
     .forum_list_box_detail {
         font-size: 12px;
         margin-top: 5px;
+    }
+    .pre_comment{
+        font-size: 12px;
     }
 
 }
@@ -166,24 +169,6 @@ pre{
     color: #4CAF50;
 }
 
-
-.button_comment_cancel{
-    padding: 5px;
-    font-size: 13px;
-    background-color: rgb(226, 231, 228);
-    border-radius: 5px;
-    border: none;
-    margin-right: 5px;
-}.button_comment_edit{
-    padding: 5px;
-    font-size: 13px;
-    background-color: rgb(191, 238, 209);
-    border-radius: 5px;
-    border: none;
-    margin-right: 5px;
-}
-
-
 .forum_list_box_content {
     margin: 10px;
     min-height: 50px;
@@ -200,21 +185,14 @@ button:hover{
     cursor: pointer;
 }
 
-.comment_text{
-    width: 100%;
-    min-height: 70px;
-    max-height: 800px;
-    padding: 10px;
-    font-size: 13px;
-    resize: none;
-}	
     
-.textbox{
+.comment_text{
     width: 100%;
     padding: 10px;
     min-height: 70px;
     max-height: 800px;
     margin-bottom: 10px;
+    font-size: 13px;
 
     background-color: white;
     border-radius: 5px;
@@ -224,4 +202,32 @@ button:hover{
     overflow-y: auto;
 }.textbox:hover{
     cursor:text;
+}
+
+.comment_submit{
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #00000081;
+    background-color: rgb(191, 238, 209);
+    border-radius: 5px;
+    border: none;
+    white-space : nowrap;
+}.comment_submit:hover{
+    background-color: rgb(161, 201, 176);
+}.comment_submit:disabled{
+    background-color: rgb(161, 201, 176);
+    cursor: default;
+}
+
+.comment_cancel{
+    padding: 10px;
+    font-size: 13px;
+    background-color: rgb(195, 201, 197);
+    color: #00000081;
+    border-radius: 5px;
+    border: none;
+    margin-right: 5px;
+}.comment_cancel:hover{
+    background-color: rgb(149, 161, 153);
 }

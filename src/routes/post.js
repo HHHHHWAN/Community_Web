@@ -16,25 +16,12 @@ const upload = require('../middleware/upload_multer');
 
 ///----------------------------------------------------------------------
 
-
-
-
-// GET MAINPAGE
-router.get('/' ,main_Controller.getMyPagelist); // app urlconf
-// GET POPULAR LIST
-router.get('/popular', get_Controller.getTypeContents);
-// GET SEARCH RESULT
-router.get('/search', get_Controller.get_SearchContents);
-
-
-
+// ADD COMMENT
+router.post('/reply/edit', user_check.check_login ,set_Controller.setAddComment);
+// PUT COMMENT
+router.put('/reply/update', user_check.check_login ,set_Controller.putUpdateComment);
 // DELETE COMMENT
 router.delete('/reply/delete', user_check.check_login, set_Controller.deleteComment);
-// PUT COMMENT
-router.post('/reply/edit/:comment_id?', user_check.check_login ,set_Controller.setCreateComment);
-// ADD COMMENT
-router.post('/reply/:contents_id/:comment_id?', user_check.check_login ,set_Controller.setCreateComment);
-
 
 // UPLOAD IMAGE
 router.post('/post/upload' , user_check.check_login, upload.single('image'), (req, res) => {
@@ -55,10 +42,17 @@ router.delete('/post/delete', user_check.check_login, set_Controller.deleteConte
 router.get('/post/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
 
 
-// GET POST DETAIL
-router.get('/:pagetype/:content_id', urlType_Check, get_Controller.getDetailContents);
-// GET POST LIST
+// GET MAIN PAGE
+router.get('/' ,main_Controller.getMyPagelist); 
+// GET POPULAR LIST PAGE
+router.get('/popular', get_Controller.getTypeContents);
+// GET SEARCH RESULT PAGE
+router.get('/search', get_Controller.get_SearchContents);
+// GET POST LIST PAGE
 router.get('/:pagetype', urlType_Check, get_Controller.getTypeContents);
+// GET POST DETAIL PAGE
+router.get('/:pagetype/:content_id', urlType_Check, get_Controller.getDetailContents);
+
 
 
 module.exports = router;
