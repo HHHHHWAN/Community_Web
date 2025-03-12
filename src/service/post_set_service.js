@@ -44,11 +44,11 @@ const post_set_service = {
         const xss_check_title = XSS_check_string(title);
         const xss_check_text = XSS_check_string(text);
 
-        const query = `UPDATE Content SET title = ?, text = ?, content_type = ?  WHERE id = ? AND user_id = ? AND visivle = 1`;
+        const query = `UPDATE Content SET title = ?, text = ?, content_type = ?  WHERE id = ? AND user_id = ? AND visible = 1`;
 
         write_DB.query(query,[ xss_check_title, xss_check_text, category, content_id, request_user_id],(err, result) => {
             if (err){
-                console.error( "(add_content) mysql2 : ", err.stack);
+                console.error( "(put_content) mysql2 : ", err.stack);
                 return callback(500, "서버에서 요청을 처리하지 못했습니다.");
             }
 
