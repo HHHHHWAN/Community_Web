@@ -1,7 +1,7 @@
 const { read_DB , write_DB  } = require('../models/mysql_connect');
 const data_utils = require('../utils/dataUtils');
 const data_recreate = require('../utils/re_structure');
-
+const redis_client = require('../models/redis_connect');
 
 // UPDATE 조회수 증가    
 async function detail_add_viewcount(content_id){
@@ -14,13 +14,28 @@ async function detail_add_viewcount(content_id){
     });
 };
 
+
+
+
 const post_get_service = {
 
-    // GET 메인 페이지 정보
-    get_mainpage_contents : ( callback ) => {
-        const query = ` 
+    // 카테고리 별 최신 글 리스트
+    get_mainpage_contents : async ( callback ) => {
+        const read_DB_promise = read_DB.promise();
+        const cacheKey = 'mainpage:list';
+        try{
+
+
+            const result_redis = redis_client.isReady ? await redis_client.get(cacheKey) : null ;
+
+            if(result_redis){
+                // console.log(" Catch Mainpage list in redis DB ");
+                return callback(null,JSON.parse(result_redis));
+            }
+
+            const query = ` 
             ( SELECT POST.*, User.nickname 
-             FROM (
+            FROM (
                 SELECT * 
                 FROM (
                     SELECT * 
@@ -39,7 +54,7 @@ const post_get_service = {
                 ON POST.user_id = User.id )
             UNION ALL
             ( SELECT POST.*, User.nickname 
-             FROM (
+            FROM (
                 SELECT * 
                 FROM (
                     SELECT * 
@@ -58,7 +73,7 @@ const post_get_service = {
             ON POST.user_id = User.id )
             UNION ALL
             ( SELECT POST.*, User.nickname 
-             FROM (
+            FROM (
                 SELECT * 
                 FROM (
                     SELECT * 
@@ -75,11 +90,9 @@ const post_get_service = {
                 ON POST.id = COMMENT.content_id) POST 
             LEFT JOIN User 
             ON POST.user_id = User.id )
-        `;
-        read_DB.query(query, (err, DB_results) => {
-            if (err) {
-                return callback(err, null);
-            }
+            `;
+
+            const [DB_results] = await read_DB_promise.query(query);
 
             DB_results.forEach(row => {
                 row.date_create = data_utils.date_before(row.date_create);
@@ -88,11 +101,19 @@ const post_get_service = {
                 row.comment_count = data_utils.content_count_change(row.comment_count);
             });
 
-            return callback(null, DB_results);
-        });
+            if( redis_client.isReady ){
+                redis_client.setEx(cacheKey, 100, JSON.stringify(DB_results));
+            }
+        
+            callback(null, DB_results);
 
+        }catch(err){
+            console.error("( get_mainpage_contents ) DB : ", err.stack );
+            callback(500, null);
+        }
     },
 
+    // 인기 게시글 리스트 
     get_popular_contents: (limit, offset, order_type, callback) => {
 
         // 요청 정렬 체크
@@ -227,7 +248,7 @@ const post_get_service = {
         });
     },
 
-    // GET 게시물 내용 
+    // 한 게시물 내용 
     get_post_detail: ( Content_id, view_history , callback ) => {
 
         const query = `
@@ -291,7 +312,7 @@ const post_get_service = {
     },
 
 
-    // 댓글 리스트 GET
+    // 댓글 리스트 
     get_comment_list: ( content_id, callback ) => {
         const query = `SELECT A.*, User.nickname FROM ( SELECT * FROM Comment WHERE content_id = ? ) A LEFT JOIN User ON A.user_id = User.id`;
 
@@ -320,7 +341,7 @@ const post_get_service = {
 
     },
 
-    // GET 리스트 페이지 수
+    // 리스트 페이지 수
     get_page_count: (pagetype, callback ) =>{
         const query = `SELECT COUNT(*) AS total_count FROM Content WHERE content_type = ? AND visible = 1 `;
     
@@ -338,6 +359,7 @@ const post_get_service = {
         });
     },
 
+    // 검색 결과 반환
     get_search_post :  async (search_text, top_page, bottom_page, callback) => { 
         const query_contents = `
             SELECT * 
@@ -411,7 +433,7 @@ const post_get_service = {
                 }
             );
 
-        }catch(err){ // MySql2 에러 캐치
+        }catch(err){ 
             console.error(" ( get_search_post ) MySQL2 query Error : ", err.stack );
             return callback(500, null);
         }

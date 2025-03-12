@@ -24,7 +24,7 @@ async function check_dup_userinfo(email, username = null){
 
     }catch(err){
         // DB query process error catch
-        console.error("(check_dup_userinfo) 쿼리 오류 발생 : ", err);
+        console.error("(check_dup_userinfo) 쿼리 오류 발생 : ", err.stack);
         return null;
     }
 };

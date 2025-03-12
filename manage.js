@@ -4,7 +4,9 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 ///--------------------------------------------------
 
-
+/// Session setting
+const session_middle = require('./src/config/session_setting');
+const local_session = require('./src/middleware/sessions_local');
 
 // route
 const api_Routes = require('./src/routes/api'); 
@@ -12,25 +14,20 @@ const user_Routes = require('./src/routes/user');
 const auth_Routes = require('./src/routes/auth'); 
 const post_Routes = require('./src/routes/post'); 
 
-/// Session setting
-const session_config = require('./src/config/session_setting');
-const local_session = require('./src/middleware/sessions_local');
+// require('./src/models/mysql_connect');
 
-require('./src/models/mysql_connect');
-
-
-/// Express -----------------------------------------
+/// Express
 const app = express();
 
-///session 관련 설정
-app.use(session_config());
+/// 공통 미들웨어 관련 설정
+app.use(session_middle());
 app.use(local_session);
 
 
 /// root path
 app.use('/public', express.static(path.join(__dirname, '/public')));
 
-///static data define
+///static data 경로 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/public/templates'));
 
@@ -62,9 +59,11 @@ app.use((req, res) => {
 
 function startserver(){
 	const port = process.env.EXPRESS_PORT;
+	const date = new Date();
 
 	app.listen(port, '0.0.0.0',() => {
 		console.log('-----------------------------------------------');
+		console.log(date.toLocaleString());
 		console.log('Server running at http://0.0.0.0:'+ port + '/');
 		console.log('-----------------------------------------------');
 	});

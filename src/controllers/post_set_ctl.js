@@ -54,44 +54,6 @@ exports.putUpdateContent = ( req, res ) => {
     });
 };
 
-
-
-// // reply ctl
-// exports.setCreateComment = (req,res) => {
-//     const content_id = parseInt(req.params.contents_id);
-//     const comment_id = parseInt(req.params.comment_id) || null;
-//     const comment_text = req.body.tag_text || '' + req.body.comment_text ;
-    
-
-//     if(content_id){
-//         //comment create 
-//         post_set_service.add_comment(comment_text, req.session.user.user_id, content_id, comment_id, (err) => {
-//             if (err){
-//                 console.error("( setCreateComment ) => ( add_comment ) : ", err);
-
-//                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-//             }
-    
-//             return res.redirect('back');            
-//         });
-//     } else {
-//         // comment modify
-//         post_set_service.put_comment(comment_text, comment_id, req.session.user.user_id, (err, result) => {
-//             if (err){
-//                 console.error("( setCreateComment ) => ( put_comment ) : ", err);
-
-//                 return res.status(500).render('forum_error.ejs', { layout : false, returnStatus : 500 });
-//             } else if (!result.changedRows){
-//                 console.error("( setCreateComment ) => ( put_comment ) : ", "권한없음");
-
-//                 return res.status(401).render('forum_error.ejs', { layout : false, returnStatus : 401 });
-//             }
-
-//             res.redirect('back');            
-//         });
-//     }
-// };
-
 // POST 댓글 작성 요청 ( /reply/edit )
 exports.setAddComment= ( req, res ) => {
     
@@ -135,9 +97,7 @@ exports.putUpdateComment = ( req, res ) => {
     });
 };
 
-///////------- 임시
-
-// DELETE Method -> invisibly setting
+// delete 게시글 삭제 요청 ( /post/delete )
 exports.deleteContent = (req, res) => {
 
     const content_id = req.body.post_id;
@@ -172,7 +132,7 @@ exports.deleteContent = (req, res) => {
     });
 };
 
-
+// delete 댓글 삭제 요청 ( /reply/delete )
 exports.deleteComment = (req, res) => {
 
     const comment_id = req.body.comment_id;
