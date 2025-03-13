@@ -10,6 +10,7 @@ async function callWeatherApi(lat, lon, city) {
         if(city){
             params.city = city;
         }
+        
         const endpoint = new URLSearchParams(params).toString();
         
         const api_Response = await fetch('/api/weather?' + endpoint);
@@ -63,10 +64,11 @@ function getLocation() {
 }
 
 function showPosition(position) {
+    console.log(position);
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     
-    callWeatherApi(latitude,longitude,null);
+    callWeatherApi(latitude,longitude);
 }
 
 function showError(error) {
