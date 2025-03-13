@@ -8,7 +8,7 @@ let store_setting = new RedisStore_object({
     prefix : 'user:'
 });
 
-let redis_status = true;
+
 
 const setting_session = () => {
     const session_config = session({
@@ -29,12 +29,13 @@ const setting_session = () => {
 
 let session_object = setting_session();
 
+
+let first_connect = false;
+
 redis_client.on('ready', () => {
-    if(!redis_status){
-        console.log("+++++++++");
-        console.log("Redis ( Read, Write ) Reconnect Success");
-    }
-    redis_status = true;
+    console.log("Redis ( Read, Write ) Connect Success");
+
+    first_connect = true;
 
     store_setting = new RedisStore_object({
         client : redis_client,
@@ -44,7 +45,6 @@ redis_client.on('ready', () => {
 
     //once 재등록
     redis_client.once('error', () => {
-        redis_status = false;
         console.error("+++++++++");
         console.error("Redis Connect Fail *");
         console.error("Redis 장애 발생 => 기본 메모리 세션 사용처리");
@@ -54,15 +54,17 @@ redis_client.on('ready', () => {
     });
 });
 
+
+
 // ERROR, DOWN STATUS ( 서버 기동 중, 한번)
 redis_client.once('error', () => {
-    redis_status = false;
-    console.error("+++++++++");
-    console.error("Redis Connect Fail *");
-    console.error("Redis 장애 발생 => 기본 메모리 세션 사용처리");
-    // console.log('connect on? :',redis_client.isOpen,'\nconnect ready? :',redis_client.isReady);
-    store_setting = new session.MemoryStore();
-    session_object = setting_session();
+    if(!first_connect){
+        console.error("+++++++++");
+        console.error("Redis Connect Fail *");
+        console.error("Redis 장애 발생 => 기본 메모리 세션 사용처리");
+        store_setting = new session.MemoryStore();
+        session_object = setting_session();
+    }
 });
 
 redis_client.on('error', () => {

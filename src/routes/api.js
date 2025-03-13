@@ -33,11 +33,12 @@ router.get('/weather', async (req, res) => {
             api_Response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}`);
         }
 
+        const data = await api_Response.json();
+
         if(!api_Response.ok){
+            console.error(data);
             throw new Error(`API HTTP error ! status : ${api_Response.status}`)
         }
-
-        const data = await api_Response.json();
 
         res.json(data);
     }catch (err){

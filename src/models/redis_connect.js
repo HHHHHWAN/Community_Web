@@ -18,7 +18,7 @@ const redis_client = redis_config();
 
 redis_client.connect()
     .then(()=>{
-        console.log("Redis ( Read, Write ) Connect Success");
+        // console.log("Redis ( Read, Write ) Connect Success");
     })
     .catch();
     // console.error("Redis Connect Fail *")   

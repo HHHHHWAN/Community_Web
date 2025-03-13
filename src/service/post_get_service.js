@@ -29,7 +29,7 @@ const post_get_service = {
             const result_redis = redis_client.isReady ? await redis_client.get(cacheKey) : null ;
 
             if(result_redis){
-                // console.log(" Catch Mainpage list in redis DB ");
+                console.log(" Catch Mainpage list in redis DB ");
                 return callback(null,JSON.parse(result_redis));
             }
 
