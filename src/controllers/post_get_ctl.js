@@ -19,8 +19,7 @@ function get_Contents(pagetype, page, callback, order_type = "newest_order") {
             if (status) {
                 return callback( status, results, null );
             }
-
-            // page 전체 수 확인
+            // page 수 확인
             post_get_service.get_page_count(pagetype,(status, count) => {
                 if (status) {
                     return callback( status, results, count);

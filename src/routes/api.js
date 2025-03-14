@@ -27,7 +27,9 @@ router.get('/settings', user_check.check_login, api_Controller.api_getSettingCon
 router.get('/weather', async (req, res) => {
     const lat = parseFloat(req.query.lat) || 37.5;
     const lon = parseFloat(req.query.lon) || 126.9;
-    const city = req.query.city;
+
+    // 위치 권한 off === 'Seoul' 고정
+    const city = req.query.city; 
     const cacheKey = 'mainpage:weather';
 
     try{
@@ -35,7 +37,6 @@ router.get('/weather', async (req, res) => {
         if( city && redis_client.isReady ){
             const cache_data =  await redis_client.get(cacheKey);
             if (cache_data){
-                console.log("weather cache !!")
                 return res.json(JSON.parse(cache_data));
             }
         }

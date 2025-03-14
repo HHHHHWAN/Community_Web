@@ -5,7 +5,7 @@ const redis_client = require('../models/redis_connect');
 
 // UPDATE 조회수 증가    
 async function detail_add_viewcount(content_id){
-    const query = `update Content set view_count = view_count + 1 where id = ?`;
+    const query = `UPDATE Content SET view_count = view_count + 1 WHERE id = ?`;
     write_DB.query(query, [content_id], (err) => {
         if (err) {
             console.error(`( detail_add_viewcount ) Content id : ${content_id}`);
@@ -13,8 +13,6 @@ async function detail_add_viewcount(content_id){
         }
     });
 };
-
-
 
 
 const post_get_service = {
@@ -25,71 +23,33 @@ const post_get_service = {
         const cacheKey = 'mainpage:list';
         try{
 
-
-            const result_redis = redis_client.isReady ? await redis_client.get(cacheKey) : null ;
-
-            if(result_redis){
-                // console.log(" Catch Mainpage list in redis DB ");
-                return callback(null,JSON.parse(result_redis));
+            if(redis_client.isReady){
+                const cache_data = await redis_client.get(cacheKey);
+                if(cache_data){
+                    // console.log(" Catch Mainpage list in redis DB ");
+                    return callback(null,JSON.parse(cache_data));
+                }
             }
 
-            const query = ` 
-            ( SELECT POST.*, User.nickname 
-            FROM (
-                SELECT * 
+            const query = `
+            WITH MAIN_CONTENT AS (
+                SELECT *
                 FROM (
-                    SELECT * 
-                    FROM Content 
-                    WHERE content_type = 'life' 
-                        AND visible = 1  
-                    ORDER BY date_create desc 
-                    limit 5 ) POST 
-                LEFT JOIN (
-                    SELECT content_id, COUNT(*) AS comment_count 
-                    FROM Comment 
-                    WHERE visible = 1
-                    GROUP BY content_id) COMMENT
-                    ON POST.id = COMMENT.content_id) POST 
-            LEFT JOIN User 
-                ON POST.user_id = User.id )
-            UNION ALL
-            ( SELECT POST.*, User.nickname 
-            FROM (
-                SELECT * 
-                FROM (
-                    SELECT * 
-                    FROM Content 
-                    WHERE content_type = 'info' 
-                        AND visible = 1  
-                    ORDER BY date_create DESC 
-                    LIMIT 5 ) POST 
-                LEFT JOIN (
-                    SELECT content_id, COUNT(*) AS comment_count 
-                    FROM Comment 
-                    WHERE visible = 1
-                    GROUP BY content_id) COMMENT
-                ON POST.id = COMMENT.content_id) POST 
-            LEFT JOIN User 
-            ON POST.user_id = User.id )
-            UNION ALL
-            ( SELECT POST.*, User.nickname 
-            FROM (
-                SELECT * 
-                FROM (
-                    SELECT * 
-                    FROM Content 
-                    WHERE content_type = 'qa' 
-                        AND visible = 1  
-                    ORDER BY date_create DESC 
-                    LIMIT 5 ) POST 
-                LEFT JOIN (
-                    SELECT content_id, COUNT(*) AS comment_count 
-                    FROM Comment
-                    WHERE visible = 1 
-                    GROUP BY content_id) COMMENT
-                ON POST.id = COMMENT.content_id) POST 
-            LEFT JOIN User 
-            ON POST.user_id = User.id )
+                    SELECT *,
+                        ROW_NUMBER() OVER ( PARTITION BY content_type ORDER BY date_create DESC ) AS rn
+                    FROM Content
+                ) SUB
+                WHERE rn <= 5 
+            )
+            SELECT MAIN_CONTENT.*, User.nickname, COALESCE( COMMENT.comment_count, 0 ) AS comment_count
+            FROM MAIN_CONTENT
+            LEFT JOIN (
+                SELECT content_id, COUNT(*) AS comment_count
+                FROM Comment
+                WHERE visible = 1
+                GROUP BY content_id 
+            ) COMMENT ON MAIN_CONTENT.id = COMMENT.content_id
+            LEFT JOIN User ON MAIN_CONTENT.user_id = User.id;
             `;
 
             const [DB_results] = await read_DB_promise.query(query);
@@ -144,12 +104,12 @@ const post_get_service = {
                 WHERE visible = 1
                 GROUP BY content_id ) B 
             ON Content.id = B.content_id 
-            WHERE view_count > 3 AND visible = 1  
-            ORDER BY ${order_column} ${order_rule}, date_create DESC LIMIT ? OFFSET ? ) A 
-        LEFT JOIN User ON User.id = A.user_id; 
+            WHERE view_count > 15 AND visible = 1  
+            ORDER BY ${order_column} ${order_rule}, date_create DESC LIMIT ? OFFSET ? 
+        ) A LEFT JOIN User ON User.id = A.user_id; 
         `; 
 
-        const query_count = `SELECT COUNT(*) AS popular_count FROM Content WHERE view_count > 15 AND visible = 1 ORDER BY date_create DESC`; 
+        
         // 조회 15 초과 레코드 출력
 
         read_DB.query(query, [limit, offset], (err, query_select_result ) => {
@@ -170,9 +130,16 @@ const post_get_service = {
             if ( limit < 6 ){
                 return callback(null, query_select_result, null);
             }
+
+            const query_page = `
+            SELECT COUNT(*) AS popular_count 
+            FROM Content 
+            WHERE view_count > 15 AND visible = 1 
+            ORDER BY date_create DESC
+            `; 
             
             // 리스트 페이지 수
-            read_DB.query(query_count, (err, query_result_count ) => {
+            read_DB.query(query_page, (err, query_result_count ) => {
                 if (err){
                     console.error(" ( get_popular_contents : count ) MySql2 : ", err.stack );
                     return callback(500, null);
@@ -362,43 +329,36 @@ const post_get_service = {
     // 검색 결과 반환
     get_search_post :  async (search_text, top_page, bottom_page, callback) => { 
         const query_contents = `
-            SELECT * 
-            FROM Content 
-            WHERE ( title like ? OR text LIKE ? ) 
-                AND visible = 1 
-            LIMIT 5 OFFSET ?`;
-        const query_comments = `
-            SELECT A.*, Content.content_type AS content_type, Content.title AS content_title 
-            FROM ( 
-                SELECT * 
-                FROM Comment 
-                WHERE comment 
-                LIKE ? 
-                    AND visible = 1 
-                LIMIT 5 OFFSET ?) A 
-            LEFT JOIN Content 
-                ON Content.id = A.content_id`;
+        SELECT * 
+        FROM Content 
+        WHERE ( title like ? OR text LIKE ? ) 
+            AND visible = 1 
+        LIMIT 5 OFFSET ?`;
 
+        const query_comments = `
+        SELECT A.*, Content.content_type AS content_type, Content.title AS content_title 
+        FROM ( 
+            SELECT * 
+            FROM Comment 
+            WHERE comment LIKE ? 
+                AND visible = 1 
+            LIMIT 5 OFFSET ?
+        ) A LEFT JOIN Content ON Content.id = A.content_id`;
 
         const query_search_count = `
         SELECT A.contents_count, B.comments_count
         FROM (  
             SELECT 1 AS join_key, COUNT(*) AS contents_count 
             FROM Content 
-            WHERE ( 
-                title LIKE ? 
-                OR text LIKE ? 
-                ) 
-                AND visible = 1
-            ) A
-        JOIN (
+            WHERE ( title LIKE ? OR text LIKE ? 
+                ) AND visible = 1
+        ) A JOIN (
             SELECT 1 AS join_key ,COUNT(*) AS comments_count 
             FROM Comment 
             WHERE comment 
                 LIKE ? 
                 AND visible = 1
-            ) B
-        ON A.join_key = B.join_key
+        ) B ON A.join_key = B.join_key
         `;
 
         const wild_text = `%${search_text}%`;
