@@ -13,7 +13,7 @@ const set_setting_config_event = async () => {
     const social_put = async (social) => {
         console.log(social);
         try{
-            const response = await fetch(`/api/settings/social` , {
+            const response = await fetch(`/settings/social` , {
                 method : 'PUT',
                 headers : {
                     'Content-Type' : 'application/json',
@@ -92,7 +92,7 @@ const set_setting_config_event = async () => {
             
             try{
 
-                const api_Response = await fetch(`/api/settings/password`,{
+                const api_Response = await fetch(`/settings/password`,{
                     method : 'PUT',
                     headers : {
                         'Content-Type' : 'application/json',
@@ -126,17 +126,17 @@ const set_setting_config_event = async () => {
 
 const get_setting_config = async () => {
     try{
-        const response = await fetch(`/api/settings`, {
+        const response = await fetch(`/settings/config`, {
             method : 'GET',
             headers : {
                 'Accept' : 'application/json'
             }
         });
 
-        const data = await response.json();
+        const api_result = await response.json();
 
         if(!response.ok){
-            throw new Error(data.message);
+            throw new Error(api_result.message);
         }
 
         
@@ -183,10 +183,12 @@ const get_setting_config = async () => {
             
         `;
 
-        if(data.social_info.key_github){
+        const api_data = api_result.data
+
+        if(api_data.social_info.key_github){
             document.getElementById('setting_github').disabled = false;
         }
-        if(data.social_info.key_naver){
+        if(api_data.social_info.key_naver){
             document.getElementById('setting_naver').disabled = false;
         }
 

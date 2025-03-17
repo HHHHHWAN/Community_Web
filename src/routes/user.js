@@ -9,7 +9,7 @@ const user_Controller = require('../controllers/user_ctl');
 // const set_Controller = require('../controllers/forum_list_set');
 
 //middleware
-const urlType_Check = require('../middleware/url_content_check');
+// const urlType_Check = require('../middleware/url_content_check');
 const user_check = require('../middleware/user_check');
 
 
@@ -18,9 +18,22 @@ const user_check = require('../middleware/user_check');
 router.get('/user/settings', user_check.check_login, (req, res) => {
     res.render('forum_setting.ejs');
 });
+router.get('/user/:user_id', user_Controller.getUserinfo);
 
-/// GET SSR && API
-router.get('/user/:user_id/:user_category?', user_Controller.getUserinfo);
+
+///api
+
+router.get('/user/:user_id/posting', user_Controller.api_getUserPostingInfo);
+router.get('/user/:user_id/activity', user_Controller.api_getUserActivityInfo);
+
+router.get('/settings/info', user_check.check_login, user_Controller.api_getSettinginfo);
+router.get('/settings/config', user_check.check_login, user_Controller.api_getSettingConfig);
+
+
+router.put('/settings/nickname', user_check.check_login, user_Controller.api_putSettingNickname);
+router.put('/settings/social', user_check.check_login, user_Controller.api_putSettingSocial);
+router.put('/settings/password', user_check.check_login, user_Controller.api_putSettingPassword);
+
 
 
 

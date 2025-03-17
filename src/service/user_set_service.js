@@ -61,7 +61,7 @@ const user_set_service = {
             const [select_result] = await read_DB_promise.query(select_query,[user_id]);
 
             if(!select_result.length){
-                return callback(404, "잘못된 접근으로, 문제가 발생했습니다.");
+                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
             }
 
             if(!await bcrypt.compare(current_password, select_result[0].password)){
@@ -77,7 +77,7 @@ const user_set_service = {
                 return callback(false, "비밀번호 변경이 완료되었습니다.");
             }
 
-            callback(404, "잘못된 접근으로, 문제가 발생했습니다.");
+            callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
 
         }catch(err){
             console.error("(put_Password_change) catch 발생 : ",err);

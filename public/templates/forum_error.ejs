@@ -1,6 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>	MyPage - <%- title %></title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&family=Playwrite+CO+Guides&display=swap');
 
+        a{
+            color: black;
+            font-weight: bolder;
+            text-decoration:none;
+        }a:hover{
+            color: rgb(255, 255, 255);
+        }
+    
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0; 
+    
+            font-family: "Gowun Dodum", serif;
+            font-weight: 400;
+            font-style: normal;
+    
+        }
+    
+        .box_error_status{
+            border-radius: 10px;
+            width: 500px;
+    
+        }.box_error_status_1 div{
+            display: flex;
+            justify-content: center;
+            font-weight:bolder;
+            font-size: 24px;
+        }.status_div{
+            display: flex;
+    
+            font-size: 80px;
+            justify-content: center;
+            color: rgb(178, 224, 193);
+    
+            margin-bottom: 20px;
+        }
+        
+        .box_error_status_2{
+            background-color: rgb(178, 224, 193);
+            border-radius: 10px;
+            display: grid;
+            grid-gap: 10px;
+            padding: 10px;
+            margin-top: 10px;
+    
+            font-family: 'Dongle', sans-serif;
+            font-weight: 400;
+            font-size: 25px;
+    
+        }.box_error_status_2 div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        @media (max-width: 768px){
 
+            .box_error_status{
+                border-radius: 10px;
+                width: 100%;
+            }.box_error_status_1 div{
+                font-size: 20px;
+            }
+        }
+    
+    </style>   
+</head>
 <body>
+    <div>
         <div class="box_error_status">
             <% switch(returnStatus){ case 500 : %>
                 <div class="status_div"> <%= returnStatus %></div>
@@ -42,70 +120,6 @@
                 <div style=" border-top: 4px solid rgba(255, 255, 255, 0.797)"><a href="/">메인으로 돌아가기</a></div>
             </div>
         </div>
+    </div>
 </body>
-
-
-
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&family=Gowun+Dodum&family=Playwrite+CO+Guides&display=swap');
-
-    body{
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        font-family: "Gowun Dodum", serif;
-        font-weight: 400;
-        font-style: normal;
-
-    }
-
-    .box_error_status{
-        border-radius: 10px;
-        width: 500px;
-
-    }.box_error_status_1 div{
-        display: flex;
-        justify-content: center;
-        font-weight:bolder;
-        font-size: 24px;
-    }.status_div{
-        display: flex;
-
-        font-size: 80px;
-        justify-content: center;
-        color: rgb(178, 224, 193);
-
-        margin-bottom: 20px;
-    }
-    
-    .box_error_status_2{
-        background-color: rgb(178, 224, 193);
-        border-radius: 10px;
-        display: grid;
-        grid-gap: 10px;
-        padding: 10px;
-        margin-top: 10px;
-
-        font-family: 'Dongle', sans-serif;
-        font-weight: 400;
-        font-size: 25px;
-
-    }.box_error_status_2 div{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    a{
-        color: black;
-        font-weight: bolder;
-        text-decoration:none;
-    }a:hover{
-        color: rgb(255, 255, 255);
-    }
-
-
-
-</style>
+</html>

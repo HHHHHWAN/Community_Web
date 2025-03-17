@@ -84,11 +84,16 @@ function reloadPage(pagetype, page){
             }
             return Response.json();
         })
-        .then(data => {
+        .then(api_data => {
+            const contents_list = api_data.data.contents_list;
+            const current_page = parseInt(page);
+            const total_page = api_data.data.total_page;
+
+
             const contents_list_ul = document.getElementById('content_list');
             contents_list_ul.innerHTML = ''; 
 
-            data.contents.forEach(content_row => {
+            contents_list.forEach(content_row => {
                 const content_list_li = document.createElement('li');
                
                 content_list_li.innerHTML = `
@@ -112,7 +117,7 @@ function reloadPage(pagetype, page){
                 contents_list_ul.appendChild(content_list_li); 
             });
             // 페이지 업데이트
-            page_reload(pagetype, data.page, data.totalPages);
+            page_reload(pagetype, current_page, total_page);
         })
         .catch(error => {
             console.error('error fetching data :', error);

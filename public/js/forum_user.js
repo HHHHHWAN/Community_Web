@@ -1,24 +1,28 @@
 // js/forum_user.js
+
 const post_dom = document.querySelector('.user_list_box_dom');
 const more_button = document.getElementById('more_button');
 
+
 const get_user_contents = async (user_id, page) => {
     try{
-        const api_response = await fetch(`/user/${user_id}/post?page=${page}`, {
+        const api_response = await fetch(`/user/${user_id}/posting?page=${page}`, {
             method : 'GET',
             headers : {
                 'Accept' : 'application/json'
             }
         });
  
-        const data = await api_response.json();
+        const api_result = await api_response.json();
 
         if(!api_response.ok){
-            throw new Error(data.message);
+            throw new Error(api_result.message);
         }
 
-        if(data.post_list.length){
-            data.post_list.forEach(row => {
+        const api_data =api_result.data;
+
+        if(api_data.post_list.length){
+            api_data.post_list.forEach(row => {
                 const post_li = document.createElement('li');
                 const post_li_div = document.createElement('div');
                 post_li_div.setAttribute('class','post_li_div');
@@ -34,7 +38,7 @@ const get_user_contents = async (user_id, page) => {
                 post_dom.appendChild(post_li);
             });
 
-            if(data.post_list.length < 10){
+            if(api_data.post_list.length < 10){
                 more_button.setAttribute('disabled',true);
             }
 
@@ -59,14 +63,16 @@ const get_user_activity = async (user_id, page) => {
             }
         });
  
-        const data = await api_response.json();
+        const api_result = await api_response.json();
 
         if(!api_response.ok){
             throw new Error(data.message);
         }
 
-        if(data.activity_list.length){
-            data.activity_list.forEach(row => {
+        const api_data = api_result.data;
+
+        if(api_data.activity_list.length){
+            api_data.activity_list.forEach(row => {
                 const post_li = document.createElement('li');
                 const post_li_div = document.createElement('div');
                 post_li_div.setAttribute('class','post_li_div');
@@ -87,13 +93,13 @@ const get_user_activity = async (user_id, page) => {
                 post_dom.appendChild(post_li);
             });
 
-            if(data.activity_list.length < 10){
+            if(api_data.activity_list.length < 10){
                 more_button.setAttribute('disabled',true);
             }
 
         }else {
             post_dom.innerHTML = `
-             <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 작성한 게시물이 없습니다.<div>
+             <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 활동이 없습니다.<div>
             `;
         }
     }catch(err){
@@ -140,7 +146,6 @@ function callUserinfo(user_id){
 
     more_button.addEventListener('click', ()=>{
         count += 1;
-        console.log(count);
         if(currnet_info === 'contents'){
             get_user_contents(user_id, count);
         }else{

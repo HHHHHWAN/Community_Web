@@ -11,17 +11,15 @@ const redis_client = require('../models/redis_connect');
 const get_Controller = require('../controllers/post_get_ctl');
 
 
-const api_Controller = require('../controllers/api_ctl');
+// const api_Controller = require('../controllers/api_ctl');
 
 ///middleware
 const urlType_Check = require('../middleware/url_content_check');
-const user_check = require('../middleware/user_check');
+// const user_check = require('../middleware/user_check');
 
 
 ///-----------------------------------------------------------------------
 
-router.get('/settings/info', user_check.check_login, api_Controller.api_getSettinginfo);
-router.get('/settings', user_check.check_login, api_Controller.api_getSettingConfig);
 
 //openWeatherApi
 router.get('/weather', async (req, res) => {
@@ -37,7 +35,11 @@ router.get('/weather', async (req, res) => {
         if( city && redis_client.isReady ){
             const cache_data =  await redis_client.get(cacheKey);
             if (cache_data){
-                return res.json(JSON.parse(cache_data));
+                return res.json({
+                    message : "API 요청 성공",
+                    result : true, 
+                    data : JSON.parse(cache_data)
+                });
             }
         }
 
@@ -47,33 +49,35 @@ router.get('/weather', async (req, res) => {
 
 
         const api_Response = await fetch(request_url);
-
-
-        const data = await api_Response.json();
+        const weather_data = await api_Response.json();
 
         if(!api_Response.ok){
-            throw new Error(`API HTTP error ! status : ${api_Response.status}`)
+            throw new Error(`${api_Response.status}, lat = ${lat}, lon = ${lon}, city = ${city},\nrequest_url = ${request_url}`);
         }
 
         if( city && redis_client.isReady ){
-            redis_client.setEx(cacheKey, 600, JSON.stringify(data));
+            redis_client.setEx(cacheKey, 600, JSON.stringify(weather_data));
         }
 
-        res.json(data);
+        res.json({
+            message : "API 요청 성공",
+            result : true, 
+            data : weather_data
+        });
 
     }catch (err){
         console.error("('/api/weather') api.openweather Response Error : ", err.message);
-        res.status(500).json({error: err.message});
+        res.status(500).json({
+            message : "API 요청을 실패하였습니다.",
+            result : false, 
+        });
     }
 });
 
-// ENUM ( 'info', 'qa, 'life')
+// ENUM ( 'info', 'qa, 'life' )
 router.get('/:pagetype', urlType_Check, get_Controller.api_getContents);
 
 
-router.put('/settings/password', user_check.check_login, api_Controller.api_putSettingPassword);
-router.put('/settings/nickname', user_check.check_login, api_Controller.api_putSettingNickname);
-router.put('/settings/social', user_check.check_login, api_Controller.api_putSettingSocial);
 
 
 module.exports = router;

@@ -35,7 +35,8 @@ const createTable = {
             email VARCHAR(30) NOT NULL UNIQUE,
             key_github INT UNIQUE,
             key_naver VARCHAR(100) UNIQUE,
-            create_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            visible BIT(1) DEFAULT 1
         )`;
         
         write_db.query(query, (err, results) => {
@@ -56,7 +57,7 @@ const createTable = {
             content_id  INT NOT NULL,
             parent_id INT,
             create_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            visible BIT(1) DEFAULT 1,
+            visible BIT(1) DEFAULT 1 NOT NULL,
             delete_at DATETIME
         )`;
 

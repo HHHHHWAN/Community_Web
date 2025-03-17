@@ -41,14 +41,18 @@ exports.api_getContents = (req, res) => {
         if (status) {
             return res.status(status).json({
                 message : "서버에서 요청을 처리하지 못했습니다." ,
-                result : false
+                result : false,
+                data : null
             });
         }
 
         res.json({
-            contents: results,
-            page: page,
-            totalPages: count
+            message : "처리 성공",
+            result : true,
+            data : {
+                contents_list : results,
+                total_page : count
+            }
         });
     });
 };

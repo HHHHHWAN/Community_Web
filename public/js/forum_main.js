@@ -1,6 +1,8 @@
 // forum_main.ejs script file
 
 async function callWeatherApi(lat, lon, city) {
+    const weatherBox = document.getElementById('weather_box');
+
     try{
         const params = {
             lat : lat,
@@ -10,22 +12,23 @@ async function callWeatherApi(lat, lon, city) {
         if(city){
             params.city = city;
         }
-        
-        const endpoint = new URLSearchParams(params).toString();
-        
-        const api_Response = await fetch('/api/weather?' + endpoint);
 
+        weatherBox.innerText = '날씨를 불러오는 중';
+        
+        const query_string = new URLSearchParams(params).toString();
+        
+        const api_Response = await fetch('/api/weather?' + query_string);
 
-        const data = await api_Response.json();
+        const api_result = await api_Response.json();
         
         if(!api_Response.ok){
-            throw new Error(`fail weather api Connect Status : ${Response.status} \n`);
+            throw new Error(`fail weather api Connect Status : ${api_result.message} \n`);
         }
 
+        const api_data = api_result.data;
 
-        const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = '';
-        const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+        const icon = `https://openweathermap.org/img/wn/${api_data.weather[0].icon}@2x.png`;
         weatherBox.innerHTML=`
         <div class="weather_icon">
             <img src="${icon}" class="weather_img" alt="weather icon">
@@ -33,22 +36,21 @@ async function callWeatherApi(lat, lon, city) {
         <div class="weather_detail" style="height:100%">
             <div>
                 - 지역 
-                <div style="text-align: right;" >${data.name}</div>
+                <div style="text-align: right;" >${api_data.name}</div>
             </div>
             <div>
                 - 날씨
-                <div style="text-align: right;">${data.weather[0].main}</div>
+                <div style="text-align: right;">${api_data.weather[0].main}</div>
             </div>
             <div>
                 - 기온
-                <div style="text-align: right;">${(data.main.temp - 273.15).toFixed(1)}℃</div>
+                <div style="text-align: right;">${(api_data.main.temp - 273.15).toFixed(1)}℃</div>
             </div>
         </div>
         `;
 
     }catch(err){
         console.error(err);
-        const weatherBox = document.getElementById('weather_box');
         weatherBox.innerHTML = `
             <div> 오늘의 날씨를 불러올 수 없어요.. </div>
         `;

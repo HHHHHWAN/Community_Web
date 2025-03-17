@@ -14,15 +14,17 @@ const user_check = require('../middleware/user_check');
 const upload = require('../middleware/upload_multer');
 
 
-///----------------------------------------------------------------------
 
-// ADD COMMENT
-router.post('/reply/edit', user_check.check_login ,set_Controller.setAddComment);
-// PUT COMMENT
-router.put('/reply/update', user_check.check_login ,set_Controller.putUpdateComment);
-// DELETE COMMENT
-router.delete('/reply/delete', user_check.check_login, set_Controller.deleteComment);
 
+/// API
+
+
+// ADD POST
+router.post('/post/edit' , user_check.check_login, set_Controller.setAddContent);
+// MODIFY POST
+router.put('/post/update' , user_check.check_login, set_Controller.putUpdateContent);
+// DELETE POST
+router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
 // UPLOAD IMAGE
 router.post('/post/upload' , user_check.check_login, upload.single('image'), (req, res) => {
     res.json({ 
@@ -32,13 +34,17 @@ router.post('/post/upload' , user_check.check_login, upload.single('image'), (re
     }); 
 });
 
-// ADD POST
-router.post('/post/edit' , user_check.check_login, set_Controller.setAddContent);
-// MODIFY POST
-router.put('/post/update' , user_check.check_login, set_Controller.putUpdateContent);
-// DELETE POST
-router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
-// GET EDIT POST PAGE
+// ADD COMMENT
+router.post('/reply/edit', user_check.check_login ,set_Controller.setAddComment);
+// PUT COMMENT
+router.put('/reply/update', user_check.check_login ,set_Controller.putUpdateComment);
+// DELETE COMMENT
+router.delete('/reply/delete', user_check.check_login, set_Controller.deleteComment);
+
+
+///SSR
+
+// 글쓰기 페이지
 router.get('/post/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
 
 

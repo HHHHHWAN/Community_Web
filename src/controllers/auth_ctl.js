@@ -82,7 +82,7 @@ exports.setLogin_page = async ( req , res ) => {
     if( username && password){
         auth_service_object.set_loginUser( req, (status, issue) => {
             if(status){
-                // unknown
+                // login fail
                 req.session.login = {
                     input_ID : username
                 } ;
@@ -95,7 +95,6 @@ exports.setLogin_page = async ( req , res ) => {
 
             res.redirect(`${return_url}`);
         }, username, password , request);
-
     }else{
         res.status(400).redirect('back');
     }

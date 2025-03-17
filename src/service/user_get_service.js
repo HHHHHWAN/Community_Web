@@ -19,23 +19,14 @@ const user_get_service = {
                 }
     
                 if(!result.length){
-                    return callback(400, null);
+                    return callback(404, null);
                 }
     
                 callback(null, result[0]);
             });
         },
 
-        get_Nickname : (search_nickname, callback ) => {
-            const query = `SELECT nickname FROM User WHERE nickname = ?`;
-            read_DB.query(query, [search_nickname], (err, result) => {
-                if(err){
-                    return callback(err, null);
-                }
-                callback(null, result);
-            });
-        },
-    
+        // 유저 포스팅 정보 
         get_userinfo_post : ( user_id, limit, offset, callback ) => {
             const query = `SELECT * FROM Content WHERE user_id = ? AND visible = 1 LIMIT ? OFFSET ?`;
     
@@ -55,6 +46,7 @@ const user_get_service = {
             });
         },
         
+        // 유저 활동 정보
         get_userinfo_activity : ( user_id, limit, offset, callback ) => {
             const query = `
                 SELECT A.*, User.nickname FROM
@@ -77,6 +69,16 @@ const user_get_service = {
                 });
     
                 callback(null, DB_results);
+            });
+        },
+
+        get_Nickname : (search_nickname, callback ) => {
+            const query = `SELECT nickname FROM User WHERE nickname = ?`;
+            read_DB.query(query, [search_nickname], (err, result) => {
+                if(err){
+                    return callback(err, null);
+                }
+                callback(null, result);
             });
         },
     

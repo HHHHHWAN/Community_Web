@@ -22,7 +22,7 @@ const set_setting_info_event = () => {
         }
 
         try{
-            const api_Response = await fetch(`/api/settings/nickname`,{
+            const api_Response = await fetch(`/settings/nickname`,{
                 method : 'PUT',
                 headers : {
                     'Content-type' : 'application/json',
@@ -78,21 +78,23 @@ const get_setting_info = async () => {
                 <div style="margin-top: 15px;"><button type="button" id="nickname_button" style="width: 50px; height: 30px;" disabled> 변경 </button></div>
             `;
 
-        const api_Response = await fetch(`/api/settings/info`,{
+        const api_Response = await fetch(`/settings/info`,{
             method:"GET",
             headers : {
                 'Accept' : 'application/json',
             }
         });
 
-        const data = await api_Response.json();
+        const api_result = await api_Response.json();
 
         if(!api_Response.ok){
-            throw new Error(data.message);
+            throw new Error(api_result.message);
         }
 
-        document.getElementById('user_info_id').textContent = data.setting_username;
-        document.getElementById('user_info_email').textContent = data.setting_email;
+        const api_data = api_result.data;
+
+        document.getElementById('user_info_id').textContent = api_data.setting_username;
+        document.getElementById('user_info_email').textContent = api_data.setting_email;
 
         set_setting_info_event();
 
