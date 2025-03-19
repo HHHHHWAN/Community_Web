@@ -83,7 +83,31 @@ const user_set_service = {
             console.error("(put_Password_change) catch 발생 : ",err);
             callback(500, "요청을 처리하는 도중, 문제가 발생했습니다.");
         }
-    }
+    },
+
+
+
+    // 계정 비활성화
+    set_invisibly_user : (user_id, callback) => {
+        const query = `UPDATE User SET visible = b'0', delete_at = ?  WHERE id = ?`;
+        write_DB.query(query, [new Date, user_id] , (err, result) => {
+            if(err){
+                console.error( " ( set_invisibly_user ) Error : ", err);
+                return callback(500,null);
+            }
+
+
+            if(!result.affectedRows){
+                console.error(" ( set_invisibly_user ) status (400) 시도 :\n",`request_id : ${ user_id }`);
+                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
+            }
+
+
+            callback(null,null); /// 정상 처리
+        });
+    },
+
+
 };
 
 module.exports = user_set_service;

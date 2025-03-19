@@ -117,10 +117,10 @@ const post_set_service = {
             if(err){
                 return callback(err,null);
             }
+
             callback(null,result);
         });
     },
-
 };
 
 

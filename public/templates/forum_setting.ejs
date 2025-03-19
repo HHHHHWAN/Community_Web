@@ -36,9 +36,7 @@
                     &nbsp;계정 탈퇴에 대한 상기 내용을 이해하고, 동의합니다.
                 </div>
                 <div style="display: flex; justify-content: right; align-items: center;">
-                    <form id="delete_account_form">
-                    <button type="submit" class="delete_button"> 계정 탈퇴</button>
-                    </form>
+                    <button type="button" class="delete_button"> 계정 탈퇴</button>
                 </div>
             </div>
         </div>
@@ -55,8 +53,7 @@
     const info_object = document.getElementById('setting_info_button');
     const config_object = document.getElementById('setting_config_button');
 
-    get_setting_info();
-    document.getElementById('nickname_input').placeholder = "<%=nickname%>";
+    get_setting_info("<%=nickname%>");
     
     nav_object.addEventListener('click', (event)=>{
         if(event.target.tagName === 'BUTTON'){
@@ -66,8 +63,7 @@
         }
             
         if(event.target.id === 'setting_info_button'){
-            get_setting_info();
-            document.getElementById('nickname_input').placeholder = "<%=nickname%>";
+            get_setting_info( "<%=nickname%>" );
         }else if(event.target.id === 'setting_config_button'){
             get_setting_config();
         }

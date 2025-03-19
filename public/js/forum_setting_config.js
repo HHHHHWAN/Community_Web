@@ -11,9 +11,8 @@ const set_setting_config_event = async () => {
 
 
     const social_put = async (social) => {
-        console.log(social);
         try{
-            const response = await fetch(`/settings/social` , {
+            const api_Response = await fetch(`/settings/social` , {
                 method : 'PUT',
                 headers : {
                     'Content-Type' : 'application/json',
@@ -24,32 +23,32 @@ const set_setting_config_event = async () => {
                 }),
             });
     
-            const data = await response.json();
+            const api_result = await api_Response.json();
 
-            if(!response.ok){
-                throw new Error(data.message);
-            }
 
-            alert(data.message);
+            alert(api_result.message);
             location.reload();
 
         }catch(err){
-            alert(err);
+            console.error(err);
+            alert("서버가 혼잡합니다. 잠시후 시도해주세요");
             location.reload();
         }
     }
 
     social_div_object.addEventListener('click', (event) => {
         if(event.target.tagName === 'BUTTON'){
-            switch(event.target.textContent){
-                case 'GitHub' :
-                    social_put('github');
-                    break;
-                case 'Naver' :
-                    social_put('naver');
-                    break;
-                default :
-                    alert('잘못된 접근입니다.');
+            if(confirm('해당 소셜연동을 해제하시겠습니까?')){
+                switch(event.target.textContent){
+                    case 'GitHub' :
+                        social_put('github');
+                        break;
+                    case 'Naver' :
+                        social_put('naver');
+                        break;
+                    default :
+                        alert('잘못된 접근입니다.');
+                }
             }
         }
     });
@@ -104,17 +103,13 @@ const set_setting_config_event = async () => {
                     }),
                 });
 
+                const api_result = await api_Response.json();
 
-                const data = await api_Response.json();
-
-                if(!api_Response.ok){
-                    throw new Error(data.message);
-                }
-
-                alert(data.message);
+                alert(api_result.message);
                 location.reload();
             }catch(err){
-                alert(err);
+                console.error(err);
+                alert("서버가 혼잡합니다. 잠시후 시도해주세요");
             }
 
         }else{
@@ -126,20 +121,20 @@ const set_setting_config_event = async () => {
 
 const get_setting_config = async () => {
     try{
-        const response = await fetch(`/settings/config`, {
+
+        const api_Response = await fetch(`/settings/config`, {
             method : 'GET',
             headers : {
                 'Accept' : 'application/json'
             }
         });
 
-        const api_result = await response.json();
+        const api_result = await api_Response.json();
 
-        if(!response.ok){
-            throw new Error(api_result.message);
+        if(!api_Response.ok){
+            alert(api_result.message);
+            return
         }
-
-        
 
         config_object.style.background = 'rgb(223, 244, 231)';
         config_object.disabled = true;
@@ -183,6 +178,8 @@ const get_setting_config = async () => {
             
         `;
 
+
+
         const api_data = api_result.data
 
         if(api_data.social_info.key_github){
@@ -195,7 +192,7 @@ const get_setting_config = async () => {
         set_setting_config_event();
 
     }catch(err){
-        alert(err);
-        location.reload();
+        console.log(err);
+        alert("서버가 혼잡합니다. 잠시후 시도해주세요");
     }
 };

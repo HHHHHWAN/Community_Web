@@ -34,7 +34,13 @@ router.put('/settings/nickname', user_check.check_login, user_Controller.api_put
 router.put('/settings/social', user_check.check_login, user_Controller.api_putSettingSocial);
 router.put('/settings/password', user_check.check_login, user_Controller.api_putSettingPassword);
 
-
+router.delete('/signout', user_check.check_login, ( req, res, next ) => {
+    // 개발 환경 체크 ( PROD === 회원탈퇴 처리 생략 )
+    if( JSON.parse(process.env.HTTPS) ){
+        return res.redirect(`/`);
+    }
+    next();
+},user_Controller.api_WithdrawAccount); //withdrawAccount
 
 
 

@@ -36,19 +36,12 @@ const header_nav_setting = ( function () {
 
             const data = await api_response.json();
 
-            if(!data.result){
-                alert(data.message);
-                window.location.href = `/`;
-                return
-            }
-
             alert(data.message);
 
             window.location.href = `/`;
         }catch(err) {
-            console.error(err);
-            alert("처리 중 오류가 발생했습니다.");
-            window.location.href = ``;
+            alert("서버가 혼잡합니다. 잠시후 시도해주세요");
+            window.location.href = `/`;
         }
     }
 
