@@ -27,6 +27,8 @@ const user_check = {
     check_logout : (req, res, next) => {
 
         const accept = req.headers['accept'].split(',');
+
+        // 로그인이 되어있는 경우
         if(req.session.user){
 
             // JSON REQUEST

@@ -1,192 +1,208 @@
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const { read_DB , write_DB } = require("../models/mysql_connect");
-const redis_client = require('../models/redis_connect');
+
 // const data_utils = require('../utils/dataUtils');
 
-// email, nickname used check
-async function check_dup_userinfo(email, username = null){
+// DB object
+const { read_DB , write_DB } = require("../models/mysql_connect");
+const redis_client = require('../models/redis_connect');
+const read_DB_promise = read_DB.promise();
 
-    // return dup user ID, Email Count
-    const query = `SELECT 
-                        (SELECT COUNT(*) FROM User WHERE email = ?) AS dup_eamil, 
-                        (SELECT COUNT(*) FROM User WHERE username = ?) AS dup_username`
 
-    const read_DB_promise = read_DB.promise();
+const Oauth_module = require('./Oauth_service');
 
-    try{
-        const [check_user_result] = await read_DB_promise.query(query, [email, username]);
+/** 유저 아이디, 닉네임, 이메일 중복 체크 */ 
+const check_dup_userinfo = async (username, nickname, email) => {
 
-        return {
-            dup_email : check_user_result[0].dup_eamil,
-            dup_username : check_user_result[0].dup_username
-        };
+    // return dup user ID, Email, nickname
+    const query = `
+    SELECT 
+        SUM( username = ? ) AS username,
+        SUM( nickname = ? ) AS nickname,
+        SUM( email = ? ) AS email
+    FROM User`;
 
-    }catch(err){
-        // DB query process error catch
-        console.error("(check_dup_userinfo) 쿼리 오류 발생 : ", err.stack);
-        return null;
-    }
+
+    const [ query_result ] = await read_DB_promise.query(query, [ username, nickname, email ]);
+
+    return {
+        duplicates : query_result[0],
+        message : {
+            username : query_result[0].username > 0 ? "사용중인 아이디입니다." : null,
+            nickname : query_result[0].nickname > 0 ? "사용중인 닉네임입니다." : null,
+            email : query_result[0].email > 0 ? "사용중인 이메일입니다." : null 
+        }
+    };
 };
 
  
-async function update_user_social_key(key_name, value, user_id) {
-    // social name = social PK in User = id
-    const query = `UPDATE User SET ${key_name} = ? WHERE id = ?`;
 
-    // promise return type 
-    const read_DB_promise = write_DB.promise();
-    
+
+/** 중복 로그인 처리  */
+const del_redis_dup_user_session = async (user_id, new_sessionID) => {
     try{
-        
-        const [result] = await read_DB_promise.query(query,[value, user_id])
-
-        // register success
-        if(result.affectedRows){
-            return true;
+        if(!redis_client.isReady){
+            // redis cli 종료상태
+            return
         }
 
-        // fail
-        return false;
+        // 해당 계정으로 접속된 세션 확인
+        const redis_result = await redis_client.get(`user:${user_id}:session`);
 
-    }catch(err){
-        //DB update catch
-        console.log("(update_user_social_key) 쿼리 오류 발생 : ", err);
-        return true;
-    }
-    
-};
-
-
-async function del_redis_dup_user_session(user_id, sessionID) {
-    try{
-        //check dup access user session 
-        const result_value = await redis_client.get(`user:${user_id}:session`);
-
-        // dup session disconnect setting 
-        if( result_value ){
-            await redis_client.del(`user:${user_id}:session`);
-            await redis_client.del(`user:${result_value}`);
+        // 중복 로그인 세션 강제 종료
+        if( redis_result ){
+            redis_client.del(`user:${user_id}:session`);
+            redis_client.del(`user:${redis_result}`);
         }
 
-        // Redis login time setting 
-        await redis_client.setEx(`user:${user_id}:session`, 1800, sessionID );
+        // Redis 중복체크용 데이터 적재
+        redis_client.setEx(`user:${user_id}:session`, 1800, new_sessionID );
 
     }catch(err){
-        // Redis process err catch
-        console.log("( del_redis_dup_user_session ) Redis-cli : ", err );
+        console.error("( del_redis_dup_user_session ) Redis-cli : ", err.stack );
     }
 };
+
+
+
+/// auth Service -----------------------------------------------------------------------------------------------------
 
 const auth_service_object = {
 
-    // 로그인 처리 return (string -> issue) 
-    set_loginUser : async (req, callback , username = null, password = null, request = null) => {
-        const read_DB_promise = read_DB.promise();
+    // 로그인 처리 
+    set_login : async ( req, input_username, input_password, callback ) => {
+        
+        const query = `
+        SELECT id, nickname, visible, password
+        FROM User 
+        WHERE username = ?`;
 
         try{
-            /// setLogin_page -> process
-            if (username){
-                const query = `SELECT * FROM User WHERE username = ? `;
-                //DB check
-                const [ check_user_info ] = await read_DB_promise.query(query,[username]);
-                
-                if(!check_user_info.length){
-                    callback(true,'login_fail');
-                }else{
-                    const match = await bcrypt.compare(password, check_user_info[0].password);
-    
-                    // 비밀번호 일치
-                    if(match){
+            const [ DB_result ] = await read_DB_promise.query(query,[input_username]);
 
-                        // register request check
-                        if(request === 'auth_login_request'){
-                            // 이미 가입된 경우
-                            if(check_user_info[0][req.session.social.social_key]){
-                                return callback(true, 'already_key');
-                            }
-                            
-                            // social key register
-                            if(req.session.social){
-                                if(req.session.social.email === check_user_info[0].email ){
-                                    
-                                    const social_connect = await update_user_social_key( req.session.social.social_key, req.session.social.id, check_user_info[0].id);
-        
-                                    if(!social_connect){
-                                        // 소셜연동 실패 ( 반환 false) 
-                                        req.session.social = null;
-                                        console.error("( set_loginUser ) : Update query err")
-                                        return callback(true,'Server account update error');
-                                    }
-
-                                } else{
-                                    // 이메일이 불일치 
-                                    // email inconsistency
-                                    return callback(true,'email_inconsistency');
-                                }
-                            }
-                        }
-
-                        delete req.session.social; // 세션정리
-
-                        //disconnect dup_user_session && create redis key
-                        del_redis_dup_user_session(check_user_info[0].id, req.sessionID);
-
-                        // check in
-                        req.session.user = {
-                            user_id : check_user_info[0].id,
-                            nickname : check_user_info[0].nickname
-                        };
-
-                        
-
-                        callback(false,'access');
-                    } else {
-                        // password inconsistency
-                        callback(true,'login_fail');
-                    }
-                }
-            }else{
-                /// setSocialLogin -> process
-                // social login access define
-                // used email status
-
-                const query = `SELECT id, nickname FROM User WHERE email = ? AND ${ req.session.social.social_key } = ? `;
-                
-                //User_DB query 
-                const [ check_user_info ] = await read_DB_promise.query(query,[req.session.social.email, req.session.social.id]);
-            
-                
-                // registered social_user login 
-                if(check_user_info.length){
-                    req.session.social = null;
-
-                    //disconnect dup_user_session && create redis key
-                    del_redis_dup_user_session(check_user_info[0].id, req.sessionID);
-
-                    // check in
-                    req.session.user = {
-                        user_id : check_user_info[0].id,
-                        nickname : check_user_info[0].nickname
-                    };
-                    
-                    callback(false,'access');
-                }else{
-                    // 해당 소셜이 등록된 계정 없음
-                    // 계정 연동 권유 
-                    callback(true,'auth_login_request');
-                }
+            // 아이디 검증
+            if(!DB_result.length){
+                return callback(401, "아이디 또는 비밀번호가 일치하지 않습니다.");
             }
+
+            const user_info = DB_result[0];
+            const match = await bcrypt.compare(input_password, user_info.password);
+
+            // 비밀번호 검증
+            if(!match){
+                return callback(401, "아이디 또는 비밀번호가 일치하지 않습니다.");
+            }
+
+            if( user_info.visible.toString('hex') === '00' ){
+                return callback(403, "회원탈퇴 처리된 아이디입니다.");
+            }
+
+            // 중복 로그인 방지 
+            del_redis_dup_user_session(user_info.id, req.sessionID);
+
+            // 세션 등록, 로그인 처리
+            req.session.user = {
+                user_id : user_info.id,
+                nickname : user_info.nickname
+            };
+
+            callback(null,'처리 완료');
+            
         }catch(err){
-            // 시스템 에러 
-            console.error(" ( set_loginUser )  : 로그인 처리 에러 ", err);
-            callback(true,'login_request_fail');
+            // 시스템 에러 ( DB 처리 문제 )
+            console.error(" ( set_loginUser )  : ", err.stack);
+            callback(500, "서버에서 요청을 처리하지 못했습니다.");
         }
-    },                                                                  
+    },
+
+    // 소셜 로그인 요청 
+    get_social_oauth : ( social_type , callback ) => {
+
+        if( social_type === "github"){
+            const authUrl_github = 'https://github.com/login/oauth/authorize';
+
+            //연동 과정 연동 설정 쿼리 스트링으로 제시
+            const config_info = {
+                client_id : process.env.GITHUB_CLIENT_ID,
+                allow_signup : false,
+                scope : "user:email"
+            }
+            const url_params = new URLSearchParams(config_info).toString();
+        
+            callback(`${authUrl_github}?${url_params}`);
+
+        } else if(social_type === "naver"){
+            const authUrl_naver = 'https://nid.naver.com/oauth2.0/authorize';
+
+            const config_info = {
+                response_type : 'code',
+                client_id : process.env.NAVER_CLIENT_ID,
+                redirect_uri : process.env.DOMAIN + '/login/naver/callback',
+                state: process.env.NAVER_CLIENT_STATE
+            }
+
+            const url_params = new URLSearchParams(config_info).toString();
+
+            callback(`${authUrl_naver}?${url_params}`);
+        }else{
+            // error
+            callback('back');
+        }
+    },
+
+    // 소셜 로그인 처리
+    set_social_login : async ( req, callback ) => {
+        const request_code = req.query.code;  // 인가 코드
+        const social_type = req.params.social_url; // 소셜 위치 
+        const social_key = 'key_' + social_type;
+
+        const Oauth_result = await Oauth_module.request_token_social( social_type, request_code ); // { result , data };
+
+        // 인증 실패
+        if(!Oauth_result.result){
+            return callback(403, null);
+        }
+
+        const Oauth_userInfo = Oauth_result.data;
+
+        const query = `
+        SELECT id, nickname 
+        FROM User 
+        WHERE visible = 1 AND ${social_key} = ?`;
+        
+        read_DB.query(query, [Oauth_userInfo.id], ( err, query_result ) => {
+            if(err){
+                console.error(" ( set_social_login ) MySql2 : \n ", err.stack);
+                return callback(500,null)
+            }
+
+            // 회원가입 필요
+            if(!query_result.length){
+                req.session.social = {
+                    id : Oauth_userInfo.id,
+                    email : Oauth_userInfo.email,
+                    social_key
+                }
+                
+                return callback(null,'/signup');
+            }
+
+            const user_info = query_result[0];
+
+            req.session.user = {
+                user_id : user_info.id,
+                nickname : user_info.nickname
+            };
+
+            callback(null,'/');
+        });
+    },
 
 
-    // 계정생성 
-    set_createUser : async (req, signup_password, request, callback ) => {
+    /// -----------------------------------------------test
+
+    // 계정생성 OLD
+    set_createUser : async (req, sign_password, request, callback ) => {
 
         try{
             const dup_check_result = await check_dup_userinfo(req.session.sign.email, req.session.sign.username);
@@ -241,110 +257,57 @@ const auth_service_object = {
         }
     },
 
-
-    /// 소셜 ---
-
-    // social auth request url create
-    request_auth_social : ( social_type , callback ) => {
-
-        if( social_type === "github"){
-            const authUrl_github = 'https://github.com/login/oauth/authorize';
-
-            //연동 과정 연동 설정 쿼리 스트링으로 제시
-            const config_info = {
-                client_id : process.env.GITHUB_CLIENT_ID,
-                allow_signup : false,
-                scope : "user:email"
-            }
-            const url_params = new URLSearchParams(config_info).toString();
-        
-            callback(`${authUrl_github}?${url_params}`);
-
-        } else if(social_type === "naver"){
-            const authUrl_naver = 'https://nid.naver.com/oauth2.0/authorize';
-
-            const config_info = {
-                response_type : 'code',
-                client_id : process.env.NAVER_CLIENT_ID,
-                redirect_uri : process.env.DOMAIN + '/login/naver/callback',
-                state: process.env.NAVER_CLIENT_STATE
-            }
-
-            const url_params = new URLSearchParams(config_info).toString();
-
-            callback(`${authUrl_naver}?${url_params}`);
-        }else{
-            // error
-            callback('back');
-        }
-    },
-
-    //Social Login Token request
-    request_token_social : async (req, callback) => {
-
-        const request_code = req.query.code;
-        const social_type = req.params.social_url;
-
-        const Oauth_modul_object = require('./Oauth_service');
+    /** 회원가입 처리 */
+    set_signup : async ( req, sign_password, callback ) => {
+        const sign_username = req.body.username;
+        const sign_nickname = req.body.nickname;
+        const sign_email = req.body.email;
 
         try{
-            let user_data;
-            // Social 인가서버 인증
-            if(social_type === 'github'){
-                user_data = await Oauth_modul_object.request_token_social_github(request_code);
-            } else if ( social_type === 'naver'){
-                if( req.query.error ){
-                    console.log("( request_token_social ) social_type 체크 에러 : ", req.query.error_description);
-                    return callback(true, "Social Access Fail");
-                }
-                user_data = await Oauth_modul_object.request_token_social_naver(request_code);
-            } else {
-                console.log("( request_token_social ) social_type 체크 에러  : 존재하지 않는 소셜 정보");
-                return callback(true, "Social Access Fail");
+            const dup_check_result = await check_dup_userinfo( sign_username, sign_nickname, sign_email );
+
+            // 중복결과 체크
+            const duplicaion_check = Object.values(dup_check_result.duplicates).some( row => parseInt(row));
+
+            if(duplicaion_check){
+                const dup_list = Object.entries(dup_check_result.message)
+                    .filter(([_,msg]) => msg !== null)
+                    .reduce((list,[key, value]) => {
+                        list[key] = value;
+                        return list;
+                    },{});
+
+                return callback(409, "중복되는 정보가 존재", dup_list);
             }
 
-            console.error("");
-            // auth err
-            if(!user_data){
-                throw new Error("( request_token_social ) : 소셜 인증 실패");
-            }
-            
-            // social email duplicated check
-            const dup_email_check = await check_dup_userinfo(user_data.email);
+            const salt = await bcrypt.genSalt(10); // salt 생성
+            const hashedPassword = await bcrypt.hash(sign_password, salt);
 
-            // 회원가입용 임시 세션 저장
-            req.session.social = {
-                id : user_data.id,
-                email : user_data.email,
-                social_key : "key_" + social_type
+            const query = `INSERT INTO User (username, email, nickname, password) VALUES ( ?, ?, ?, ? )`;
+
+            const [ insert_query_result ] = await read_DB_promise.query(query, [ sign_username, sign_email, sign_nickname, hashedPassword]);
+
+            if(!insert_query_result.affectedRows){
+                console.log( ` (set_signup) INSERT 영향 없음 : ${username}, ${email}, ${nickname} `);
+                return callback(400, "회원가입 처리를 완료하지 못했습니다. 다시 시도해주세요.", null);
             }
 
-            // 이미 존재하는 이메일인 경우
-            if(dup_email_check.dup_email){
-                // 로그인 시도 
-                auth_service_object.set_loginUser(req,(status, issue) => {
-                    if(issue === 'access' ){
-                        // 로그인 완료
-                        callback(status, issue);
-                    }else if (issue === 'auth_login_request') {
-                        // 계정 연동 권유
-                        callback(status, issue);
-                    }else{ 
-                        // 시스템적 예외 처리
-                        callback(status, issue);
-                    }
-                });
-            }else{
-                //new user create 유저 post 처리 필요
-                callback(true,"auth_signup_request");
+            // 소셜 연동 기록
+            if( req.session.social ){
+                const request_info = req.session.social;
+                delete req.session.social;
+                Oauth_module.update_user_social_key(request_info.social_key, request_info.id, result.insertId );
             }
+
+            callback(null, "회원가입 완료", null);
 
         }catch(err){
-            // 소셜 토큰 에러
-            console.error(err);
-            callback(true, err);
+            console.error( "( set_signup ) : \n",err.stack);
+            callback( 500, "서버에서 요청을 처리하지 못했습니다.", null);
         }
     },
+
+
 };
 
 

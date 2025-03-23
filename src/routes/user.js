@@ -22,7 +22,6 @@ router.get('/user/:user_id', user_Controller.getUserinfo);
 
 
 ///api
-
 router.get('/user/:user_id/posting', user_Controller.api_getUserPostingInfo);
 router.get('/user/:user_id/activity', user_Controller.api_getUserActivityInfo);
 

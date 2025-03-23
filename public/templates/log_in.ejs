@@ -68,10 +68,11 @@
                 <img src="public/img/Naver_login_text.png" height="25px" alt="Naver_text_img">
             </a>
             <p> 계정 로그인 </p>
-            <form class=login action="/login" method="POST">
+
+            <div>
                 <div class="login_input_div">
                     <div>아이디</div>
-                    <input type="username" id="username" name="username" value="<%= history ? history.input_ID : '' %>" >   
+                    <input type="text" id="username" name="username">   
                     <span class="alert_span" id="error_id"></span> 
                 </div>
 
@@ -86,9 +87,10 @@
                 <% if (request === "auth_login_request") { %>
                     <input type="hidden" name="request" value="<%= request %>">
                 <% } %>
+                
+                <button id="login_button" type="button">로그인</button>
+            </div>
 
-                <button type="submit">로그인</button>
-            </form>
             <div>아직 회원이 아니신가요? <a href="/signup">회원가입</a></div>
         </div> 
         <div style="margin-top: 5px; padding: 5px; border-radius: 10px; border: 1px solid rgb(0, 0, 0); width: 150px;">

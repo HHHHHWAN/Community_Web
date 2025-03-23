@@ -63,9 +63,7 @@ body{
         border: 1.2px solid rgb(214, 212, 212);
     }
 
-    button:hover{
-        background-color: rgb(151, 192, 167);
-    }
+
     
 
 }
@@ -113,13 +111,21 @@ button{
     font-size: 12px;
     font-weight: bold;
     margin-top: 20px;
+    margin-bottom: 10px;
     height: 30px;
     color: black;
     background-color: rgb(210, 245, 221);
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}button:hover{
+    background-color: rgb(151, 192, 167);
+}button:disabled{
+    cursor:default;
+    background-color: rgb(178, 201, 187);
 }
+
+
 a {
     margin-bottom: 10px;
 }

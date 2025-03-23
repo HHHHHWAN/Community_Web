@@ -5,15 +5,19 @@ const redis_client = require('../models/redis_connect');
 const auth_service_object = require("../service/auth_service");
 
 
+
+/// SSR --------------------------------------------------
+
 // 회원가입 렌더링
 exports.getSignUp_page = ( req , res ) => {
-    req.session.returnURL = req.query.returnUrl || '/'; 
-    const issue  = req.query.issue || ''; 
-    const request = req.query.request || '';
+    // req.session.returnURL = req.query.returnUrl || '/';  // 진입 경로 
+    const issue  = req.query.issue || ''; // 문제 체크용 
+    const request = req.query.request || ''; // OLD 이전 회원가입을 유도한 것인지 체크 용
     const history = req.session.sign || {};
     delete req.session.sign;
     
-    if( request && req.session.social){
+    // 소셜 연동 체크
+    if( req.session.social ){
         history.social_email = req.session.social.email;
     }
 
@@ -25,8 +29,6 @@ exports.getSignUp_page = ( req , res ) => {
 // 로그인 렌더링
 exports.getLogin_page = ( req , res ) => {
     req.session.returnURL = req.query.returnUrl || '/'; 
-    const history = req.session.login || {}; 
-    delete req.session.login;
 
     const error = req.query.error || ''; 
     const request = req.query.request || ''; 
@@ -34,74 +36,81 @@ exports.getLogin_page = ( req , res ) => {
     const signup  = req.query.signup || ''; 
     const social_signup  = req.query.social_signup || ''; 
 
-    res.render('log_in.ejs', { layout : false , history, error, request, signup, social_signup});
+    res.render('log_in.ejs', { layout : false , error, request, signup, social_signup});
 };
 
 
+/// 리다이렉트 --------------------------------------------------
 
-// 사용자 소셜 계정 연동 승인
+// 소셜 인증 이동
 exports.getSocialLogin = (req, res) => {
     const social_type = req.params.social_url;
-    auth_service_object.request_auth_social(social_type, (request_url)=> {
-
+    auth_service_object.get_social_oauth(social_type, (request_url)=> {
         return res.redirect(request_url);
     });
 };
 
 
-// 소셜 연동 승인 콜백
+
+// 소셜 로그인 ( /login/:social_url/callback )
 exports.setSocialLogin = async (req, res) => {
-    auth_service_object.request_token_social(req, (status, issue ) => {
-        // status === 'null' : ok
+    let returnURL = req.session.returnURL;
+    delete req.session.returnURL;
+
+    auth_service_object.set_social_login(req, (status, redirect_url ) => {
+    
+        // 연동 실패
         if(status){
-            switch (issue){
-                case 'auth_signup_request' :
-                    return res.redirect(`/signup?request=${issue}`);
-                case 'auth_login_request' :
-                    return res.redirect(`/login?request=${issue}`);
-                default :
-                    // server error result page
-                    return res.redirect(`/login?error=${issue}`);
-            }
+            return res.status(status).render('forum_error.ejs', { layout: false, returnStatus : status });   
         }
 
-        const return_url = req.session.returnURL;
-        delete req.session.returnURL;
-        // 로그인 완료
-        res.redirect(`${return_url}`);
+        if(redirect_url === '/signup'){
+            returnURL = redirect_url;
+        }
+
+        
+        res.redirect(returnURL);
     });
 };
 
 
-//'/login' post
-exports.setLogin_page = async ( req , res ) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const request = req.body.request || '';
+// 로그인 요청 ( /login ) 
+exports.setLogin = ( req, res ) => {
+    const returnURL = req.session.returnURL;
+    delete req.session.returnURL;
 
-    if( username && password){
-        auth_service_object.set_loginUser( req, (status, issue) => {
-            if(status){
-                // login fail
-                req.session.login = {
-                    input_ID : username
-                } ;
+    const input_username = req.body.username;
+    const input_password = req.body.password;
 
-                return res.redirect(`/login?error=${issue}&request=${request}`);
-            }
-
-            const return_url = req.session.returnURL;
-            delete req.session.returnURL;
-
-            res.redirect(`${return_url}`);
-        }, username, password , request);
-    }else{
-        res.status(400).redirect('back');
+    // 공백여부 체크
+    if( !input_username && !input_password ){
+        return res.status(400).json({
+            message : "잘못된 접근 방식입니다.",
+            result : false,
+            data : null
+        });
     }
+    
+    auth_service_object.set_login( req, input_username, input_password, (status, service_message) => {
+        if(status){
+            return res.status(status).json({
+                message : service_message,
+                result : false,
+                data : null
+            });
+        }
+
+        res.json({
+            message : "로그인 처리 완료",
+            result : true,
+            data : { returnURL }
+        });
+    });
 };
 
+/// test --------------------------------
 
-// signup post
+// signup post old
 exports.setSignUp_page = async ( req , res ) => {
 
     req.session.sign = {
@@ -110,7 +119,7 @@ exports.setSignUp_page = async ( req , res ) => {
         nickname : req.body.nickname,
     };
 
-    const request = req.body.request || '';
+    const request = req.body.request || ''; // 일반 회원가입 , 소셜 연동인지 체크
     const signup_password = req.body.password;
 
 
@@ -125,6 +134,43 @@ exports.setSignUp_page = async ( req , res ) => {
     });
 
 };
+
+
+// signup post new 
+exports.setSignUp = async ( req , res ) => {
+
+    req.session.sign = {
+        username : req.body.username,
+        email : req.body.email,
+        nickname : req.body.nickname,
+    };
+    const sign_password = req.body.password; 
+
+    // const request = req.body.request || ''; // 일반 회원가입 , 소셜 연동인지 체크
+
+    auth_service_object.set_signup(req, sign_password, (status, service_message, service_result) => {
+
+        if(status){
+            return res.status(status).json({
+                message : service_message,
+                result : false,
+                data : {
+                    service_result
+                }
+            })
+        }
+
+
+        res.json({
+            message : "회원가입이 완료되었습니다.",
+            result : true,
+            data : null
+        });
+    });
+
+};
+
+/// test --------------------------------
 
 
 

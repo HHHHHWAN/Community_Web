@@ -5,6 +5,7 @@ const e = require("connect-flash");
 
 const data_utils = {
 
+    //** 시간 단위 변경 */
     date_before : (create_Date) => {
         const last_time = new Date - new Date(create_Date);
     
@@ -29,6 +30,7 @@ const data_utils = {
         }
     },
 
+    //** 게시판명 변경 */
     content_type_string : (record) => {
         record.forEach(row => {
             switch (row.content_type) {
@@ -42,6 +44,7 @@ const data_utils = {
         return record;
     },
 
+    //** 댓글 비공개 처리 */
     change_delete_comment_text : (list) => {
         let change_count = 0;
         list
@@ -53,6 +56,7 @@ const data_utils = {
         return { list, change_count };
     },
 
+    //**  1000 단위 변경 */
     content_count_change : (value) => {
         var result;
 

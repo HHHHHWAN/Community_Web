@@ -75,7 +75,7 @@ const header_nav_setting = ( function () {
             const href_object = event.target.closest('.login_href');
             const login_path = `/login`;
             const login_path_object = {
-            returnUrl : window.location.pathname,
+                returnUrl : window.location.pathname,
             }
             
             const param = new URLSearchParams(login_path_object).toString();

@@ -1,31 +1,66 @@
 
+(function(){
+    const login_el = document.getElementById('login_button')
 
-document.querySelector('.login').addEventListener('submit', function(event) {
-    // 체크 폼 항목 
-    const Check_foam = [
-        { id: 'username', errorspan: 'error_id', massage: '아이디를 입력해주세요' },
-        { id: 'password', errorspan: 'error_pw', massage: '비밀번호를 입력해주세요' }            
-    ]
+    const submit_login = async (input) =>{
+        try{
 
-    let foam_check = true;
+            const api_Response = await fetch(`/login`,{
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Accept' : 'application/json',
+                },
+                body : JSON.stringify(input),
+            });
+            
+            const api_result = await api_Response.json();
 
-    //Check_foam 반복
-    Check_foam.forEach( row => {
-        //span id취득 
-        error_span = document.getElementById(row.errorspan);
+            const api_data = api_result.data;
 
-        // username input value 값 공백 확인 
-        if( !document.getElementById(row.id).value ){
-            error_span.textContent = row.massage;
-            foam_check = false;
-        } else {
-            // 체크 문제 없을 시 error span 공백 
-            error_span.textContent = '';
+            if(api_result.result){
+                window.location.href = `${api_data.returnURL}`;
+                return
+            }
+
+            if(!alert(api_result.message)){
+                location.reload();
+            }
+
+        }catch(err){
+            console.error(err);
+            alert("서버가 혼잡합니다. 잠시후 시도해주세요");
         }
+    };
 
+    login_el.addEventListener('click', (event) => {
+        const Check_foam = [
+            { id: 'username', errorspan: 'error_id', massage: '아이디를 입력해주세요' },
+            { id: 'password', errorspan: 'error_pw', massage: '비밀번호를 입력해주세요' }            
+        ]
+        
+        const regax = /^\s*$/; //공백
+        let foam_check = true;
+        let input = {};
+
+        Check_foam.forEach(row => {
+            const error_span = document.getElementById(row.errorspan);
+            const input_el = document.getElementById(row.id);
+
+            if( regax.test(input_el.value) ){
+                error_span.textContent = row.massage;
+                foam_check = false;
+            } else {
+                input[row.id] = input_el.value;
+                error_span.textContent = '';
+            }
+        });
+
+        if(foam_check){
+            submit_login(input);
+        }
     });
+})();
 
-    //foam_check 확인 후 foam 이행
-    !foam_check && event.preventDefault();
-});
+
 

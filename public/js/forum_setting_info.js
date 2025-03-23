@@ -16,9 +16,9 @@ const set_setting_info_event = (current_nickname) => {
 
 
     name_button_object.addEventListener('click', async (event) => {
-        const regex_nickname = /^[a-zA-Z0-9가-힣]{2,15}$/; // 대, 소문자 숫자 조합 최소 길이 3자, 최대길이 15자
+        const regax = /^[a-zA-Z0-9가-힣]{2,15}$/; // 대, 소문자 숫자 조합 최소 길이 3자, 최대길이 15자
 
-        if(!regex_nickname.test(name_input_object.value)){
+        if(!regax.test(name_input_object.value)){
             name_hint_object.style.color='red';
             alert('올바른 조건으로 다시 입력해주세요.');
             return event.preventDefault();
@@ -34,7 +34,7 @@ const set_setting_info_event = (current_nickname) => {
             const api_Response = await fetch(`/settings/nickname`,{
                 method : 'PUT',
                 headers : {
-                    'Content-type' : 'application/json',
+                    'Content-Type' : 'application/json',
                     'Accept' : 'application/json',
                 },
                 body : JSON.stringify({
@@ -42,10 +42,10 @@ const set_setting_info_event = (current_nickname) => {
                 }),
             });
 
-            const data = await api_Response.json();
+            const api_result = await api_Response.json();
 
-            alert(data.message);
-            location.reload();
+            alert(api_result.message);
+            location.reload()
         }catch(err){
             alert("서버가 혼잡합니다. 잠시후 시도해주세요");
             location.reload();
@@ -60,7 +60,7 @@ const get_setting_info = async ( current_nickname ) => {
     
     try{
         const api_Response = await fetch(`/settings/info`,{
-            method:"GET",
+            method: 'GET',
             headers : {
                 'Accept' : 'application/json',
             }

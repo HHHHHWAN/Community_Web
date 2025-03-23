@@ -58,12 +58,13 @@ const set_setting_config_event = async () => {
 
     password_div_object.addEventListener('input', (event) => {
 
+        submit_button_object.disabled = true;
+        check_password_hint_object.textContent = '';
+
         if( current_password_object.value 
             && new_password_object.value 
             && check_password_object.value ){
                 submit_button_object.disabled = false;
-        }else{
-            submit_button_object.disabled = true;
         }
 
         if(event.target.id === 'new_password' 
@@ -80,9 +81,8 @@ const set_setting_config_event = async () => {
         }else if(event.target.id === 'check_password'){
             check_password_hint_object.textContent = '불일치';
             check_password_hint_object.style.color = 'red'; 
-        }else{
-            check_password_hint_object.textContent = '';
         }
+        
     });
 
     submit_button_object.addEventListener('click', async (event) => {
