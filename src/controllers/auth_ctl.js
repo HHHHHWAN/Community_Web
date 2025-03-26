@@ -72,11 +72,11 @@ exports.setSocialLogin = async (req, res) => {
         }
 
         if(service_message === 'signup'){
-            returnURL = '/signup';
+            returnURL = `/signup`;
         }
 
-        if(!!req.session.user){
-            returnURL = '/user/settings?nav=config';
+        if(service_message !== 'login'){
+            returnURL = `/user/settings?nav=config` ;
         }
 
         res.redirect(returnURL);

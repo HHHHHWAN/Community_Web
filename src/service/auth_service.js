@@ -194,7 +194,7 @@ const auth_service_object = {
                 nickname : existingUser.nickname
             };
 
-            callback(null,null);
+            callback(null,'login');
 
         }catch(err){
             console.error( ` ( set_social_login ) 소셜 연결 : ${err.message}` );
