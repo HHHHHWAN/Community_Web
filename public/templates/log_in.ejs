@@ -5,95 +5,44 @@
 <body>
     <%- include('layout/log_sign.ejs')%>
     <div style="width: 80%; display: flex; flex-direction: column; align-items: center;">
-        <% if (error) {%>
-            <div class="alertbox">
-                <p>로그인 실패</p>
-                <span class="alert_span">
-                    <% switch (error) { case 'already_key' : %>
-                        이미 연동이 완료된 계정입니다.
-                    <% break; case 'email_inconsistency' :%>
-                        소셜 계정과 다른 이메일을 사용하고 있어
-                        <br> 연동에 실패했습니다.
-                    <% break; case 'login_fail':%>
-                        아이디, 비밀번호 문제로 로그인에 실패했습니다.
-                    <% break; default :%>
-                        서버와 통신 중, 문제가 발생했습니다.
-                        <br>처음부터 다시 시도해 주세요.
-                    <% } %>
-                </span>
-                <span class="alert_span" ></span>
-            </div>
-        <% } %>
-        <% if (request === "auth_login_request") { %>
-            <div class="alertbox">
-                <p>알림</p>
-                <span class="hint">
-                    소셜 계정의 이메일이 이미 존재합니다. 
-                    <br>이미 가입한 계정과 연동하고 싶으시다면, 로그인 해주세요.
-                </span>
-            </div>
-        <% } %>
-
-        <% if (signup === "ok") {%>
-            <div class="alertbox">
-                <p>알림</p>
-                
-                    <% if (!social_signup) {%>
-                        <span class="hint">
-                        소셜계정 연동 및 
-                        </span>
-                    <% } else if ( social_signup === 'social_registering'){%>
-                        <span class="alert_span">
-                            "소셜계정 연결 실패"
-                            <br> 이메일 불일치
-                        </span>
-                    <% } %>
-                <span class="hint">
-                    회원가입이 정상적으로 처리되었습니다.
-                </span>
-
-            </div>
-        <% } %>
-
-
         <div class="login_box">
             <div class="logo_div"><a href="/" class="logo_href"> MyPage </a></div>
             <p> SNS 로그인 </p>
             <a class="button_login_github" href="/login/github">
-                <img src="public/img/github-mark.png" width="30px" alt="github_logo">
-                <img src="public/img/GitHub_Logo.png" width="70px" alt="github_logo">
+                <img src="public/img/github-logo.png" width="30px" alt="github_logo">
+                <img src="public/img/github-text.png" width="70px" alt="github_logo">
             </a>
             <a class="button_login_naver" href="/login/naver">
-                <img src="public/img/Naver-logo.png" height="30px" alt="Naver_login_img">
-                <img src="public/img/Naver_login_text.png" height="25px" alt="Naver_text_img">
+                <img src="public/img/naver-logo.png" height="30px" alt="Naver_login_img">
+                <img src="public/img/naver-text.png" height="25px" alt="Naver_text_img">
             </a>
             <p> 계정 로그인 </p>
 
             <div>
                 <div class="login_input_div">
                     <div>아이디</div>
-                    <input type="text" id="username" name="username">   
+                    <input type="text" id="username" name="username" placeholder="아이디 입력">   
                     <span class="alert_span" id="error_id"></span> 
                 </div>
 
                 <div class="login_input_div">
                     비밀번호
-                    <input type="password" id="password" name="password" >
+                    <input type="password" id="password" name="password" placeholder="비밀번호 입력">
                     <span class="alert_span" id="error_pw"></span>
                 </div>
 
                 
-
-                <% if (request === "auth_login_request") { %>
-                    <input type="hidden" name="request" value="<%= request %>">
-                <% } %>
                 
                 <button id="login_button" type="button">로그인</button>
             </div>
 
             <div>아직 회원이 아니신가요? <a href="/signup">회원가입</a></div>
+
+            <div id="login_alert" 
+                style="display: none; margin-top: 10px;  color: red;">
+            </div>
         </div> 
-        <div style="margin-top: 5px; padding: 5px; border-radius: 10px; border: 1px solid rgb(0, 0, 0); width: 150px;">
+        <div style="margin-top: 10px; padding: 5px; border-radius: 10px; border: 1px solid rgb(0, 0, 0); width: 150px;">
             <p> 테스트 계정 </p> 
             ID: test1
             <br>

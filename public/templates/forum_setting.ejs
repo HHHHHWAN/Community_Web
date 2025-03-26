@@ -31,7 +31,7 @@
                     작성된 게시물은 삭제되지 않으며, 익명처리 후 본 웹서비스에 귀속됩니다.
             </div>
             <div>
-                <div style="display: flex; justify-content: right; align-items: center; font-size: 10px;">
+                <div style="display: flex; justify-content: right; align-items: center; font-size: 12px;">
                     <input type="checkbox" id="accept_check" style="width: 11px;"> 
                     &nbsp;계정 탈퇴에 대한 상기 내용을 이해하고, 동의합니다.
                 </div>
@@ -48,23 +48,32 @@
 <script src="/public/js/forum_setting_config.js"></script>
 
 <script>
-    const nav_object = document.getElementById('setting_nav');
-    const main_object = document.getElementById('setting_box_main');
-    const info_object = document.getElementById('setting_info_button');
-    const config_object = document.getElementById('setting_config_button');
+    const nav_div_el = document.getElementById('setting_nav');
+    const main_div_el = document.getElementById('setting_box_main');
+    const info_button_el = document.getElementById('setting_info_button');
+    const config_button_el = document.getElementById('setting_config_button');
 
-    get_setting_info("<%=nickname%>");
-    
-    nav_object.addEventListener('click', (event)=>{
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    if(params.get('nav') === 'config'){
+        get_setting_config();
+    }else{
+        get_setting_info("<%=nickname%>");
+    }
+
+    nav_div_el.addEventListener('click', (event)=>{
         if(event.target.tagName === 'BUTTON'){
-            main_object.innerHTML = ``;
-            info_object.style.background = '';
-            config_object.style.background = '';
+            main_div_el.innerHTML = ``;
+            config_button_el.style.background = '';
+            info_button_el.style.background = '';
         }
             
         if(event.target.id === 'setting_info_button'){
             get_setting_info( "<%=nickname%>" );
-        }else if(event.target.id === 'setting_config_button'){
+        }
+        
+        if(event.target.id === 'setting_config_button'){
             get_setting_config();
         }
     });

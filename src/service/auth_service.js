@@ -69,7 +69,7 @@ const del_redis_dup_user_session = async (user_id, new_sessionID) => {
 
 const auth_service_object = {
 
-    // 로그인 처리 
+    /** 일반 로그인 처리  */ 
     set_login : async ( req, input_username, input_password, callback ) => {
         
         const query = `
@@ -150,118 +150,65 @@ const auth_service_object = {
         }
     },
 
-    // 소셜 로그인 처리
+    /** 소셜 로그인 처리 new*/ 
     set_social_login : async ( req, callback ) => {
         const request_code = req.query.code;  // 인가 코드
         const social_type = req.params.social_url; // 소셜 위치 
         const social_key = 'key_' + social_type;
+        try{ 
 
-        const Oauth_result = await Oauth_module.request_token_social( social_type, request_code ); // { result , data };
+            const { reuslt, social_data } = await Oauth_module.request_token_social( social_type, request_code ); // { result , data };
+            const existingUser = await Oauth_module.find_social_user( social_data.id, social_key);
 
-        // 인증 실패
-        if(!Oauth_result.result){
-            return callback(403, null);
-        }
+            // 소셜 등록
+            if(!!req.session.user){
 
-        const Oauth_userInfo = Oauth_result.data;
+                if(existingUser
+                    && existingUser.id !== req.session.user.user_id){
+                    return callback(409, "이미 연동된 소셜 계정입니다. ");
+                }
 
-        const query = `
-        SELECT id, nickname 
-        FROM User 
-        WHERE visible = 1 AND ${social_key} = ?`;
-        
-        read_DB.query(query, [Oauth_userInfo.id], ( err, query_result ) => {
-            if(err){
-                console.error(" ( set_social_login ) MySql2 : \n ", err.stack);
-                return callback(500,null)
+                const handle_social_register = await Oauth_module.update_user_social_key( social_key, social_data.id, req.session.user.user_id);
+                if(!handle_social_register){
+                    throw { status : 500, message : " (update_user_social_key) 데이터베이스 처리 중, 문제가 발생했습니다." }
+                }
+
+                return callback(null, "소셜 계정 연동이 완료되었습니다.");
             }
 
+            /// 일반 로그인 
+
             // 회원가입 필요
-            if(!query_result.length){
+            if(!existingUser){
                 req.session.social = {
-                    id : Oauth_userInfo.id,
-                    email : Oauth_userInfo.email,
+                    id : social_data.id,
+                    email : social_data.email,
                     social_key
                 }
                 
-                return callback(null,'/signup');
+                return callback(null,'signup');
             }
-
-            const user_info = query_result[0];
 
             req.session.user = {
-                user_id : user_info.id,
-                nickname : user_info.nickname
+                user_id : existingUser.id,
+                nickname : existingUser.nickname
             };
 
-            callback(null,'/');
-        });
-    },
+            callback(null,null);
 
-
-    /// -----------------------------------------------test
-
-    // 계정생성 OLD
-    set_createUser : async (req, sign_password, request, callback ) => {
-
-        try{
-            const dup_check_result = await check_dup_userinfo(req.session.sign.email, req.session.sign.username);
-
-            if(dup_check_result.dup_email || dup_check_result.dup_username ){
-        
-                if(dup_check_result.dup_email){
-                    delete req.session.sign.email;
-                }
-                if(dup_check_result.dup_username){
-                    delete req.session.sign.username;
-                }
-                
-                
-                return callback(true, 'duplicated_user');
-            } else {
-
-                // DB 접속전 해쉬화 처리
-                const salt = await bcrypt.genSalt(10); // salt 생성
-                const hashedPassword = await bcrypt.hash(signup_password, salt);
-                const query = `INSERT INTO User (username, email, nickname, password) VALUES ( ?, ?, ?, ?)`;
-
-                write_DB.query(query, [ req.session.sign.username, req.session.sign.email, req.session.sign.nickname, hashedPassword ] , async (err, result) => {
-                    if(err) {
-                        // DB server error
-                        console.error("insert error : " , err);
-                        return callback(true, 'signup_request_fail');
-                    }
-
-                    const return_message = {
-                        signup : 'ok'
-                    };
-
-                    if(request === 'auth_signup_request'){
-                        return_message.social_signup = 'social_registering';
-                        if(req.session.social.email === req.session.sign.email){
-                            const social_connect = await update_user_social_key( req.session.social.social_key, req.session.social.id, result.insertId);
-                            return_message.social_signup = social_connect;
-                        }
-                    }
-
-                    // session initialize
-                    req.session = '';
-
-                    callback(false, new URLSearchParams(return_message).toString());
-                });
-            }
         }catch(err){
-            // DB system err
-            console.error("( set_createUser ) 쿼리 오류 발생 : ", err);
-            callback(true, 'signup_request_fail');
+            console.error( ` ( set_social_login ) 소셜 연결 : ${err.message}` );
+            return callback( err.status || 500, null);
         }
     },
 
-    /** 회원가입 처리 */
-    set_signup : async ( req, sign_password, callback ) => {
+
+    /** 회원가입 처리 (소셜 등록 체크) */
+    set_signup : async ( req, callback ) => {
         const sign_username = req.body.username;
         const sign_nickname = req.body.nickname;
         const sign_email = req.body.email;
+        const sign_password = req.body.password; 
 
         try{
             const dup_check_result = await check_dup_userinfo( sign_username, sign_nickname, sign_email );
@@ -269,6 +216,7 @@ const auth_service_object = {
             // 중복결과 체크
             const duplicaion_check = Object.values(dup_check_result.duplicates).some( row => parseInt(row));
 
+            // 중복 결과를 key:value 로 반환
             if(duplicaion_check){
                 const dup_list = Object.entries(dup_check_result.message)
                     .filter(([_,msg]) => msg !== null)
@@ -280,27 +228,26 @@ const auth_service_object = {
                 return callback(409, "중복되는 정보가 존재", dup_list);
             }
 
+            // 회원가입 처리
             const salt = await bcrypt.genSalt(10); // salt 생성
             const hashedPassword = await bcrypt.hash(sign_password, salt);
 
             const query = `INSERT INTO User (username, email, nickname, password) VALUES ( ?, ?, ?, ? )`;
-
             const [ insert_query_result ] = await read_DB_promise.query(query, [ sign_username, sign_email, sign_nickname, hashedPassword]);
-
             if(!insert_query_result.affectedRows){
+                // 사용자 입력 정보 미흡
                 console.log( ` (set_signup) INSERT 영향 없음 : ${username}, ${email}, ${nickname} `);
                 return callback(400, "회원가입 처리를 완료하지 못했습니다. 다시 시도해주세요.", null);
             }
 
-            // 소셜 연동 기록
+            // 소셜 연동 처리
             if( req.session.social ){
                 const request_info = req.session.social;
                 delete req.session.social;
-                Oauth_module.update_user_social_key(request_info.social_key, request_info.id, result.insertId );
+                Oauth_module.update_user_social_key(request_info.social_key, request_info.id, insert_query_result.insertId );
             }
 
             callback(null, "회원가입 완료", null);
-
         }catch(err){
             console.error( "( set_signup ) : \n",err.stack);
             callback( 500, "서버에서 요청을 처리하지 못했습니다.", null);

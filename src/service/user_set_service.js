@@ -89,7 +89,7 @@ const user_set_service = {
 
     // 계정 비활성화
     set_invisibly_user : (user_id, callback) => {
-        const query = `UPDATE User SET visible = b'0', delete_at = ?  WHERE id = ?`;
+        const query = `UPDATE User SET visible = b'0', delete_at = ?, key_github = NULL, key_naver = NULL  WHERE id = ?`;
         write_DB.query(query, [new Date, user_id] , (err, result) => {
             if(err){
                 console.error( " ( set_invisibly_user ) Error : ", err);

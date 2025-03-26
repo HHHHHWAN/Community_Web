@@ -82,7 +82,7 @@ const user_get_service = {
             });
         },
     
-        // 회원 정보 DOM 데이터 -> api_getSettinginfo
+        /** 회원 정보 DOM 데이터 -> api_getSettinginfo */
         get_Setting_user_info : (user_id, callback) => {
             const query = `SELECT username, email FROM User WHERE id = ?`;
     
@@ -95,7 +95,7 @@ const user_get_service = {
             });
         },
     
-        // 소셜 연동 현황 -> api_getSettingConfig
+        /** 소셜 연동 현황 -> api_getSettingConfig */
         get_Setting_Social : (user_id, callback) => {
             const query = `SELECT 
                 CASE 

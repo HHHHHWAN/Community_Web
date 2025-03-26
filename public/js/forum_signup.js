@@ -98,7 +98,7 @@
 
 
 				const api_data = api_result.data;
-				console.log(api_data);
+
 				if(api_data){
 					Object.entries(api_data.service_result).forEach( ( [input_name, value] ) => {
 						const input_el = document.getElementById(input_name);
@@ -112,7 +112,7 @@
 				
 				alert(api_result.message);
 
-				window.location.href = '/';
+				window.location.href = '/login';
 			}catch(err){
 				alert('서버 요청에 실패했습니다. 잠시후 시도해주세요');
 			}

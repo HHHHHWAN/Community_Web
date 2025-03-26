@@ -4,6 +4,8 @@ a {
     color: #333;
     font-weight: bold;
     text-decoration: none;
+
+    margin-bottom: 10px;
 }a:hover {
     color: #4CAF50;
     cursor: pointer;
@@ -126,9 +128,7 @@ button{
 }
 
 
-a {
-    margin-bottom: 10px;
-}
+
 
 .button_login_github{
     display: flex;

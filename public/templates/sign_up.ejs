@@ -7,21 +7,7 @@
 <body>
     <%- include('layout/log_sign.ejs')%>
     <div style="width: 80%; display: flex; flex-direction: column; align-items: center;">
-        <% if (issue) {%>
-            <div class="alertbox">
-                <p>회원가입 실패</p>
-                <span class="alert_span">
-                <% if (issue === 'duplicated_user') { %>
-                    이미 사용중인 이메일 또는 아이디 입니다.
-                <% } else {%>
-                    서버와 통신 중, 문제가 발생했습니다.
-                    <br>다시 시도해 주세요.
-                <% } %>
-                </span>
-            </div>
-        <% } %>
-
-        <% if (request === "auth_signup_request") {%>
+        <% if (social_request) {%>
             <div class="alertbox">
                 <p>알림</p>
                 <span class="hint">
@@ -30,42 +16,35 @@
                 </span>
             </div>
         <% } %>
-
         <div class="login_box">
             <div class="logo_div"><a href="/" class="logo_href"> MyPage </a></div>
             <p> SNS 회원가입 </p>
             <a class="button_login_github" href="/login/github">
-                <img src="public/img/GitHub_Logo.png" width="70px" alt="github_logo">
-                <img src="public/img/github-mark.png" width="30px" alt="github_logo">
+                <img src="public/img/github-logo.png" width="30px" alt="github_logo">
+                <img src="public/img/github-text.png" width="70px" alt="github_logo">
             </a>
             <a class="button_login_naver" href="/login/naver">
-                <img src="public/img/Naver-logo.png" height="30px" alt="Naver_login_img">
-                <img src="public/img/Naver_login_text.png" height="25px" alt="Naver_text_img">
+                <img src="public/img/naver-logo.png" height="30px" alt="Naver_login_img">
+                <img src="public/img/naver-text.png" height="25px" alt="Naver_text_img">
             </a>
             <p> 회원가입에 필요한 정보를 기입해주세요 </p>
-            <!-- <form id='signin' action="/signup" method="POST"> -->
             <div id="signup_input_div">
                 <div style="margin-top: 5px;">
                     아이디 
-                    <input type="text" id="username" name="username"  placeholder="4 ~ 15글자 이내" value="<%= history ?  history.username : '' %>">    
+                    <input type="text" id="username" name="username"  placeholder="4 ~ 15글자 이내">    
                     <span class="alert_span" id="error_id"></span>
                 </div>
 
                 <div style="margin-top: 8px;">
                     이메일 
-                    <input type="email" id="email" name="email"  placeholder="username@mypagehhh.shop" value="<%= history ?  ( history.social_email ? history.social_email : history.email ) : '' %>">
+                    <input type="email" id="email" name="email"  placeholder="username@mypagehhh.shop">
                     <span class="alert_span" id="error_email"></span>
-                    <% if (request === "auth_signup_request") { %>
-                        <span class="hint">  
-                            *소셜 연동을 위해 동일한 이메일로 가입해주세요.
-                            <br> ( 다른 이메일로 가입시 일반가입으로 처리됩니다. )
-                        </span>
-                    <% } %>
+
                 </div>  
 
                 <div style="margin-top: 8px;">
                     닉네임 
-                    <input type="text" id="nickname" name="nickname"  placeholder="두 글자이상 15자 이내" value="<%= history ?  history.nickname : '' %>">
+                    <input type="text" id="nickname" name="nickname"  placeholder="두 글자이상 15자 이내">
                     <span class="alert_span" id="error_nk"></span>
                 </div>  
 
@@ -81,13 +60,8 @@
                     <span class="alert_span" id="error_pwc"></span>
                 </div>  
 
-                <% if (request === "auth_signup_request") { %>
-                    <input type="hidden" name="request" value="<%= request %>">
-                <% } %>
-
                 <button id="signup_button" type="button" disabled>회원가입</button>
             </div>
-            <!-- </form> -->
             이미 아이디가 존재하신가요? <a href="/login">로그인</a>
         </div>  
     </div>

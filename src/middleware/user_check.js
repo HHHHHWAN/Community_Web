@@ -5,15 +5,15 @@ const user_check = {
         const accept = req.headers['accept'].split(',');
         if(!req.session.user){
 
-            // JSON REQUEST
-            if(accept[0] === 'application/json'){
-                return res.status(401).json({
-                    message: "인증 실패, 허가되지 않은 접근",
-                    returnStatus : 401 });
-            }
+            // // JSON REQUEST
+            // if(accept[0] === 'application/json'){
+            //     return res.status(401).json({
+            //         message: "인증 실패, 허가되지 않은 접근",
+            //         returnStatus : 401 });
+            // }
 
             // EJS REQUEST
-            if(accept[0] === 'text/html'){
+            if(accept){
                 return res.redirect('/login');
             }
 

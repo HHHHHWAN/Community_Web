@@ -214,7 +214,7 @@ exports.api_putSettingSocial = (req, res ) => {
             }
 
             res.json({
-                message : "성공적으로 소셜 연동을 해제하였습니다.",
+                message : "성공적으로 소셜 연동을 설정하였습니다.",
                 result : true
             });
         });
@@ -269,7 +269,7 @@ exports.api_WithdrawAccount = (req, res) => {
         }
 
         res.json({
-            message : "회원탈퇴가 처리되었습니다.",
+            message : "회원탈퇴 처리되었습니다.",
             result : true
         });
     });

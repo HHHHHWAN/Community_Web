@@ -1,6 +1,8 @@
 
 (function(){
-    const login_el = document.getElementById('login_button')
+    const login_el = document.getElementById('login_button');
+    const login_alert_div_el = document.getElementById('login_alert');
+    // const login_alert_el = document.getElementById();
 
     const submit_login = async (input) =>{
         try{
@@ -23,9 +25,8 @@
                 return
             }
 
-            if(!alert(api_result.message)){
-                location.reload();
-            }
+            login_alert_div_el.style.display = 'block';
+            login_alert_div_el.textContent = api_result.message;
 
         }catch(err){
             console.error(err);
@@ -35,8 +36,8 @@
 
     login_el.addEventListener('click', (event) => {
         const Check_foam = [
-            { id: 'username', errorspan: 'error_id', massage: '아이디를 입력해주세요' },
-            { id: 'password', errorspan: 'error_pw', massage: '비밀번호를 입력해주세요' }            
+            { id: 'username', errorspan: 'error_id', message: '아이디를 입력해주세요' },
+            { id: 'password', errorspan: 'error_pw', message: '비밀번호를 입력해주세요' }            
         ]
         
         const regax = /^\s*$/; //공백
@@ -48,7 +49,7 @@
             const input_el = document.getElementById(row.id);
 
             if( regax.test(input_el.value) ){
-                error_span.textContent = row.massage;
+                error_span.textContent = row.message;
                 foam_check = false;
             } else {
                 input[row.id] = input_el.value;

@@ -74,11 +74,11 @@ const get_setting_info = async ( current_nickname ) => {
         }
 
 
-        info_object.disabled = true;
-        config_object.disabled = false;
-        info_object.style.background = 'rgb(223, 244, 231)';
+        info_button_el.disabled = true;
+        config_button_el.disabled = false;
+        info_button_el.style.background = 'rgb(223, 244, 231)';
 
-        main_object.innerHTML = `
+        main_div_el.innerHTML = `
                 <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>회원정보</b></div>
                 
                 <div>

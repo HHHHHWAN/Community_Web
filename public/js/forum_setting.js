@@ -44,7 +44,7 @@
     document.querySelector('.delete_button').addEventListener('click', (event) => {
         const accept_box = document.getElementById('accept_check');
         if(accept_box.checked){
-            if(confirm('회원탈퇴를 신청하시겠습니까?')){
+            if(confirm('정말로 탈퇴하시겠습니까?\n탈퇴신청된 아이디는 복구되지 않습니다.')){
                 request_signout();
             }
         } else {
