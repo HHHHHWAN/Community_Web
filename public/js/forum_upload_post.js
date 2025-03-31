@@ -8,7 +8,8 @@ const submit = (function () {
                 method : input.method,
                 headers : {
                     'Accept' : 'application/json',
-                    'Content-Type' : 'application/json'
+                    'Content-Type' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 },
                 body : JSON.stringify(input)
             });

@@ -165,7 +165,7 @@ const auth_service_object = {
 
                 if(existingUser
                     && existingUser.id !== req.session.user.user_id){
-                    return callback(409, "이미 연동된 소셜 계정입니다. ");
+                    return callback(409, 'register', "이미 연동된 소셜 계정입니다. ");
                 }
 
                 const handle_social_register = await Oauth_module.update_user_social_key( social_key, social_data.id, req.session.user.user_id);
@@ -173,7 +173,7 @@ const auth_service_object = {
                     throw { status : 500, message : " (update_user_social_key) 데이터베이스 처리 중, 문제가 발생했습니다." }
                 }
 
-                return callback(null, "소셜 계정 연동이 완료되었습니다.");
+                return callback(null, 'register', "소셜 계정 연동이 완료되었습니다.");
             }
 
             /// 일반 로그인 
@@ -186,7 +186,7 @@ const auth_service_object = {
                     social_key
                 }
                 
-                return callback(null,'signup');
+                return callback(null,'signup', null);
             }
 
             req.session.user = {
@@ -194,11 +194,11 @@ const auth_service_object = {
                 nickname : existingUser.nickname
             };
 
-            callback(null,'login');
+            callback(null,'login',null);
 
         }catch(err){
             console.error( ` ( set_social_login ) 소셜 연결 : ${err.message}` );
-            return callback( err.status || 500, null);
+            return callback( err.status || 500, null, null);
         }
     },
 

@@ -59,7 +59,7 @@
                         <div class="comment_text" contenteditable="true" 
                             aria-required="true"  aria-multiline="true" 
                             spellcheck="true"></div>
-                        <input type="hidden" class="comment_box_content_id" value="<%= Content.id%>">
+                        <input type="hidden" class="comment_box_content_id" value="<%= Content.id %>">
 
                         <div>
                             <button type="button" 
@@ -74,8 +74,6 @@
                     </div>
                 <% } %>
             </div>
-
-            
             <div>
                 <%if ( Comment_Info.Count ) {%>
                     <div class="comment_label">
@@ -104,7 +102,7 @@
                                         </div>
                                         <div>
                                             <div class="pre_comment"
-                                            style="padding-left: 10px; overflow-y: auto;"
+                                            style="padding-left: 10px;"
                                             role="textbox" aria-multiline="true">
                                                 <%- row.comment %>
                                             </div>
@@ -149,7 +147,7 @@
                                                         </div>
                                                         <div style='margin-bottom : 2px;'>
                                                             <div class="pre_comment"
-                                                            style="padding-left: 10px;  overflow-y: auto;"
+                                                            style="padding-left: 10px;"
                                                             role="textbox" aria-multiline="true">
                                                                 <%- children.comment %>
                                                             </div>
@@ -199,7 +197,7 @@
 
                 <% if (nickname && (pagetype !== "popular")) { %>
                     <div>
-                        <a href="/<%= Content.content_type %>/edit"><button class="forum_button" >글쓰기</button></a>
+                        <a href="/post/edit?pagetype=<%= pagetype %>"><button class="forum_button" >글쓰기</button></a>
                     </div>
                 <% }else if (pagetype !== "popular") {%>
                     <div>

@@ -9,15 +9,15 @@
 	<div class="forum_list_box">
 		<div class="forum_list_box_info"> 
 
-			<% if (userId && (pagetype !== "popular")) { %>
+			<% if (userId) { %>
 				<div>
-					<a href="/post/edit?pagetype=<%= pagetype %>"><button class="forum_button" >글쓰기</button></a>
+					<a href="/post/edit?pagetype=<%= pagetype === 'popular' ? 'info' : pagetype %>"><button class="forum_button" >글쓰기</button></a>
 				</div>
-			<% }else if (pagetype !== "popular") {%>
+			<% } else { %>
 				<div>
 					<a href="/login"><button class="forum_button">글쓰기</button></a>
 				</div>
-			<%} else {}%>
+			<%}%>
 				
 			<div class="forum_info_top">
 				<div class="forum_describe">		

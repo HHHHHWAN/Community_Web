@@ -1,5 +1,7 @@
 
 (function(){
+	const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content;
+
 	const signup_div_el = document.getElementById('signup_input_div');
 	const signup_submit_el = document.getElementById('signup_button');
 
@@ -89,7 +91,8 @@
 					method : 'POST',
 					headers : {
 						'Accept' : 'application/json',
-						'Content-Type' : 'application/json'
+						'Content-Type' : 'application/json',
+						'X-CSRF-Token' : user_csrf_token
 					},
 					body : JSON.stringify(check_point),
 				});

@@ -4,8 +4,6 @@ const set_setting_info_event = (current_nickname) => {
     const name_button_object = document.getElementById('nickname_button');
     const name_hint_object = document.getElementById('nickname_hint');
 
-    name_input_object.placeholder = current_nickname;
-
     name_input_object.addEventListener('input', () => {
         if(!name_input_object.value){
             name_button_object.disabled = true;
@@ -36,6 +34,7 @@ const set_setting_info_event = (current_nickname) => {
                 headers : {
                     'Content-Type' : 'application/json',
                     'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 },
                 body : JSON.stringify({
                     nickname_input : name_input_object.value,
@@ -56,7 +55,7 @@ const set_setting_info_event = (current_nickname) => {
 
 
 
-const get_setting_info = async ( current_nickname ) => {
+const get_setting_info = async () => {
     
     try{
         const api_Response = await fetch(`/settings/info`,{
@@ -78,6 +77,8 @@ const get_setting_info = async ( current_nickname ) => {
         config_button_el.disabled = false;
         info_button_el.style.background = 'rgb(223, 244, 231)';
 
+        const api_data = api_result.data;
+
         main_div_el.innerHTML = `
                 <div style="width: 100%; font-size: 18px; margin-bottom: 20px;"><b>회원정보</b></div>
                 
@@ -92,19 +93,17 @@ const get_setting_info = async ( current_nickname ) => {
                 </div>
                 <div>
                     <div class="label_div">&middot; 닉네임 변경</div>
-                    <input id="nickname_input" name="nickname_input" required >
+                    <input id="nickname_input" name="nickname_input" placeholder="${api_data.setting_nickname}" required >
                     <span style="font-size:11px" id="nickname_hint">※ 공백 특수문자를 제외한, 2자 이상, 15자 이하 영어, 한글 문자 <span>
                 </div>
                 
                 <div style="margin-top: 15px;"><button type="button" id="nickname_button" style="width: 50px; height: 30px;" disabled> 변경 </button></div>
             `;
 
-        const api_data = api_result.data;
-
         document.getElementById('user_info_id').textContent = api_data.setting_username;
         document.getElementById('user_info_email').textContent = api_data.setting_email;
 
-        set_setting_info_event(current_nickname);
+        set_setting_info_event(api_data.setting_nickname);
 
     }catch(err){
         alert("서버가 혼잡합니다. 잠시후 시도해주세요");

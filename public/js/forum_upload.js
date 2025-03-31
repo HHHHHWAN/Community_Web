@@ -52,6 +52,7 @@ document.getElementById('imageInput').addEventListener('change',function(){
             method: 'POST', 
             headers : {
                 'Accept' : 'application/json',
+                'X-CSRF-Token' : user_csrf_token
             },
             body: formData 
         });

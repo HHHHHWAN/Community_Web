@@ -1,8 +1,5 @@
 <% title = ( nickname ? nickname : "설정" )%>
-
 <link rel="stylesheet" href="/public/css/forum_setting.css">
-
-
 
 <div class="box">
     <div class="setting_box">
@@ -43,40 +40,9 @@
     </div>
 </div>
 
-<script src="/public/js/forum_setting.js"></script>
 <script src="/public/js/forum_setting_info.js"></script>
 <script src="/public/js/forum_setting_config.js"></script>
+<script src="/public/js/forum_setting.js"></script>
 
-<script>
-    const nav_div_el = document.getElementById('setting_nav');
-    const main_div_el = document.getElementById('setting_box_main');
-    const info_button_el = document.getElementById('setting_info_button');
-    const config_button_el = document.getElementById('setting_config_button');
 
-    const url = new URL(window.location.href);
-    const params = url.searchParams;
-
-    if(params.get('nav') === 'config'){
-        get_setting_config();
-    }else{
-        get_setting_info("<%=nickname%>");
-    }
-
-    nav_div_el.addEventListener('click', (event)=>{
-        if(event.target.tagName === 'BUTTON'){
-            main_div_el.innerHTML = ``;
-            config_button_el.style.background = '';
-            info_button_el.style.background = '';
-        }
-            
-        if(event.target.id === 'setting_info_button'){
-            get_setting_info( "<%=nickname%>" );
-        }
-        
-        if(event.target.id === 'setting_config_button'){
-            get_setting_config();
-        }
-    });
-    
-</script>
 

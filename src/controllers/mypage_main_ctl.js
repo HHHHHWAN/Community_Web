@@ -2,6 +2,7 @@ const post_get_service = require('../service/post_get_service');
 
 
 exports.getMyPagelist = (req, res) => {
+
     // 게시글 리스트 5건 씩 요청
     post_get_service.get_mainpage_contents(( status, category_result ) => {
         if(status){

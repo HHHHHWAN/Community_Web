@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
+	<!-- <% if( userId ){%>
+		<meta name="csrf_token" content="<%= csrf %>">
+	<% } %> -->
+	<meta name="csrf_token" content="<%= csrf %>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>	MyPage - <%- title %></title>
 	<link rel="stylesheet" href="/public/css/forum.css">
@@ -16,4 +20,8 @@
 
 	<%- include('footer_company.ejs') %>
 </body>
+
+<script>
+	const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content || null;
+</script>
 </html>

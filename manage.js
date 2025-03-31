@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config()
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
+const csrf_token = require('csurf');
 ///--------------------------------------------------
 
 /// Session setting
@@ -14,13 +15,12 @@ const user_Routes = require('./src/routes/user');
 const auth_Routes = require('./src/routes/auth'); 
 const post_Routes = require('./src/routes/post'); 
 
-// require('./src/models/mysql_connect');
-
 /// Express
 const app = express();
 
 /// 공통 미들웨어 관련 설정
 app.use(session_middle());
+app.use(csrf_token());
 app.use(local_session);
 
 

@@ -79,12 +79,12 @@ const password_event = async () => {
 
         if( submit_check ){
             try{
-
                 const api_Response = await fetch(`/settings/password`,{
                     method : 'PUT',
                     headers : {
                         'Content-Type' : 'application/json',
                         'Accept' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
                     },
                     body : JSON.stringify({
                         Current_Password : current_password_el.value,
@@ -93,14 +93,11 @@ const password_event = async () => {
                 });
 
                 const api_result = await api_Response.json();
-
-
                 alert(api_result.message);
 
                 if(api_Response.ok){
                     location.reload();
                 }
-                
                 
             }catch(err){
                 console.error(err);
@@ -122,6 +119,7 @@ const social_put = async (social) => {
             headers : {
                 'Content-Type' : 'application/json',
                 'Accept' : 'application/json',
+                'X-CSRF-Token' : user_csrf_token
             },
             body : JSON.stringify({
                 social_name : social,
@@ -142,6 +140,7 @@ const social_put = async (social) => {
         location.reload();
     }
 };
+
 
 
 const get_setting_config = async () => {

@@ -2,6 +2,7 @@
 (function(){
     const login_el = document.getElementById('login_button');
     const login_alert_div_el = document.getElementById('login_alert');
+    const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content;
     // const login_alert_el = document.getElementById();
 
     const submit_login = async (input) =>{
@@ -12,6 +13,7 @@
                 headers : {
                     'Content-Type' : 'application/json',
                     'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 },
                 body : JSON.stringify(input),
             });

@@ -105,7 +105,8 @@ exports.api_getSettinginfo = (req,res) => {
             result : true,
             data : {
                 setting_username : service_result[0].username,
-                setting_email : service_result[0].email
+                setting_email : service_result[0].email,
+                setting_nickname : service_result[0].nickname
             }
         });
     });    

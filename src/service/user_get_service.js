@@ -84,7 +84,7 @@ const user_get_service = {
     
         /** 회원 정보 DOM 데이터 -> api_getSettinginfo */
         get_Setting_user_info : (user_id, callback) => {
-            const query = `SELECT username, email FROM User WHERE id = ?`;
+            const query = `SELECT username, email, nickname FROM User WHERE id = ?`;
     
             read_DB.query(query,[ user_id ],( err, DB_results ) => {
                 if(err){

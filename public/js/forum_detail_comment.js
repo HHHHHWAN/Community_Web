@@ -1,14 +1,12 @@
 // js/forum_detail_comment.js
 
+(function () {
 
-const CommentDOMsetting = (function () {
-
-    const comment_root_div = document.querySelector('.forum_detail_comment');
-    const main_comment_box_el = document.querySelector('.comment_box');
-    const content_id_value = main_comment_box_el.querySelector('.comment_box_content_id').value;
+    const comment_main_div_el = document.querySelector('.forum_detail_comment');
+    const comment_edit_box_el = document.querySelector('.comment_box');
+    const current_content_id = comment_edit_box_el.querySelector('.comment_box_content_id').value;
 
     const comment_div_placeholder = (el) => {
-
         function comment_box_check(){
             if (el.innerText.trim() === ''){
                 el.classList.add("placeholder");
@@ -24,7 +22,7 @@ const CommentDOMsetting = (function () {
         });
         el.addEventListener('blur', comment_box_check());
         comment_box_check();
-    }
+    };
 
     const comment_submit_setting =  ( el, input ) => {
         const comment_text_el = el.querySelector('.comment_text');
@@ -42,14 +40,16 @@ const CommentDOMsetting = (function () {
 
             comment_submit_el.disabled = true;
             input.text = comment_text_el.innerHTML;
-            input.content_id = content_id_value;
+            input.content_id = current_content_id;
 
             try{
+                // ADD, PUT
                 const api_response = await fetch(input.endpoint_value, {
                     method : input.method_value,
                     headers : {
                         'Accept' : 'application/json',
                         'Content-Type' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
                     },
                     body : JSON.stringify(input)
                 });
@@ -67,16 +67,16 @@ const CommentDOMsetting = (function () {
                 window.location.reload();
             }
         });
-    }
+    };
 
-    comment_submit_setting( main_comment_box_el, {
+    comment_submit_setting( comment_edit_box_el, {
         method_value : 'POST', 
         endpoint_value : `/reply/edit`
     });
 
-    comment_root_div.addEventListener('click', function(event){
+    comment_main_div_el.addEventListener('click', function(event){
 
-        // editor modal
+        // EDIT MODAL
         if (event.target.classList.contains('create_subcomment_button')){
             const button_el = event.target;
             const sub_comment_div = button_el.parentElement.nextElementSibling;
@@ -85,7 +85,6 @@ const CommentDOMsetting = (function () {
             const parent_id_value = sub_comment_div.querySelector('.comment_parent_id').value;
             
             if( form_div.children.length === 0 ){
-
                 button_el.textContent = "- 댓글창 닫기";
 
                 form_div.innerHTML = `
@@ -99,23 +98,20 @@ const CommentDOMsetting = (function () {
                 </div>
                 `;
 
-
                 const input_value = {
                     endpoint_value : `/reply/edit`,
                     method_value : 'POST',
                     parent_id : parent_id_value
                 };
     
-
-                comment_submit( form_div, input_value );
-
+                comment_submit_setting( form_div, input_value );
             } else {
                 button_el.textContent = '+ 댓글 쓰기'
                 form_div.innerHTML = '';
             }
         };
 
-        //modify
+        // MODIFY
         if (event.target.classList.contains('comment_modify')){
             const form_div = event.target.closest('.comment_container');
             const origin_div_html = form_div.innerHTML;
@@ -153,30 +149,36 @@ const CommentDOMsetting = (function () {
             });
         }
 
-        //delete
+        //DELETE
         if(event.target.classList.contains('comment_delete')){
-            const comment_id = event.target.closest('.comment_container').querySelector('.comment_id_hidden').value;
-            fetch(`/reply/delete` , { 
-                method : 'DELETE',
-                headers : {
-                    'Accept' : 'applicaion/json',
-                    'Content-Type' : 'application/json'
-                },
-                body : JSON.stringify({
-                    comment_id
+            if(confirm("댓글을 삭제하시겠습니까?")){
+                const target_comment_div_el = event.target.closest('.comment_container');
+                const comment_id = target_comment_div_el.querySelector('.comment_id_hidden').value;
+
+                fetch(`/reply/delete` , { 
+                    method : 'DELETE',
+                    headers : {
+                        'Accept' : 'applicaion/json',
+                        'Content-Type' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
+                    },
+                    body : JSON.stringify({
+                        comment_id
+                    })
                 })
-            })
-            .then(Response => Response.json())
-            .then(data => {
-                alert(data.message);
-                window.location.reload();
-            })
-            .catch(err => {
-                console.error(err);
-                alert('요청 처리 중, 문제가 발생했습니다.');
-                window.location.reload();
-            });
+                .then(Response => Response.json())
+                .then(data => {
+                    alert(data.message);
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('요청 처리 중, 문제가 발생했습니다.');
+                    window.location.reload();
+                });
+            }
         }
+
     });
 
 })();

@@ -1,3 +1,7 @@
+const main_div_el = document.getElementById('setting_box_main');
+const info_button_el = document.getElementById('setting_info_button');
+const config_button_el = document.getElementById('setting_config_button');
+// const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content;
 
 ( function(){
 
@@ -7,6 +11,7 @@
                 method : 'DELETE',
                 headers : {
                     'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 },
             });
 
@@ -26,6 +31,7 @@
                 method : 'DELETE',
                 headers : {
                     'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 }
             });
 
@@ -51,8 +57,34 @@
             alert('이용약관에 동의가 필요합니다.');
         }
     });
+
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
     
+    if(params.get('nav') === 'config'){
+        get_setting_config();
+    }else{
+        get_setting_info();
+    }
+    
+    const nav_div_el = document.getElementById('setting_nav');
+    
+    nav_div_el.addEventListener('click', (event)=>{
+        if(event.target.tagName === 'BUTTON'){
+            main_div_el.innerHTML = ``;
+            config_button_el.style.background = '';
+            info_button_el.style.background = '';
+        }
+            
+        if(event.target.id === 'setting_info_button'){
+            get_setting_info();
+        }
+        
+        if(event.target.id === 'setting_config_button'){
+            get_setting_config();
+        }
+    });
+    
+
 }())
-
-
 

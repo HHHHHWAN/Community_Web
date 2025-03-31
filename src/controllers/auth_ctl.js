@@ -55,11 +55,11 @@ exports.setSocialLogin = async (req, res) => {
     let returnURL = req.session.returnURL || '/';
     delete req.session.returnURL;
 
-    auth_service_object.set_social_login(req, (status, service_message ) => {
+    auth_service_object.set_social_login(req, (status, request_info , service_message) => {
     
         // 연동 실패
         if(status){
-            if(!!req.session.user){
+            if( request_info === 'register' ){
                 return res.send(`
                     <script>
                         alert("${service_message || "서버에서 요청을 처리하지 못했습니다." }");
@@ -71,11 +71,12 @@ exports.setSocialLogin = async (req, res) => {
             return res.status(status).render('forum_error.ejs', { layout: false, returnStatus : status });   
         }
 
-        if(service_message === 'signup'){
+
+        if(request_info === 'signup'){
             returnURL = `/signup`;
         }
 
-        if(service_message !== 'login'){
+        if( request_info === 'register'){
             returnURL = `/user/settings?nav=config` ;
         }
 

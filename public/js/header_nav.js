@@ -1,5 +1,6 @@
 
 const header_nav_setting = ( function () {
+    
     const mobile_nav_box = document.querySelector('.modal_nav_button_div');
     const mobile_user_box = document.querySelector('.modal_user_button_div');
     const mobile_search_box = document.querySelector('.modal_search_button_div');
@@ -31,6 +32,7 @@ const header_nav_setting = ( function () {
                 method : 'DELETE',
                 headers : {
                     'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
                 },
             });
 
