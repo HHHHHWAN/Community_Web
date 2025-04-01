@@ -333,6 +333,7 @@ const post_get_service = {
         FROM Content 
         WHERE ( title like ? OR text LIKE ? ) 
             AND visible = 1 
+        ORDER BY date_create DESC
         LIMIT 5 OFFSET ?`;
 
         const query_comments = `
@@ -342,6 +343,7 @@ const post_get_service = {
             FROM Comment 
             WHERE comment LIKE ? 
                 AND visible = 1 
+            ORDER BY Comment.id DESC
             LIMIT 5 OFFSET ?
         ) A LEFT JOIN Content ON Content.id = A.content_id`;
 
@@ -394,7 +396,7 @@ const post_get_service = {
             );
 
         }catch(err){ 
-            console.error(" ( get_search_post ) MySQL2 query Error : ", err.stack );
+            console.error(" ( get_search_post ) MySQL2 query Error : ", err.stack || "MySQL 처리 에러" );
             return callback(500, null);
         }
     }

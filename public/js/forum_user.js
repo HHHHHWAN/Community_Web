@@ -3,6 +3,9 @@
 const post_dom = document.querySelector('.user_list_box_dom');
 const more_button = document.getElementById('more_button');
 
+function stripHtmlTags(html) {
+    return html.replace(/<\/?[^>]+(>|$)/g, "");
+}
 
 const get_user_contents = async (user_id, page) => {
     try{
@@ -21,6 +24,12 @@ const get_user_contents = async (user_id, page) => {
 
         const api_data =api_result.data;
 
+
+
+        if(api_data.post_list.length < 10){
+            more_button.setAttribute('disabled',true);
+        }
+
         if(api_data.post_list.length){
             api_data.post_list.forEach(row => {
                 const post_li = document.createElement('li');
@@ -37,11 +46,6 @@ const get_user_contents = async (user_id, page) => {
                 post_li.appendChild(post_li_div);
                 post_dom.appendChild(post_li);
             });
-
-            if(api_data.post_list.length < 10){
-                more_button.setAttribute('disabled',true);
-            }
-
         } else {
             post_dom.innerHTML = `
              <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 작성한 게시물이 없습니다.<div>
@@ -71,6 +75,12 @@ const get_user_activity = async (user_id, page) => {
 
         const api_data = api_result.data;
 
+        console.log(api_data.activity_list.length);
+        if(api_data.activity_list.length < 10){
+            
+            more_button.setAttribute('disabled', true);
+        }
+
         if(api_data.activity_list.length){
             api_data.activity_list.forEach(row => {
                 const post_li = document.createElement('li');
@@ -84,19 +94,14 @@ const get_user_activity = async (user_id, page) => {
                     </div>
                     <div style="flex:1; display: flex; justify-content: right;">${row.date_now}</div>
                 </div>
-                <div class='post_li_div_title' style="display: flex; height: 30px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;"></div>               
+                <div class='post_li_div_title' style="display: flex; height: 30px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">
+                    ${stripHtmlTags(row.comment)}
+                </div>               
                 `;
-
                 post_li_div.querySelector('.user_nickname_href').textContent = row.nickname;
-                post_li_div.querySelector('.post_li_div_title').textContent = row.comment;
                 post_li.appendChild(post_li_div);
                 post_dom.appendChild(post_li);
             });
-
-            if(api_data.activity_list.length < 10){
-                more_button.setAttribute('disabled',true);
-            }
-
         }else {
             post_dom.innerHTML = `
              <div style="display: flex; height: 30px; align-items: center; justify-content:center;"> 아직 활동이 없습니다.<div>

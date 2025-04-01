@@ -130,8 +130,6 @@ exports.get_SearchContents = (req, res) => {
 
     post_get_service.get_search_post( search_keyword, top_page, bottom_page, ( status, Search_result ) => {
         if(status){
-            console.error("( get_SearchContents ) => ( get_search_post ) : ", err );
-
             return res.status(status).render('forum_error.ejs', { layout : false, returnStatus : status });
         }
 

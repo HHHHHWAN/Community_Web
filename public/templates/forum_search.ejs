@@ -2,6 +2,11 @@
 
 <% title = 'search'%>
 
+<%    
+    function stripHtmlTags(html) {
+        return html.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+%>
 
 <div class="box">
     <div class="search_main_div"> 
@@ -14,8 +19,8 @@
                     <ul>
                         <% Contents_list.forEach( row => { %>
                             <li>
-                                <div class="search_link"><a href="/<%= row.content_type %>/<%= row.id %>"><%= row.title %></a></div>
-                                <div class="search_sub"> <%= row.text %></div>
+                                <div class="search_link"><a href="/<%= row.content_type %>/<%= row.id %>"><%- stripHtmlTags(row.title) %></a></div>
+                                <div class="search_sub"> <%- stripHtmlTags(row.text) %></div>
                             </li>
                         <%}); %>
                     </ul>
@@ -91,8 +96,8 @@
                         <ul>
                             <% Comments_list.forEach( row => { %>
                                 <li>
-                                    <div class="search_link"> <a href="/<%= row.content_type %>/<%- row.content_id %>"><%= row.comment %></a></div>
-                                    <div class="search_sub">  <%= row.content_title %></div>
+                                    <div class="search_link"> <a href="/<%= row.content_type %>/<%- row.content_id %>"><%- stripHtmlTags(row.comment) %></a></div>
+                                    <div class="search_sub">  <%- stripHtmlTags(row.content_title) %></div>
                                 </li>
                             <%}); %>
                         </ul>
@@ -167,9 +172,7 @@
 </div>
 
 
-<script>
 
-</script>
 
 <style>
     .search_main_div{
