@@ -76,7 +76,7 @@
 
     2. MySql
        1. ERD
-          ![image](https://github.com/user-attachments/assets/82cd2b88-5657-466c-a4f9-74e5e0ead8be)
+          ![image](https://github.com/user-attachments/assets/b4a409b5-cd38-41e4-bae2-d49c8f4d3faa)
        2. 테이블
           - Content
               - 게시글 리스트 
