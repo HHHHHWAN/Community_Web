@@ -4,7 +4,6 @@
 1. 내용
     - 인터넷 커뮤니티 웹 서비스 개발
       
-
 2. 작업기간
     - 24.10 ~ 
 
@@ -18,19 +17,22 @@
         - [작업 기록](https://evening-adapter-5d0.notion.site/1061a3736ea580208a14e89c080b27fe?v=fff1a3736ea581bcb55d000c37d1d778)
     - 배포 도메인
         - [https://mypagehhh.shop](https://mypagehhh.shop)
+    - 배포 기록
+        - [배포](https://evening-adapter-5d0.notion.site/1a51a3736ea5806eafa7cb69bb064b64)
 
-5. 기술 ( 프레임 워크 )
+5. 기술 
    - Node.js
-   - Express
+   - Express.js
    - Docker
    - Mysql
    - Redis
-6. 환경 ( 도구 )
+6. 환경 
    - Ubuntu
    - VScode
-   - Teraterm
+   - Teraterm 또는 iterm
    - Git
    - GitHub Action
+   - flyway
 
 ## 구성
 
@@ -41,13 +43,12 @@
         - 글 작성
         - 게시글 메인
         - 댓글
-            - 대댓글 처리
-            - 삭제 처리
+            - 대댓글
         - 게시글 리스트
             - 게시글 내부에서 게시글 리스트 확인
     - 검색
-        - 게시글 별, 댓글 별 검색
-        - 다중 페이징 처리
+        - 게시글 검색
+        - 댓글 검색
     - 유저 정보
         - 작성한 게시글
         - 활동
@@ -59,9 +60,6 @@
             - 비밀번호 변경
             - 소셜 연동 해제
     - 회원가입
-        - 일반 회원가입
-        - 소셜 연동 회원가입
-            - 소셜 로그인 접근시, 회원가입과 동시에 연동 
     - 로그인
         - 소셜 로그인
             - 일반 회원, 소셜 연동 지원  
