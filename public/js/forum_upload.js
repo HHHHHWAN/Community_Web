@@ -1,12 +1,11 @@
 
-document.getElementById('text').innerHTML = document.getElementById('text_input').value;
+(function(){
+    document.getElementById('text').innerHTML = document.getElementById('text_input').value;
 
-const limitText = ( function(){
-    const editableDiv = document.getElementById('text');
-    // const maxLength = 21844;  
-    const maxLength = 2000;  
     const length_display = document.getElementById('text_length_div');
-    
+    const editableDiv = document.getElementById('text');
+    const maxLength = 2000;  
+
     length_display.innerHTML = `${editableDiv.innerText.length}`;
 
     const updateText = () => {
@@ -33,41 +32,63 @@ const limitText = ( function(){
     }
 
     editableDiv.addEventListener('input', updateText);
-
     editableDiv.addEventListener('paste', updateText);
+
+    const fileInput = document.getElementById('imageInput');
+
+    const uploadImage = async () => {
+        try{
+
+            if(!fileInput.files.length){
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            if(file.size > 5 * 1024 * 1024){
+                alert('5MB를 초과하는 파일입니다.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file );
+        
+            const api_response = await fetch("/post/upload", {
+                method: 'POST', 
+                headers : {
+                    'Accept' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
+                },
+                body: formData 
+            });
+            const api_result = await api_response.json();
+
+            if(!api_result.result){
+                alert(api_result.message);
+                return;
+            }
+            
+            const editor = document.getElementById('text');
+            const img_path = document.createElement('img');
+            img_path.src = `/public${api_result.filePath}`;
+            img_path.alt = `${api_result.filePath}`;
+            img_path.setAttribute('style', 'max-width: 100%;');
+        
+            editor.appendChild(img_path);
+
+        }catch(err){
+            console.error( err || " API 요청 중, 문제가 발생했습니다.")
+        }
+    };
+
+
+    document.getElementById('imageInput').addEventListener('change',function(){
+        uploadImage();
+    });
+
 })();
 
 
-document.getElementById('imageInput').addEventListener('change',function(){
 
-    async function uploadImage() {
-        const fileInput = document.getElementById('imageInput');
-        if(!fileInput.files.length){
-            return;
-        }
-        const formData = new FormData();
-        formData.append('image', fileInput.files[0]);
-    
-        const response = await fetch("/post/upload", {
-            method: 'POST', 
-            headers : {
-                'Accept' : 'application/json',
-                'X-CSRF-Token' : user_csrf_token
-            },
-            body: formData 
-        });
-        const data = await response.json();
-        
-        const editor = document.getElementById('text');
-        const img_path = document.createElement('img');
-        img_path.src = `/public${data.filePath}`;
-        img_path.alt = `${data.filePath}`;
-        img_path.setAttribute('style', 'max-width: 100%;');
-    
-        editor.appendChild(img_path);
-    }
-
-    uploadImage();
-});
 
     
