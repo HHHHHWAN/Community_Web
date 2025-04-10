@@ -36,7 +36,7 @@ const post_get_service = {
                 SELECT *
                 FROM (
                     SELECT *,
-                        ROW_NUMBER() OVER ( PARTITION BY content_type ORDER BY date_create DESC ) AS rn
+                        ROW_NUMBER() OVER ( PARTITION BY content_type ORDER BY create_at DESC ) AS rn
                     FROM Content
                 ) SUB
                 WHERE rn <= 5 
@@ -55,7 +55,7 @@ const post_get_service = {
             const [DB_results] = await read_DB_promise.query(query);
 
             DB_results.forEach(row => {
-                row.date_create = data_utils.date_before(row.date_create);
+                row.create_at = data_utils.date_before(row.create_at);
                 // COUNT
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
@@ -77,7 +77,7 @@ const post_get_service = {
     get_popular_contents: (limit, offset, order_type, callback) => {
 
         // 요청 정렬 체크
-        let order_column = 'date_create';
+        let order_column = 'create_at';
         let order_rule = 'DESC';
 
         switch(order_type){
@@ -105,7 +105,7 @@ const post_get_service = {
                 GROUP BY content_id ) B 
             ON Content.id = B.content_id 
             WHERE view_count > 15 AND visible = 1  
-            ORDER BY ${order_column} ${order_rule}, date_create DESC LIMIT ? OFFSET ? 
+            ORDER BY ${order_column} ${order_rule}, create_at DESC LIMIT ? OFFSET ? 
         ) A LEFT JOIN User ON User.id = A.user_id; 
         `; 
 
@@ -121,7 +121,7 @@ const post_get_service = {
 
             // 데이터 UI 수정 ( 날짜, 조회수, 댓글 수 )
             query_select_result.forEach( row => {
-                row.date_create = data_utils.date_before(row.date_create);
+                row.create_at = data_utils.date_before(row.create_at);
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
             });
@@ -135,7 +135,7 @@ const post_get_service = {
             SELECT COUNT(*) AS popular_count 
             FROM Content 
             WHERE view_count > 15 AND visible = 1 
-            ORDER BY date_create DESC
+            ORDER BY create_at DESC
             `; 
             
             // 리스트 페이지 수
@@ -159,7 +159,7 @@ const post_get_service = {
     // GET 게시판 페이지 리스트 
     get_type: (pagetype, offset, order_type, callback) => {
 
-        let order_column = 'date_create';
+        let order_column = 'create_at';
         let order_rule = 'DESC';
 
         // 요청정렬 체크
@@ -188,7 +188,7 @@ const post_get_service = {
                 ON Content.id = B.content_id 
             WHERE content_type = ? 
                 AND visible = 1  
-            ORDER BY ${order_column} ${order_rule}, date_create DESC 
+            ORDER BY ${order_column} ${order_rule}, create_at DESC 
             LIMIT 10 
             OFFSET ? ) A 
         LEFT JOIN User 
@@ -205,7 +205,7 @@ const post_get_service = {
             
             // 데이터 UI 수정 ( 날짜, 조회수, 댓글 수 )
             results.forEach( row => {
-                row.date_create = data_utils.date_before(row.date_create);
+                row.create_at = data_utils.date_before(row.create_at);
                 row.view_count = data_utils.content_count_change(row.view_count);
                 row.comment_count = data_utils.content_count_change(row.comment_count);
 
@@ -247,7 +247,7 @@ const post_get_service = {
             }
 
             // 날짜 정보 가공
-            content_record.date_create = data_utils.date_before(content_record.date_create);
+            content_record.create_at = data_utils.date_before(content_record.create_at);
 
             return callback(null, content_record, view_history); 
 
@@ -333,7 +333,7 @@ const post_get_service = {
         FROM Content 
         WHERE ( title like ? OR text LIKE ? ) 
             AND visible = 1 
-        ORDER BY date_create DESC
+        ORDER BY create_at DESC
         LIMIT 5 OFFSET ?`;
 
         const query_comments = `

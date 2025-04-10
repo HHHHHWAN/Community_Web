@@ -2,7 +2,7 @@
 
 async function callWeatherApi(lat, lon, city) {
     const weatherBox = document.getElementById('weather_box');
-
+    weatherBox.innerText = '날씨를 불러오는 중';
     try{
         const params = {
             lat : lat,
@@ -13,7 +13,7 @@ async function callWeatherApi(lat, lon, city) {
             params.city = city;
         }
 
-        weatherBox.innerText = '날씨를 불러오는 중';
+        
         
         const query_string = new URLSearchParams(params).toString();
         

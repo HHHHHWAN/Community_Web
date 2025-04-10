@@ -39,7 +39,7 @@ const user_get_service = {
                 DB_results = data_utils.content_type_string(DB_results);
                 
                 DB_results.forEach(row => {
-                    row.date_now = data_utils.date_before(row.date_create);
+                    row.date_now = data_utils.date_before(row.create_at);
                 });
     
                 callback(null, DB_results);

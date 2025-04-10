@@ -101,7 +101,7 @@ const post_set_service = {
 
     // 게시글 비활성화
     set_invisibly_content : (content_id, user_id, callback) =>{
-        const query = `UPDATE Content SET visible = b'0', date_delete = ?  WHERE id = ? AND user_id = ?`;
+        const query = `UPDATE Content SET visible = b'0', delete_at = ?  WHERE id = ? AND user_id = ?`;
         write_DB.query(query, [new Date, content_id , user_id] , (err, result) => {
             if(err){
                 return callback(err,null);

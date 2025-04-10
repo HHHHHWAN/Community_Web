@@ -46,20 +46,20 @@ write_DB.connect((err) => {
 
 
 //  Initialize Table
-read_DB.query(`SHOW TABLES`, (err, query_results) => {
-    if(err){
-        console.error(" ( Initialize Table ) 초기화 체크 실패 : \n", err);
-        return
-    }
+// read_DB.query(`SHOW TABLES`, (err, query_results) => {
+//     if(err){
+//         console.error(" ( Initialize Table ) 초기화 체크 실패 : \n", err);
+//         return
+//     }
 
-    if(!query_results.length){
-        const TableObject = require('./mysql_init');
-        TableObject.Comment_Table(write_DB);
-        TableObject.Forum_Table(write_DB);
-        TableObject.User_Table(write_DB);
+//     if(!query_results.length){
+//         const TableObject = require('./mysql_init');
+//         TableObject.Comment_Table(write_DB);
+//         TableObject.Forum_Table(write_DB);
+//         TableObject.User_Table(write_DB);
 
-        console.log("-- 테이블 초기화 진행 완료 --");
-    }
-});
+//         console.log("-- 테이블 초기화 진행 완료 --");
+//     }
+// });
 
 module.exports = { read_DB, write_DB };

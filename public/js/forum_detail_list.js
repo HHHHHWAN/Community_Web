@@ -98,7 +98,7 @@ function reloadPage(pagetype, page){
                
                 content_list_li.innerHTML = `
                     <div class="forum_list_box_content">
-                        <div><span><a class="user_href" href="/user/${content_row.user_id}">${content_row.nickname}</a><b>&nbsp·&nbsp</b>${content_row.date_create}</span></div>
+                        <div><span><a class="user_href" href="/user/${content_row.user_id}">${content_row.nickname}</a><b>&nbsp·&nbsp</b>${content_row.create_at}</span></div>
                         <div class="forum_list_box_detail">
                             <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <a href="/${content_row.content_type}/${content_row.id}?pagetype=${pagetype}&page=${page}">${content_row.title}</a>

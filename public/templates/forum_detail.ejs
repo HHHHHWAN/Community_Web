@@ -20,7 +20,7 @@
         <div id="forum_detail_user">
             <div><a class="user_href" id="forum_detail_user_nickname" href="/user/<%= Content.user_id %>"><%= Content.nickname%></a></div>
             <div><span><b>·</b></span></div>
-            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"><%= Content.date_create %></span></div>
+            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"><%= Content.create_at %></span></div>
             <div><span><b>·</b></span></div>
             <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count">&nbsp;<%= Content.view_count %></span></div>
         </div>
