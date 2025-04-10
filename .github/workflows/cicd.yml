@@ -2,6 +2,8 @@ name: CI with docker image build
 
 on :
  push:
+  paths-ignore:
+    - 'README.md'
   branches:
     - main
 
