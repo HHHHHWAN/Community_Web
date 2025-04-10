@@ -76,14 +76,8 @@
 
     2. MySql
        1. ERD
-          ![image](https://github.com/user-attachments/assets/b4a409b5-cd38-41e4-bae2-d49c8f4d3faa)
-       2. 테이블
-          - Content
-              - 게시글 리스트 
-          - User
-              - 유저 정보 리스트
-          - Comment
-              - 댓글 리스트
+          ![image](https://github.com/user-attachments/assets/e26f4594-450b-4783-a8a8-edfbeec9f700)
+
     
     3. Redis
        - 세션 데이터 유지를 위한, `TTL` 설정
