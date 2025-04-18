@@ -85,6 +85,9 @@ function reloadPage(pagetype, page){
             return Response.json();
         })
         .then(api_data => {
+            const title_el = document.querySelector('.forum_detail_title_box');
+            const content_id = title_el.dataset.post_id;
+
             const contents_list = api_data.data.contents_list;
             const current_page = parseInt(page);
             const total_page = api_data.data.total_page;
@@ -100,12 +103,14 @@ function reloadPage(pagetype, page){
                     <div class="forum_list_box_content">
                         <div><span><a class="user_href" href="/user/${content_row.user_id}">${content_row.nickname}</a><b>&nbsp·&nbsp</b>${content_row.create_at}</span></div>
                         <div class="forum_list_box_detail">
-                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <a href="/${content_row.content_type}/${content_row.id}?pagetype=${pagetype}&page=${page}">${content_row.title}</a>
+                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                                    ${ parseInt(content_id) === content_row.id ? 'font-weight : bold;' : '' }">
+                                <a href="/${content_row.content_type}/${content_row.id}?pagetype=${pagetype}&page=${page}">
+                                    ${content_row.title}
+                                </a>
                             </div>
                         </div>
                         <div style="display:flex; width=100%;">
-                            <div></div>
                             <div style="display: flex; width: 100%; justify-content: right; font-size: 12px;">
                                 <img src="../public/img/comment-icon.png" width="11px" style="object-fit:contain;">&nbsp;${content_row.comment_count ? content_row.comment_count : 0}
                                 &nbsp;<span><b>·</b></span>&nbsp;

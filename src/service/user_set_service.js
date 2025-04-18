@@ -107,6 +107,35 @@ const user_set_service = {
         });
     },
 
+    set_Bookmark_info : (content_id, user_id, callback ) => {
+        const query = `INSERT INTO Bookmark (content_id, user_id) VALUES ( ?, ?)`;
+
+        write_DB.query(query, [ content_id, user_id ], ( err, DB_result ) => {
+            if(err){
+                return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
+            }
+            if(!DB_result.affectedRows){
+                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
+            }
+
+            callback(null,DB_result.affectedRows);
+        });
+    },
+
+    del_Bookmark_info : (content_id, user_id, callback ) => {
+        const query = `DELETE FROM Bookmark WHERE content_id = ? AND user_id = ?`;
+
+        write_DB.query(query, [ content_id, user_id ], ( err, DB_result ) => {
+            if(err){
+                return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
+            }
+            if(!DB_result.affectedRows){
+                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
+            }
+
+            callback(null,DB_result.affectedRows);
+        });
+    }
 
 };
 

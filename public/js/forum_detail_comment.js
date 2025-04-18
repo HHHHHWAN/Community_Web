@@ -75,7 +75,6 @@
     });
 
     comment_main_div_el.addEventListener('click', function(event){
-
         // EDIT MODAL
         if (event.target.classList.contains('create_subcomment_button')){
             const button_el = event.target;
@@ -158,7 +157,7 @@
                 fetch(`/reply/delete` , { 
                     method : 'DELETE',
                     headers : {
-                        'Accept' : 'applicaion/json',
+                        'Accept' : 'application/json',
                         'Content-Type' : 'application/json',
                         'X-CSRF-Token' : user_csrf_token
                     },
@@ -178,7 +177,6 @@
                 });
             }
         }
-
     });
 
 })();

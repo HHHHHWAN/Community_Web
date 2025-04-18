@@ -31,7 +31,7 @@
 				<div class="main_contents_list_box">
 					<div><a class="user_href" href="/user/<%= popular.user_id %>"><%= popular.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= popular.create_at %></div>
 					<div class="list_title_box">
-						<div><a href="/<%=popular.content_type %>/<%= popular.id %>"><%= popular.title %></a></div>
+						<div><a href="/<%=popular.content_type %>/<%= popular.id %>?pagetype=popular"><%= popular.title %></a></div>
 						<div class="post_list_info">  
 							<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= popular.comment_count ? popular.comment_count : 0 %>
 							&nbsp;<span><b>·</b></span>&nbsp;
@@ -57,7 +57,7 @@
 					<div class="main_contents_list_box">
 						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.create_at %></div>
 						<div class="list_title_box">
-							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div><a href="/<%= content.content_type%>/<%= content.id%>?pagetype=info"><%= content.title %></a></div>
 							<div class="post_list_info">  
 								<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 								&nbsp;<span><b>·</b></span>&nbsp;
@@ -83,7 +83,7 @@
 					<div class="main_contents_list_box">
 						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.create_at %></div>
 						<div class="list_title_box">
-							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div><a href="/<%= content.content_type%>/<%= content.id%>?pagetype=qa"><%= content.title %></a></div>
 							<div class="post_list_info">  
 								<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 								&nbsp;<span><b>·</b></span>&nbsp;
@@ -109,7 +109,7 @@
 					<div class="main_contents_list_box">
 						<div><a class="user_href" href="/user/<%= content.user_id %>"><%= content.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= content.create_at %></div>
 						<div class="list_title_box">
-							<div><a href="/<%= content.content_type%>/<%= content.id%>"><%= content.title %></a></div>
+							<div><a href="/<%= content.content_type%>/<%= content.id%>?pagetype=life"><%= content.title %></a></div>
 							<div class="post_list_info">  
 								<img src="public/img/comment-icon.png" width="13px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 								&nbsp;<span><b>·</b></span>&nbsp;

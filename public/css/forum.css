@@ -17,8 +17,8 @@ p {
 }
 
 a {
-    color: #333;
-    font-weight: bold;
+    color: #000000;
+    /* font-weight: 500; */
     text-decoration: none;
 }a:hover {
     color: #4CAF50;
@@ -218,19 +218,20 @@ textarea{
 
     body {
         line-height: 1.6;
-        
     }
 
     .container {
         min-height: 1000px;
         margin-top: 50px;
-        margin-bottom: 60px;
+        margin-bottom: 10px;
         border-radius: 8px;
         justify-content:center;
 
-        font-family: "Gowun Dodum", serif;
+        /* background-color: #000000; */
+
+        /* font-family: "Gowun Dodum", serif;
         font-weight: 400;
-        font-style: normal;
+        font-style: normal; */
     }
     .sidebox {
         width: 100%;
@@ -325,8 +326,8 @@ textarea{
         right: 0;
         z-index: 10;
 
-        font-family: 'Dongle', sans-serif;
-        font-weight: 400;
+        /* font-family: 'Dongle', sans-serif; */
+        font-weight: 200;
 
     }.head_body {
         display: flex;
@@ -349,7 +350,7 @@ textarea{
         align-items: center;
         margin-left: 20px;
 
-        font-size: 30px;
+        font-size: 20px;
     }.head_nav div{
         text-align: center;
     }.head_nav_button {
@@ -396,26 +397,26 @@ textarea{
         width: 70px;
         height: 60px;
 
-    }.modal_pc_button{
-        /* border: none;
-        background-color: #00000000; */
     }.modal_pc_button_div{
         display: none;
         border-radius: 3px;
         box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+        border: 1px solid black;
         background-color: white;
         position:absolute;
         top: 45px;
         right: -10%;
-        padding: 3px;
+        padding: 5px;
     }.head_ctl_user{
-        font-size: 17px;
+        font-size: 13px;
         margin-left: 10px;
         min-width: 130px;
         text-align: center;
         border-radius: 10px;
     }.head_ctl_user a{
-        font-size: 20px;
+        font-size: 15px;
+    }.head_ctl_user div{
+        margin: 10px;
     }
 
     body {
@@ -434,9 +435,9 @@ textarea{
         border-radius: 8px;
         justify-content:center;
 
-        font-family: "Gowun Dodum", serif;
+        /* font-family: "Gowun Dodum", serif;
         font-weight: 400;
-        font-style: normal;
+        font-style: normal; */
     }
 
     .sidebox {

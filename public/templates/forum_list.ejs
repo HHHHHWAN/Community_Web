@@ -11,11 +11,19 @@
 
 			<% if (userId) { %>
 				<div>
-					<a href="/post/edit?pagetype=<%= pagetype === 'popular' ? 'info' : pagetype %>"><button class="forum_button" >글쓰기</button></a>
+					<a href="/post/edit?pagetype=<%= pagetype === 'popular' ? 'info' : pagetype %>">
+						<button class="forum_button" >
+							글쓰기
+						</button>
+					</a>
 				</div>
 			<% } else { %>
 				<div>
-					<a href="/login"><button class="forum_button">글쓰기</button></a>
+					<a href="/login">
+						<button class="forum_button">
+							글쓰기
+						</button>
+					</a>
 				</div>
 			<%}%>
 				
@@ -84,12 +92,13 @@
 								<span><b>·</b></span>
 								<%= content.create_at %> 
 							</div>
-							<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
-								<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>"><%= content.title %></a>
+							<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; margin-top: 5px; font-size: 15px;">
+								<a href="/<%= content.content_type %>/<%= content.id %>?pagetype=<%= pagetype%>&page=<%= page%>">
+									<%= content.title %>
+								</a>
 							</div>
 
 							<div style="display: flex; width: 100%;">
-								<div></div>
 								<div style="display: flex; width: 100%; justify-content: right; font-size: 12px;">
 									<img src="public/img/comment-icon.png" width="12px" style="object-fit:contain;">&nbsp;<%= content.comment_count ? content.comment_count : 0 %>
 									&nbsp;<span><b>·</b></span>&nbsp;

@@ -22,6 +22,14 @@ router.get('/user/:user_id', user_Controller.getUserinfo);
 
 
 ///api
+router.get('/user/bookmark/list', user_check.check_login, user_Controller.api_getBookmark_list);
+router.get('/user/bookmark/:content_id', user_check.check_login, user_Controller.api_getBookmark);
+router.post('/user/bookmark/:content_id', user_check.check_login, user_Controller.api_setBookmark);
+router.delete('/user/bookmark/:content_id', user_check.check_login, user_Controller.api_delBookmark);
+
+
+
+
 router.get('/user/:user_id/posting', user_Controller.api_getUserPostingInfo);
 router.get('/user/:user_id/activity', user_Controller.api_getUserActivityInfo);
 

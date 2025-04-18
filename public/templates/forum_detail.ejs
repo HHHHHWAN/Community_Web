@@ -3,7 +3,6 @@
 
 <link rel="stylesheet" href="/public/css/forum_detail.css">
 
-
 <div class="box">
 
     <p> 
@@ -16,16 +15,50 @@
 
 
     <div class="forum_detail_box">
-
         <div id="forum_detail_user">
-            <div><a class="user_href" id="forum_detail_user_nickname" href="/user/<%= Content.user_id %>"><%= Content.nickname%></a></div>
-            <div><span><b>·</b></span></div>
-            <div class="detail_date" style="font-size: 14px;"><span id="forum_detail_post_date"><%= Content.create_at %></span></div>
-            <div><span><b>·</b></span></div>
-            <div><img src="/public/img/eye-icon.png" width="15px" alt="view_icon"><span id="forum_detail_view_count">&nbsp;<%= Content.view_count %></span></div>
+            <div style="display: flex; flex: 1;">
+                <div>
+                    <a class="user_href" id="forum_detail_user_nickname" href="/user/<%= Content.user_id %>">
+                        <%= Content.nickname%>
+                    </a>
+                </div>
+                <div><span><b>·</b></span></div>
+                <div class="detail_date">
+                    <span id="forum_detail_post_date">
+                        <%= Content.create_at %>
+                    </span>
+                </div>
+                <div><span><b>·</b></span></div>
+                <div>
+                    <img src="/public/img/eye-icon.png" width="13px" style="object-fit:contain;" alt="view_icon">
+                    <span id="forum_detail_view_count">
+                        &nbsp;<%= Content.view_count %>
+                    </span>
+                </div>
+            </div>
+
+            <% if (userId) { %>
+            <div style="display: flex; flex: 1; justify-content: right;" 
+                id="forum_detail_select">
+                <button id="button_bookmark">
+                    북마크
+                </button>
+                <!-- <span><b>·</b></span>
+                <button id="button_like">
+                    좋아요
+                </button>
+                <span><b>·</b></span>
+                <button id="button_hate">
+                    싫어요
+                </button> -->
+            </div>
+            <% } %>
         </div>
         
-        <div class="forum_detail_title_box" style="font-size: 18px; margin-bottom: 5px; font-weight: bold;" ><%= Content.title %></div>
+        <div class="forum_detail_title_box" data-post_id="<%= Content.id %>"
+            style="font-size: 18px; margin-bottom: 5px; font-weight: bold;" >
+            <%= Content.title %>
+        </div>
 
 
         <div class="forum_detail_text_box">
@@ -42,9 +75,15 @@
             <% if (userId == Content.user_id) {%>
                 <div class="forum_detail_ctl_edit">
                     <a href="/post/edit/<%= Content.id %>">
-                        <button type="button" class="forum_button_2">수정</button>
+                        <button type="button" class="forum_button_2">
+                            수정
+                        </button>
                     </a>
-                    <button type="button" class="forum_button_2" onclick="setContent_delete('<%=Content.content_type%>','<%= Content.id %>')">삭제</button>
+                    <button type="button" class="forum_button_2" id="post_delete_button" 
+                        data-post_id="<%= Content.id %>"
+                        data-post_type="<%= Content.content_type %>">
+                        삭제
+                    </button>
                 </div>
             <% } %>
             <div class="forum_detail_ctl_return">           
@@ -54,7 +93,7 @@
 
         <div class='forum_detail_comment'>
             <div>
-                <% if (userId) {%>
+                <% if ( userId ) {%>
                     <div class="comment_box">
                         <div class="comment_text" contenteditable="true" 
                             aria-required="true"  aria-multiline="true" 
@@ -195,15 +234,19 @@
              </div>
              <div style="width: 100%; display: flex; align-items: center; justify-content: right;">
 
-                <% if (nickname && (pagetype !== "popular")) { %>
+                <% if (userId) { %>
                     <div>
-                        <a href="/post/edit?pagetype=<%= pagetype %>"><button class="forum_button" >글쓰기</button></a>
+                        <a href="/post/edit?pagetype=<%= pagetype %>">
+                            <button class="forum_button" >
+                                글쓰기
+                            </button>
+                        </a>
                     </div>
-                <% }else if (pagetype !== "popular") {%>
+                <%} else { %>
                     <div>
                         <a href="/login"><button class="forum_button">글쓰기</button></a>
                     </div>
-                <%} else {}%>
+                <%}%>
              </div>
         </div>
           
@@ -221,7 +264,7 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function(){
-        reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");
+        reloadPage("<%= returnURL.pagetype %>","<%= returnURL.page %>");      
     });
     const nav_button = document.getElementById("<%= pagetype %>");
 	const mobile_nav_button = document.getElementById("mobile_<%= pagetype %>");

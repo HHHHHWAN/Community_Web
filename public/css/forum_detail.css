@@ -31,12 +31,6 @@ span{
     color: #868585;;
 }
 
-/* pre{
-    padding-left: 10px;
-    white-space: pre-wrap;
-} */
-
-
 
 @media (max-width: 768px){
     p{
@@ -68,11 +62,27 @@ span{
     }
 
     .forum_list_box_detail {
-        font-size: 12px;
+        font-size: 13px;
         margin-top: 5px;
     }
     .pre_comment{
         font-size: 12px;
+    }
+
+    /* 유저 정보란 */
+    #forum_detail_user{
+        width: 100%;
+        display: flex;
+        font-size: 12px;
+    }
+    #forum_detail_user div{
+        margin-right: 10px;
+    }#forum_detail_user button{
+        min-width: 40px;
+        font-size: 11px;
+        
+    }#forum_detail_user button:hover{
+        color: #4CAF50;
     }
 
 }
@@ -104,22 +114,32 @@ span{
 
     .forum_list_box_detail {
         width: 100%;
-        font-size: 13px;
+        font-size: 14px;
         margin-top: 5px;
+    }
+
+    /* 유저 정보란 */
+    #forum_detail_user{
+        width: 100%;
+        display: flex;
+        font-size: 15px;
+    }
+    #forum_detail_user div{
+        margin-right: 10px;
+    }#forum_detail_user button{
+        min-width: 40px;
+        font-size: 12px;
+        
+    }#forum_detail_user button:hover{
+        color: #4CAF50;
     }
 
 }
 
 
 
-/* 유저 정보란 */
-#forum_detail_user{
-    display: flex;
-    font-size: 15px;
-}
-#forum_detail_user div{
-    margin-right: 10px;
-}
+
+
 
 /* 게시물 본문 */
 .forum_detail_text_box{
@@ -152,7 +172,6 @@ span{
     border: none ;
 }#page_box button:hover {
     color: #4CAF50;
-    cursor: pointer;
 }
 #page_box button:disabled {
     color: rgb(119, 121, 120);
@@ -161,8 +180,6 @@ span{
     width: 13px;
     font-size: 15px;
     margin-right: 10px;
-}#page_box_center button:hover {
-    color: #4CAF50;
 }#page_box_center button:disabled {
     margin-right: 10px;
     font-size: 17px;
@@ -179,10 +196,6 @@ span{
     font-size: 11px; color: #868585; 
     border: none; 
     background-color: white;
-}
-
-button:hover{
-    cursor: pointer;
 }
 
     

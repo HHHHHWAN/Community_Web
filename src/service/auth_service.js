@@ -35,9 +35,6 @@ const check_dup_userinfo = async (username, nickname, email) => {
     };
 };
 
- 
-
-
 /** 중복 로그인 처리  */
 const del_redis_dup_user_session = async (user_id, new_sessionID) => {
     try{
@@ -189,6 +186,7 @@ const auth_service_object = {
                 return callback(null,'signup', null);
             }
 
+            // 로그인 처리
             req.session.user = {
                 user_id : existingUser.id,
                 nickname : existingUser.nickname

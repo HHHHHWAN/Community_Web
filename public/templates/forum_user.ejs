@@ -5,15 +5,18 @@
 <div class="box">
     <div style="height: auto; margin: 10px; padding: 20px; background-color: white; border-radius: 5px;">
         <div style="border: 2px solid rgba(102, 101, 101, 0.24); border-radius: 10px;">
-            <div class="user_info_box">
+            <div class="user_info_box" data-user_id="<%= user_info.id %>">
                 <div class="user_info_box_text">
-                    <%= user_info.nickname %>
+                    <h4><%= user_info.nickname %></h4>
                 </div>
                 <div class="user_info_box_ctl">
                     <nav style=" border-radius: 10px;">
                         <ul>
                             <li><div><button type="button" class="user_contents">게시물</button></div></li>
                             <li><div><button type="button" class="user_activity">활동</button></div></li>
+                            <% if ( userId === user_info.id){ %>
+                                <li><div><button type="button" class="user_bookmark">북마크</button></div></li>
+                            <% } %>
                         </ul>
                     </nav>
                 </div>
@@ -35,6 +38,3 @@
 </div>
 
 <script src="/public/js/forum_user.js"></script>
-<script>
-    callUserinfo("<%= user_info.id %>");
-</script>

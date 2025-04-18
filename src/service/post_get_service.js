@@ -36,8 +36,9 @@ const post_get_service = {
                 SELECT *
                 FROM (
                     SELECT *,
-                        ROW_NUMBER() OVER ( PARTITION BY content_type ORDER BY create_at DESC ) AS rn
+                        ROW_NUMBER() OVER ( PARTITION BY content_type ORDER BY id DESC ) AS rn
                     FROM Content
+                    WHERE visible = 1
                 ) SUB
                 WHERE rn <= 5 
             )
@@ -77,7 +78,7 @@ const post_get_service = {
     get_popular_contents: (limit, offset, order_type, callback) => {
 
         // 요청 정렬 체크
-        let order_column = 'create_at';
+        let order_column = 'Content.id';
         let order_rule = 'DESC';
 
         switch(order_type){
@@ -105,8 +106,9 @@ const post_get_service = {
                 GROUP BY content_id ) B 
             ON Content.id = B.content_id 
             WHERE view_count > 15 AND visible = 1  
-            ORDER BY ${order_column} ${order_rule}, create_at DESC LIMIT ? OFFSET ? 
-        ) A LEFT JOIN User ON User.id = A.user_id; 
+            ORDER BY ${order_column} ${order_rule} 
+            LIMIT ? OFFSET ? ) A 
+        LEFT JOIN User ON User.id = A.user_id; 
         `; 
 
         
@@ -159,7 +161,7 @@ const post_get_service = {
     // GET 게시판 페이지 리스트 
     get_type: (pagetype, offset, order_type, callback) => {
 
-        let order_column = 'create_at';
+        let order_column = 'Content.id';
         let order_rule = 'DESC';
 
         // 요청정렬 체크
@@ -188,7 +190,7 @@ const post_get_service = {
                 ON Content.id = B.content_id 
             WHERE content_type = ? 
                 AND visible = 1  
-            ORDER BY ${order_column} ${order_rule}, create_at DESC 
+            ORDER BY ${order_column} ${order_rule}
             LIMIT 10 
             OFFSET ? ) A 
         LEFT JOIN User 

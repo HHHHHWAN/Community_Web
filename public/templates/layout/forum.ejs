@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>	MyPage - <%- title %></title>
 	<link rel="stylesheet" href="/public/css/forum.css">
+	<script>
+		const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content || null;
+	</script>
 </head>
 <body>
 	<%- include('header_nav.ejs')%>
@@ -17,8 +20,4 @@
 
 	<%- include('footer_company.ejs') %>
 </body>
-
-<script>
-	const user_csrf_token = document.querySelector('meta[name="csrf_token"]').content || null;
-</script>
 </html>

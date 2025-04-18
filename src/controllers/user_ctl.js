@@ -28,8 +28,8 @@ exports.api_getUserPostingInfo = ( req, res ) => {
     const user_id = req.params.user_id; //request user id
 
     const page = parseInt(req.query.page) || 1;
-    const limit = page * 10;
-    const offset = (page - 1) * 10;
+    const limit = 10;
+    const offset = (page - 1) * limit;
 
     user_get_service_object.get_userinfo_post( user_id, limit, offset, ( status, service_results ) => {
         if(status){
@@ -55,8 +55,8 @@ exports.api_getUserActivityInfo = ( req, res ) => {
     const user_id = req.params.user_id; //request user id
 
     const page = parseInt(req.query.page) || 1;
-    const limit = page * 10;
-    const offset = ( page - 1 ) * 10;
+    const limit = 10;
+    const offset = ( page - 1 ) * limit;
 
     //유저 활동 데이터 반환
     user_get_service_object.get_userinfo_activity(user_id, limit, offset, (status, service_results) => {
@@ -257,7 +257,7 @@ exports.api_putSettingPassword = ( req, res ) => {
     });
 };
 
-
+// 회원 비활성화 
 exports.api_WithdrawAccount = (req, res) => {
     const request_user_id = req.session.user.user_id;
 
@@ -272,6 +272,101 @@ exports.api_WithdrawAccount = (req, res) => {
         res.json({
             message : "회원탈퇴 처리되었습니다.",
             result : true
+        });
+    });
+};
+
+// 북마크 리스트 출력
+exports.api_getBookmark_list = ( req, res ) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = ( page - 1 ) * limit;
+    const request_user_id = req.session.user.user_id;
+
+    user_get_service_object.get_Bookmark_list( request_user_id, limit, offset, (status, service_result) => {
+        if(status){
+            return res.status(status).json({
+                message : service_result,
+                result : false
+            });
+        }
+
+        res.json({
+            message : "조회 완료",
+            result : true,
+            data : {
+                list : service_result
+            }
+        });
+    });
+
+};
+
+// 북마크 체크
+exports.api_getBookmark = (req, res) => {
+    const content_id = parseInt(req.params.content_id);
+    const request_user_id = req.session.user.user_id;
+
+    user_get_service_object.get_Bookmark_info( content_id, request_user_id, (status, service_result) => {
+        if(status){
+            return res.status(status).json({
+                message : service_result,
+                result : false
+            });
+        }
+
+        res.json({
+            message : "조회 완료",
+            result : true,
+            data : {
+                check : service_result
+            }
+        });
+    });
+};
+
+// 북마크 설정
+exports.api_setBookmark = (req, res) => {
+    const content_id = parseInt(req.params.content_id);
+    const request_user_id = req.session.user.user_id;
+
+    user_set_service_object.set_Bookmark_info( content_id, request_user_id, (status, service_result) => {
+        if(status){
+            return res.status(status).json({
+                message : service_result,
+                result : false
+            });
+        }
+
+        res.json({
+            message : "등록 완료",
+            result : true,
+            data : {
+                check : service_result
+            }
+        });
+    });
+};
+
+// 북마크 해제
+exports.api_delBookmark = (req, res) => {
+    const content_id = parseInt(req.params.content_id);
+    const request_user_id = req.session.user.user_id;
+
+    user_set_service_object.del_Bookmark_info( content_id, request_user_id, (status, service_result) => {
+        if(status){
+            return res.status(status).json({
+                message : service_result,
+                result : false
+            });
+        }
+
+        res.json({
+            message : "삭제 완료",
+            result : true,
+            data : {
+                check : service_result
+            }
         });
     });
 };
