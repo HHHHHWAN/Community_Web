@@ -49,47 +49,44 @@ const user_get_service = {
         // 유저 활동 정보
         get_userinfo_activity : ( user_id, limit, offset, callback ) => {
             const query = `
-                SELECT A.*, User.nickname 
-                FROM    (
-                            SELECT 
-                                Post.comment AS comment, 
-                                Post.create_at AS comment_create_at, 
-                                Content.id AS content_id, 
-                                Content.user_id AS content_user_id, 
-                                Content.content_type AS content_type 
-                            FROM ( 
-                                SELECT * 
-                                FROM Comment 
-                                where user_id = ? AND visible = 1 
-                                LIMIT ? OFFSET ? ) Post 
-                            LEFT JOIN Content ON Post.content_id = Content.id ) 
-                A LEFT JOIN User ON A.content_user_id  = User.id;
-            `;
-
-            const query2 = `
+                WITH USER_HISTORY AS (
+                    SELECT 
+                        'comment' AS history_type,
+                        NULL AS target_type,
+                        content_id,
+                        create_at
+                    FROM Comment
+                    WHERE user_id = ?
+                        AND visible = 1
+                    UNION
+                    SELECT 
+                        'like' AS history_type,
+                        target_type,
+                        CASE target_type
+                            WHEN 'comment' THEN ( SELECT content_id FROM Comment WHERE L.target_id = Comment.id )
+                            WHEN 'content' THEN target_id
+                        ELSE target_id 
+			            END AS content_id,
+                        like_at AS create_at
+                    FROM \`Like\` L
+                    WHERE user_id = 22
+                )
                 SELECT
-                    C.comment,
-                    C.create_at AS comment_create_at,
-                    P.id AS content_id,
-                    P.user_id AS content_user_id,
+                    USER_HISTORY.*,
                     P.content_type,
                     P.title,
+                    P.user_id,
                     U.nickname
                 FROM 
-                    (
-                        SELECT *
-                        FROM Comment
-                        WHERE user_id = ? 
-                            AND visible = 1
-                        LIMIT ? OFFSET ? 
-                    ) C
-                LEFT JOIN Content P ON P.id = C.content_id
+                    USER_HISTORY
+                JOIN Content P ON P.id = USER_HISTORY.content_id
                     AND P.visible = 1
-                LEFT JOIN User U ON P.user_id = U.id;
-            `;
+                LEFT JOIN User U ON P.user_id = U.id
+                ORDER BY USER_HISTORY.create_at DESC
+                LIMIT ? OFFSET ?`;
     
             // 리스트 출력
-            read_DB.query(query2, [user_id,  limit, offset] ,(err, DB_results) => {
+            read_DB.query(query, [user_id,  limit, offset] ,(err, DB_results) => {
                 if(err){
                     console.error("( getUserinfo => get_userinfo_activity ) : \n" , err.stack);
                     return callback(500, null);
@@ -98,7 +95,7 @@ const user_get_service = {
                 DB_results = data_utils.content_type_string(DB_results);
     
                 DB_results.forEach(row => {
-                    row.date_now = data_utils.date_before(row.comment_create_at);
+                    row.date_now = data_utils.date_before(row.create_at);
                 });
     
                 callback(null, DB_results);

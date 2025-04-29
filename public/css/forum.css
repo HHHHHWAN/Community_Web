@@ -450,6 +450,7 @@ textarea{
     .box {
         width: 800px;
         background-color: rgb(223, 244, 231);
+        /* background-color: #DDFFCC; */
     
         font-size: 14px;
         color: #333;

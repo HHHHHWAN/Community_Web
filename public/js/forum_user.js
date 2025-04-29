@@ -91,15 +91,17 @@
                     const post_li_div = document.createElement('div');
                     post_li_div.setAttribute('class','post_li_div');
                     post_li_div.innerHTML = `
-                    <div style="display: flex; width: 100%;">
+                    <div style="display: flex; width: 100%; font-size: 12px;">
                         <div style="flex: 7;">
-                            <a href='/user/${row.content_user_id}' class='user_nickname_href'></a>님의 
-                            <a href='/${row.content_type}/${row.content_id}'>게시물</a>에 댓글을 작성했습니다. 
+                            <a href='/user/${row.user_id}' class='user_nickname_href'></a>님의 
+                            ${row.history_type === 'comment' ? '게시글에 댓글을 <span style="color: green;">작성</span>했습니다.' 
+                                : row.target_type === 'content' ? '게시글을 <span style="color: green;">추천</span>했습니다.'
+                                :'게시글에 댓글을 <span style="color: green;">추천</span>했습니다.' } 
                         </div>
                         <div style="flex:1; display: flex; justify-content: right;">${row.date_now}</div>
                     </div>
                     <div class='post_li_div_title' style="display: flex; height: 30px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">
-                        ${stripHtmlTags(row.comment)}
+                        <a href='/${row.content_type}/${row.content_id}'>${stripHtmlTags(row.title)}</a> 
                     </div>               
                     `;
                     post_li_div.querySelector('.user_nickname_href').textContent = row.nickname;
