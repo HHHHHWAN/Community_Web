@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const { read_DB , write_DB } = require("../models/mysql_connect");
 // const redis_client = require('../models/redis_connect');
-const data_utils = require('../utils/dataUtils');
+// const data_utils = require('../utils/dataUtils');
 
 
 
@@ -34,7 +34,6 @@ const user_set_service = {
         const query = `UPDATE User SET ${social_key} = NULL WHERE id = ?`;
 
         write_DB.query(query, [ user_id ], (err, result) => {
-
             if(err){
                 return callback(err);
             }
@@ -107,35 +106,62 @@ const user_set_service = {
         });
     },
 
+    //** 북마크 */
     set_Bookmark_info : (content_id, user_id, callback ) => {
         const query = `INSERT INTO Bookmark (content_id, user_id) VALUES ( ?, ?)`;
 
         write_DB.query(query, [ content_id, user_id ], ( err, DB_result ) => {
             if(err){
+                console.error( " ( set_Bookmark_info ) Error : ", err);
                 return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
-            }
-            if(!DB_result.affectedRows){
-                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
             }
 
             callback(null,DB_result.affectedRows);
         });
     },
 
+    //** 북마크 해제 */
     del_Bookmark_info : (content_id, user_id, callback ) => {
         const query = `DELETE FROM Bookmark WHERE content_id = ? AND user_id = ?`;
 
         write_DB.query(query, [ content_id, user_id ], ( err, DB_result ) => {
             if(err){
+                console.error( " ( del_Bookmark_info ) Error : ", err);
                 return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
-            }
-            if(!DB_result.affectedRows){
-                return callback(400, "잘못된 요청 방식으로, 문제가 발생했습니다.");
             }
 
             callback(null,DB_result.affectedRows);
         });
-    }
+    },
+
+
+    set_Like_info : ( target_type, target_id, user_id, callback ) => {
+        const query = `INSERT INTO \`Like\` ( target_type, target_id, user_id ) VALUES ( ?, ?, ?)`;
+
+        write_DB.query(query, [target_type, target_id, user_id], ( err, DB_result ) => {
+            if(err){
+                console.error( " ( set_Like_info ) Error : ", err);
+                return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
+            }
+
+            callback(null, DB_result.affectedRows);
+        });
+    },
+
+    del_Like_info : ( target_type, target_id, user_id, callback ) => {
+        const query = `
+        DELETE FROM \`Like\` 
+        WHERE target_type = ? AND target_id = ? AND user_id = ?`;
+
+        write_DB.query(query, [target_type, target_id, user_id], ( err, DB_result ) => {
+            if(err){
+                console.error( " ( set_Like_info ) Error : ", err);
+                return callback(500, "서버에서 처리 중, 문제가 발생했습니다.");
+            }
+
+            callback(null, DB_result.affectedRows);
+        });
+    },
 
 };
 

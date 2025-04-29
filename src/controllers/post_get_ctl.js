@@ -76,6 +76,8 @@ exports.getTypeContents = (req, res) => {
 exports.getDetailContents = (req, res) => {
     const content_id = req.params.content_id; 
     const pagetype = req.params.pagetype; 
+
+    const request_user_id = req.session.user ? req.session.user.user_id : null;
     
     const returnURL = {
         pagetype : req.query.pagetype || pagetype,
@@ -85,7 +87,7 @@ exports.getDetailContents = (req, res) => {
     // 유저 조회 기록
     const view_history = req.session.view_history || [];
 
-    post_get_service.get_post_detail(content_id, view_history, (status, post_info, view_history_return) => {
+    post_get_service.get_post_detail(content_id, view_history, request_user_id, (status, post_info, view_history_return) => {
         if (status) {
             return res.status(status).render('forum_error.ejs', { layout : false, returnStatus : status });
         }
@@ -93,7 +95,7 @@ exports.getDetailContents = (req, res) => {
         req.session.view_history = view_history_return;
 
         // 게시글 댓글 요청
-        post_get_service.get_comment_list(content_id, ( comment_list ) => {
+        post_get_service.get_comment_list(content_id, request_user_id,( comment_list ) => {
             //  ( Comment_Info === null )  => 렌더링 댓글없음 공백 처리
 
             res.render('forum_detail.ejs' , { Content : post_info, Comment_Info : comment_list, pagetype , returnURL });

@@ -1,6 +1,8 @@
 
 const user_check = {
 
+    // 로그인 여부 체크 일반 미들웨어
+
     check_login : (req, res, next) => {
         const accept = req.headers['accept'].split(',');
         if(!req.session.user){
@@ -12,7 +14,7 @@ const user_check = {
             //         returnStatus : 401 });
             // }
 
-            // EJS REQUEST
+            // EJS REQUEST ( JSON 처리 )
             if(accept){
                 return res.redirect('/login');
             }

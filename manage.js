@@ -22,7 +22,15 @@ const app = express();
 app.use(session_middle());
 app.use(csrf_token());
 app.use(local_session);
-
+app.use((err, req, res, next) => {
+	if (err.code === 'EBADCSRFTOKEN') {
+	  return res.status(403).json({
+		message : '권한이 없습니다.',
+		result : false
+	  });      
+	}
+	next(err);
+  });
 
 /// root path
 app.use('/public', express.static(path.join(__dirname, '/public')));

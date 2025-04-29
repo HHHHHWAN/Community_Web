@@ -1,16 +1,13 @@
-// js/forum_detail_util.js
-
 (function(){
     const title_el = document.querySelector('.forum_detail_title_box');
     const post_delete_el = document.getElementById('post_delete_button');
-    const bookmark_button_el = document.getElementById('forum_detail_select');
+    const post_button_el = document.getElementById('forum_detail_select');
 
     // Current Post ID
     const content_id = title_el.dataset.post_id;
 
 
     if(post_delete_el){
-        // const content_id = post_delete_el.dataset.post_id;
         const content_type = post_delete_el.dataset.post_type;
 
         post_delete_el.addEventListener('click', () => {
@@ -43,78 +40,110 @@
         });
     }
 
-    if(bookmark_button_el){
-        const button_bookmark_el = document.getElementById('button_bookmark');
-        // const content_id = bookmark_button_el.dataset.post_id;
+    if(post_button_el){ // login check
+        
+        // comment_div 
+        const comment_div_el = document.querySelector('.forum_detail_comment');
+        
 
+        const CHECK_COLOR = 'green';
         let isProcessing = false;
-        let isBookmarked = false;
-        const BOOKMARK_COLOR = 'green';
+        let isLike_type = 'content';
 
-        function updateButton(el){
-            el.style.color = isBookmarked ? BOOKMARK_COLOR : '';
+        let request_url = {
+            Bookmark : `/user/bookmark/${content_id}`,
+            Like : ``
         }
 
-        async function init_bookmark() {
-            try{
-                const api_Response = await fetch(`/user/bookmark/${content_id}`,{
-                    method : 'GET',
-                    headers : {
-                        'Accept' : 'application/json',
-                    }
-                });
-    
-                const api_result = await api_Response.json();
-                const api_data = api_result.data;
-    
-                if(api_data.check){ // 북마크 존재 여부, 변경 성공 
-                    isBookmarked = true;
-                    updateButton(button_bookmark_el);
-                }
-            
-            }catch(err){
-                console.error('북마크 상태 확인 중, 문제가 발생했습니다 : ',err);
-            }  
+        function updateUI(el){ 
+            el.style.color = el.dataset.status ? CHECK_COLOR : '';
+
+            let like_count_el = document.getElementById('post_like_count');
+
+            if( isLike_type === 'comment'){
+                like_count_el = el.parentElement.previousElementSibling.querySelector('.comment_like_count');
+            }
+
+            const current_count = parseInt(like_count_el.textContent);
+
+            like_count_el.textContent = el.dataset.status ?
+            current_count + 1  : current_count - 1;
         }
 
-        async function request_bookmark(method){
-            if (isProcessing) return;
-
+        // Request API
+        async function request_check(method, el, event_name){
             isProcessing = true;
 
             try{
-                const api_Response = await fetch(`/user/bookmark/${content_id}`,{
+                const api_Response = await fetch(request_url[event_name],{
                     method : method,
                     headers : {
                         'Accept' : 'application/json',
                         'X-CSRF-Token' : user_csrf_token
                     }
                 });
-    
                 const api_result = await api_Response.json();
                 const api_data = api_result.data;
-    
-                if(api_data.check){ 
-                    isBookmarked = method === 'POST';
-                    updateButton(button_bookmark_el);
+
+                if(!api_Response.ok){
+                    throw Error(api_result.message);
                 }
-            
+    
+                // checked event
+                if(api_data.check){ 
+                    el.dataset.status = method === 'POST' ? 1 : ''; // comment-data
+                    updateUI(el);
+                }
             }catch(err){
-                console.error('북마크 요청 중, 문제가 발생했습니다 : ', err);
+                alert(err);
+                console.error('요청 중, 문제가 발생했습니다 : ', err);
+                window.location.reload();
             }finally{
                 isProcessing = false;
             }
         }
-    
-        bookmark_button_el.addEventListener('click',(event) => {
-            //  BOOKMARK BUTTON
-            if( event.target.id === "button_bookmark"){
-                const method = isBookmarked ? 'DELETE' : 'POST';
-                request_bookmark(method);
+
+        // Comment area event
+        comment_div_el.addEventListener('click', (event) => {
+            if (isProcessing) return;
+
+            if (event.target.classList.contains('button_like')){
+                const target_el = event.target;
+                const event_name = 'Like';
+                isLike_type = 'comment';
+
+                request_url[event_name] = `/like/comment/${target_el.dataset.comment_id}`;
+                const method = target_el.dataset.status ? 'DELETE' : 'POST';
+
+                request_check(method, target_el, event_name);
             }
         });
+    
+        // Content area event
+        post_button_el.addEventListener('click',(event) => {
+            if (isProcessing) return;
 
-        init_bookmark();
+            // Bookmark
+            if( event.target.id === "button_bookmark"){
+                const target_el = event.target;
+                const event_name = 'Bookmark';
+                const method = target_el.dataset.status ? 'DELETE' : 'POST';
+
+                request_check(method, target_el, event_name);
+            }
+
+            // Like 
+            if (event.target.classList.contains('button_like')){
+                const target_el = event.target;
+                const event_name = 'Like';
+                isLike_type = 'content';
+
+                request_url[event_name] = `/like/content/${content_id}`;
+                const method = target_el.dataset.status ? 'DELETE' : 'POST';
+                
+                request_check(method, target_el, event_name);
+            }
+        });
     }
 
 })();

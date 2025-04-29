@@ -8,12 +8,12 @@ const auth_Controller = require('../controllers/auth_ctl');
 //middleware
 const user_check = require('../middleware/user_check');
 
-// 렌더링 요청
+/// SSR ---
 router.get('/login', user_check.check_logout, auth_Controller.getLogin_page);
 router.get('/signup', user_check.check_logout, auth_Controller.getSignUp_page);
 
 
-// redirect 요청
+// REDIRECT ---
 router.get('/login/:social_url', auth_Controller.getSocialLogin);
 router.get('/login/:social_url/callback', auth_Controller.setSocialLogin);
 router.post('/signup', user_check.check_logout, (req, res, next) =>{
@@ -24,7 +24,7 @@ router.post('/signup', user_check.check_logout, (req, res, next) =>{
     next();
 }, auth_Controller.setSignUp); 
 
-// API 요청
+/// API ---
 router.post('/login', user_check.check_logout, auth_Controller.setLogin);
 router.delete('/logout', user_check.check_login, auth_Controller.getLogout);
 

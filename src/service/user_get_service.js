@@ -50,21 +50,46 @@ const user_get_service = {
         get_userinfo_activity : ( user_id, limit, offset, callback ) => {
             const query = `
                 SELECT A.*, User.nickname 
-                FROM    (SELECT Post.comment AS comment, 
-                            Post.create_at AS comment_create_at, 
-                            Content.id AS content_id, 
-                            Content.user_id AS content_user_id, 
-                            Content.content_type AS content_type 
-                        FROM ( SELECT * 
-                            FROM Comment 
-                            where user_id = ? AND visible = 1 
-                            LIMIT ? OFFSET ?) Post 
-                        LEFT JOIN Content ON Post.content_id = Content.id) 
+                FROM    (
+                            SELECT 
+                                Post.comment AS comment, 
+                                Post.create_at AS comment_create_at, 
+                                Content.id AS content_id, 
+                                Content.user_id AS content_user_id, 
+                                Content.content_type AS content_type 
+                            FROM ( 
+                                SELECT * 
+                                FROM Comment 
+                                where user_id = ? AND visible = 1 
+                                LIMIT ? OFFSET ? ) Post 
+                            LEFT JOIN Content ON Post.content_id = Content.id ) 
                 A LEFT JOIN User ON A.content_user_id  = User.id;
+            `;
+
+            const query2 = `
+                SELECT
+                    C.comment,
+                    C.create_at AS comment_create_at,
+                    P.id AS content_id,
+                    P.user_id AS content_user_id,
+                    P.content_type,
+                    P.title,
+                    U.nickname
+                FROM 
+                    (
+                        SELECT *
+                        FROM Comment
+                        WHERE user_id = ? 
+                            AND visible = 1
+                        LIMIT ? OFFSET ? 
+                    ) C
+                LEFT JOIN Content P ON P.id = C.content_id
+                    AND P.visible = 1
+                LEFT JOIN User U ON P.user_id = U.id;
             `;
     
             // 리스트 출력
-            read_DB.query(query, [user_id,  limit, offset] ,(err, DB_results) => {
+            read_DB.query(query2, [user_id,  limit, offset] ,(err, DB_results) => {
                 if(err){
                     console.error("( getUserinfo => get_userinfo_activity ) : \n" , err.stack);
                     return callback(500, null);
@@ -150,9 +175,10 @@ const user_get_service = {
             const query = `
             SELECT Content.id, Content.title, Content.user_id,
                     Content.content_type, User.nickname, Bookmark.create_at 
-            FROM Bookmark
-            JOIN Content ON Bookmark.content_id = Content.id 
-            JOIN User ON Content.user_id = User.id
+            FROM 
+                Bookmark
+                JOIN Content ON Bookmark.content_id = Content.id 
+                JOIN User ON Content.user_id = User.id
             WHERE Bookmark.user_id = ? 
                 AND Content.visible = 1
             ORDER BY Bookmark.create_at DESC

@@ -35,22 +35,24 @@
                         &nbsp;<%= Content.view_count %>
                     </span>
                 </div>
+
+                乃&nbsp;<span id="post_like_count"><%= Content.like_count %></span>
             </div>
 
             <% if (userId) { %>
             <div style="display: flex; flex: 1; justify-content: right;" 
                 id="forum_detail_select">
-                <button id="button_bookmark">
+                <button type="button" id="button_bookmark" 
+                    data-status=<%= Content.bookmark_at %>
+                    <%- Content.bookmark_at ? 'style="color: green;"' : null %>>
                     북마크
                 </button>
-                <!-- <span><b>·</b></span>
-                <button id="button_like">
-                    좋아요
-                </button>
                 <span><b>·</b></span>
-                <button id="button_hate">
-                    싫어요
-                </button> -->
+                <button type="button" class="button_like" 
+                    data-status=<%= Content.like_at %>
+                    <%- Content.like_at ? 'style="color: green;"' : null %>>
+                좋아요
+            </button>
             </div>
             <% } %>
         </div>
@@ -123,20 +125,34 @@
                             <li>
                                 <div>
                                     <div class="comment_container">
-                                        <input type="hidden" class='comment_id_hidden' value="<%= row.id %>">
+                                        <!--  -->
+                                        <input type="hidden" class='comment_id_hidden' value="<%= row.id %>"> 
+                                        <!--  -->
                                         <div style="display : flex; width: 100%;">
                                             <div style="flex: 3;">
                                                 <% if (Content.user_id === row.user_id) {%>
                                                     <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
                                                 <% } %>
-                                                <a class="user_href" href="/user/<%= row.user_id %>"><%= row.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%= row.create_at %>
+                                                <a class="user_href" href="/user/<%= row.user_id %>">
+                                                    <%= row.nickname %>
+                                                </a>
+                                                <span><b>&nbsp;·&nbsp;</b></span>
+                                                <%= row.create_at %>
+                                                <span><b>&nbsp;·&nbsp;</b></span>
+                                                乃 <span class="comment_like_count"><%= row.like_count %></span>
                                             </div>
                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                 <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
-                                                    <button type="button" class="comment_modify">수정</button></a>
+                                                    <button type="button" class="comment_modify">수정</button>
                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
                                                     <button type="button" class="comment_delete">삭제</button>
-                                                <%}%>        
+                                                <%} else if (userId && row.visible.toString('hex') === '01' ) {%>
+                                                    <button type="button" class="button_like" 
+                                                        data-comment_id=<%= row.id %> data-status=<%= row.like_at %>
+                                                        <%- row.like_at ? 'style="color: green;"' : null %>>
+                                                        좋아요
+                                                    </button>
+                                                <% } %>
                                             </div>
                                         </div>
                                         <div>
@@ -147,7 +163,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <% if (userId) {%>
+                                    <% if (userId) {%>                                                                              
                                         <div> 
                                             <button type="button" 
                                                     class="create_subcomment_button"
@@ -155,12 +171,13 @@
                                                 + 댓글 쓰기
                                             </button>
                                         </div>
+
+                                        <div class="create_subcomment_div" style="padding: 5px;">
+                                            <input type="hidden" class="comment_parent_nickname" value="<%= row.nickname %>">
+                                            <input type="hidden" class="comment_parent_id" value="<%= row.id %>">
+                                            <div class="comment_form"></div>
+                                        </div>
                                     <% } %>
-                                    <div class="create_subcomment_div" style="padding: 5px;">
-                                        <input type="hidden" class="comment_parent_nickname" value="<%= row.nickname %>">
-                                        <input type="hidden" class="comment_parent_id" value="<%= row.id %>">
-                                        <div class="comment_form"></div>
-                                    </div>
                                 </div>
                                 <% if (row.children.length) { %>
                                     <ul style="margin-left : 15px;">
@@ -172,16 +189,33 @@
                                                         <div style="display : flex; width: 100%;">
                                                             <div style="flex: 3;">
                                                                 <% if (Content.user_id === children.user_id) {%>
-                                                                    <span style="font-size: 11px; color: rgb(23, 116, 5); border: 1px solid rgb(11, 223, 11); border-radius: 5px ; padding: 2px;">작성자</span>&nbsp;
+                                                                    <span style="
+                                                                        font-size: 11px; color: rgb(23, 116, 5); 
+                                                                        border: 1px solid rgb(11, 223, 11); 
+                                                                        border-radius: 5px ; padding: 2px;">
+                                                                            작성자
+                                                                    </span>&nbsp;
                                                                 <% } %>
-                                                                <a class="user_href" href="/user/<%= children.user_id %>"><%= children.nickname %></a><span><b>&nbsp;·&nbsp;</b></span><%=children.create_at %>
+                                                                <a class="user_href" href="/user/<%= children.user_id %>">
+                                                                    <%= children.nickname %>
+                                                                </a>
+                                                                <span><b>&nbsp;·&nbsp;</b></span>
+                                                                <%=children.create_at %>
+                                                                <span><b>&nbsp;·&nbsp;</b></span>
+                                                                乃 <span class="comment_like_count"><%= children.like_count %></span>
                                                             </div>
                                                             <div style="flex: 1; display: flex; justify-content: right;">
                                                                 <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
                                                                     <button type='button' class="comment_modify">수정</button></a>
                                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
                                                                     <button type='button' class="comment_delete">삭제</button>
-                                                                <%}%>        
+                                                                <%} else if (userId && children.visible.toString('hex') === '01' ) {%>
+                                                                    <button type="button" class="button_like"
+                                                                        data-comment_id=<%= children.id %> data-status=<%= children.like_at %>
+                                                                        <%- children.like_at ? 'style="color: green;"' : null %>>
+                                                                        좋아요
+                                                                    </button>
+                                                                <% } %>
                                                             </div>
                                                         </div>
                                                         <div style='margin-bottom : 2px;'>
@@ -217,8 +251,6 @@
             </div>
         </div>
     </div>
-
-
 
     <div class="forum_detail_box">
         <div style="display: flex;">

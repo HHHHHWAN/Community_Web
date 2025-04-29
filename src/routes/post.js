@@ -4,7 +4,8 @@ require('dotenv').config();
 
 //controller
 const main_Controller = require('../controllers/mypage_main_ctl'); 
-// const user_Controller = require('../controllers/user_ctl');
+
+// POST Controller
 const get_Controller = require('../controllers/post_get_ctl');
 const set_Controller = require('../controllers/post_set_ctl');
 
@@ -16,16 +17,13 @@ const upload = require('../middleware/upload_multer');
 
 
 
-/// API
+/// API ---
 
-
-// ADD POST
+// POST
 router.post('/post/edit' , user_check.check_login, set_Controller.setAddContent);
-// MODIFY POST
 router.put('/post/update' , user_check.check_login, set_Controller.putUpdateContent);
-// DELETE POST
 router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
-// UPLOAD IMAGE
+// UPLOAD
 router.post('/post/upload' , user_check.check_login, ( req, res ) => {
     upload.single('image')( req, res, (err) => {
         if(err){
@@ -48,19 +46,16 @@ router.post('/post/upload' , user_check.check_login, ( req, res ) => {
     });
 });
 
-// ADD COMMENT
+// COMMENT
 router.post('/reply/edit', user_check.check_login ,set_Controller.setAddComment);
-// PUT COMMENT
 router.put('/reply/update', user_check.check_login ,set_Controller.putUpdateComment);
-// DELETE COMMENT
 router.delete('/reply/delete', user_check.check_login, set_Controller.deleteComment);
 
 
-///SSR
+///SSR ---
 
-// 글쓰기 페이지
+// GET EDIT PAGE
 router.get('/post/edit/:content_id?', user_check.check_login, urlType_Check, get_Controller.getCreateContent);
-
 
 // GET MAIN PAGE
 router.get('/' ,main_Controller.getMyPagelist); 

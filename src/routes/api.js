@@ -18,8 +18,7 @@ const urlType_Check = require('../middleware/url_content_check');
 // const user_check = require('../middleware/user_check');
 
 
-///-----------------------------------------------------------------------
-
+/// API ---
 
 //openWeatherApi
 router.get('/weather', async (req, res) => {
@@ -74,7 +73,7 @@ router.get('/weather', async (req, res) => {
     }
 });
 
-// ENUM ( 'info', 'qa, 'life' )
+// POST LIST
 router.get('/:pagetype', urlType_Check, get_Controller.api_getContents);
 
 

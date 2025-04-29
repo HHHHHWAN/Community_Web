@@ -17,7 +17,7 @@ async function detail_add_viewcount(content_id){
 
 const post_get_service = {
 
-    // 카테고리 별 최신 글 리스트
+    /** 카테고리 별 최신 글 리스트 */ 
     get_mainpage_contents : async ( callback ) => {
         const read_DB_promise = read_DB.promise();
         const cacheKey = 'mainpage:list';
@@ -74,7 +74,7 @@ const post_get_service = {
         }
     },
 
-    // 인기 게시글 리스트 
+    /** 인기 게시글 리스트 */  
     get_popular_contents: (limit, offset, order_type, callback) => {
 
         // 요청 정렬 체크
@@ -110,9 +110,6 @@ const post_get_service = {
             LIMIT ? OFFSET ? ) A 
         LEFT JOIN User ON User.id = A.user_id; 
         `; 
-
-        
-        // 조회 15 초과 레코드 출력
 
         read_DB.query(query, [limit, offset], (err, query_select_result ) => {
             
@@ -153,10 +150,6 @@ const post_get_service = {
             });
         });
     },
-
-
-    /// --------------------------------------------------------------------------------------
-
 
     // GET 게시판 페이지 리스트 
     get_type: (pagetype, offset, order_type, callback) => {
@@ -217,20 +210,43 @@ const post_get_service = {
         });
     },
 
-    // 한 게시물 내용 
-    get_post_detail: ( Content_id, view_history , callback ) => {
+    /** 게시물 내용 */
+    get_post_detail: ( Content_id, view_history, user_id, callback ) => {
 
         const query = `
-        SELECT A.*, User.nickname 
+        SELECT 
+            C.*, 
+            U.nickname,
+            (   
+                SELECT COUNT(*)
+                FROM \`Like\` LC 
+                WHERE LC.target_id = C.id
+                    AND LC.target_type = 'content'
+            ) AS like_count,
+            ${ user_id ? 
+                'B.create_at AS bookmark_at, L.like_at' : 
+                'NULL AS bookmark_at, NULL AS like_at'
+            } 
         FROM (
             SELECT * 
             FROM Content 
             WHERE id = ? 
-                AND visible = 1) A 
-        LEFT JOIN User 
-        ON User.id = A.user_id`;
+                AND visible = 1) C
+            LEFT JOIN User U ON U.id = C.user_id
+            ${ user_id ? 
+	            `LEFT JOIN Bookmark B ON B.content_id = C.id 
+		            AND B.user_id = ?
+	             LEFT JOIN \`Like\` L ON L.target_id = C.id
+		            AND L.target_type = 'content' 
+		            AND L.user_id = ?` :
+                ''}`;
 
-        read_DB.query(query, [Content_id], (err, results) => {
+
+        let query_value = [ Content_id ];
+
+        if(user_id) query_value.push(user_id, user_id);
+
+        read_DB.query(query, query_value, (err, results) => {
             if (err) {
                 console.error("( get_post_detail ) MySQL2 : \n", err.stack );
                 return callback(500, null);
@@ -256,7 +272,7 @@ const post_get_service = {
         });
     },
 
-    // GET 게시글 수정
+    /** GET 게시글 수정 내용 불러오기 */ 
     get_post_edit: ( content_id, request_user_id, callback ) => {
 
         const query = `SELECT * FROM Content WHERE id = ? AND user_id = ?  AND visible = 1`;
@@ -281,16 +297,44 @@ const post_get_service = {
     },
 
 
-    // 댓글 리스트 
-    get_comment_list: ( content_id, callback ) => {
-        const query = `SELECT A.*, User.nickname FROM ( SELECT * FROM Comment WHERE content_id = ? ) A LEFT JOIN User ON A.user_id = User.id`;
+    /** 게시글 정보 가져오기 */ 
+    get_comment_list: ( content_id, user_id, callback ) => {
 
-        read_DB.query(query, [content_id], ( err, comment_results ) => {
+        const query = `
+        SELECT 
+            C.*,
+            U.nickname,
+            (
+                SELECT COUNT(*)
+                FROM \`Like\` LC
+                WHERE LC.target_id = C.id
+                    AND LC.target_type = 'comment'
+            ) AS like_count,
+            ${ user_id ? 'L.like_at' : 'NULL AS like_at' }
+        FROM 
+            (
+                SELECT *
+                FROM Comment
+                WHERE content_id = ?
+            ) C
+            LEFT JOIN User U ON C.user_id = U.id
+            ${ user_id ? `
+                LEFT JOIN \`Like\` L ON L.target_id = C.id
+                AND L.target_type = 'comment'
+                AND L.user_id = ?` : '' }`;
+
+
+        
+        let query_value = [];
+
+        query_value.push(content_id);
+        if(user_id) query_value.push(user_id);
+
+        read_DB.query(query, query_value, ( err, comment_results ) => {
             if (err){
                 console.error("( get_comment_list ) MySql2 : " , err.stack );
                 return callback (null);
             }
-
 
             // 날짜 가공
             comment_results.forEach( row => {
@@ -310,7 +354,7 @@ const post_get_service = {
 
     },
 
-    // 리스트 페이지 수
+    /** 페이지 수 반환 */
     get_page_count: (pagetype, callback ) =>{
         const query = `SELECT COUNT(*) AS total_count FROM Content WHERE content_type = ? AND visible = 1 `;
     
@@ -328,7 +372,7 @@ const post_get_service = {
         });
     },
 
-    // 검색 결과 반환
+    /** 검색 결과 반환 */
     get_search_post :  async (search_text, top_page, bottom_page, callback) => { 
         const query_contents = `
         SELECT * 
