@@ -1,5 +1,3 @@
-# Community_Web
-
 ## 설명
 1. 내용
     - 인터넷 커뮤니티 웹 서비스 개발
@@ -18,7 +16,7 @@
     - 배포 도메인
         - [https://mypagehhh.shop](https://mypagehhh.shop)
     - 배포 기록
-        - [배포](https://evening-adapter-5d0.notion.site/1a51a3736ea5806eafa7cb69bb064b64)
+        - [릴리즈 기록](https://evening-adapter-5d0.notion.site/1a51a3736ea5806eafa7cb69bb064b64)
 
 5. 기술 
    - Node.js
@@ -26,8 +24,13 @@
    - Docker
    - Mysql
    - Redis
-6. 환경 
-   - Ubuntu
+   - HTML
+   - CSS
+   - JavaScript
+   - Nginx
+
+6. 도구
+   - VirtualBox
    - VScode
    - Teraterm 또는 iterm
    - Git
@@ -36,7 +39,7 @@
 
 ## 구성
 
-1. 커뮤니티 웹 어플리케이션
+1. 기능
     - 메인페이지
     - 장르 별 게시판
     - 게시글
@@ -68,21 +71,22 @@
         - 일반 로그인
           - 일반 회원가입 지원
 
-2. 접근방식 채택
+2. 구상
          
     1. 아키텍처
        - 구조
-         ![구상도](https://github.com/user-attachments/assets/f6f23a1f-9a37-4aee-b503-93619b302d37)
+         ![구상도](https://github.com/user-attachments/assets/f6f23a1f-9a37-4aee-b503-93619b302d37) 
 
     2. MySql
        1. ERD
           ![image](https://github.com/user-attachments/assets/e26f4594-450b-4783-a8a8-edfbeec9f700)
-
     
     3. Redis
        - 세션 데이터 유지를 위한, `TTL` 설정
        - 서버 확장성을 고려한, 유저 세션 관리 가능
-           - 다른 `세션쿠키` 에서 로그인 할 경우, 중복 로그인 방지를 위해, 세션 삭제 처리 
+           - 다른 `세션쿠키` 에서 로그인 할 경우, 중복 로그인 방지를 위해, 세션 삭제 처리
+       - 요청 데이터, `캐싱` 전략 이용
+
     4. Docker
        - Dockerfile을 이용한, 웹 서비스 이미지화
        - Mysql, Redis, 웹 서비스를 docker-compose를 이용해, 통합 관리
@@ -97,4 +101,6 @@
                - docker-compose.yml 작성
                - 환경변수 파일 작성
                - 서버 환경에 맞추어, 유동적으로 서버 설정을 바꿀 수 있도록 구현
+   6. flyway
+      - 개발 과정 중, 발생하는 마이그레이션을 형상관리
 
