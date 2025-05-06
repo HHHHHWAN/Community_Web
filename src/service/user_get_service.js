@@ -69,7 +69,7 @@ const user_get_service = {
 			            END AS content_id,
                         like_at AS create_at
                     FROM \`Like\` L
-                    WHERE user_id = 22
+                    WHERE user_id = ?
                 )
                 SELECT
                     USER_HISTORY.*,
@@ -86,7 +86,7 @@ const user_get_service = {
                 LIMIT ? OFFSET ?`;
     
             // 리스트 출력
-            read_DB.query(query, [user_id,  limit, offset] ,(err, DB_results) => {
+            read_DB.query(query, [user_id,  user_id, limit, offset] ,(err, DB_results) => {
                 if(err){
                     console.error("( getUserinfo => get_userinfo_activity ) : \n" , err.stack);
                     return callback(500, null);
