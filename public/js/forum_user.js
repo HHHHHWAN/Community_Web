@@ -38,8 +38,8 @@
                     const post_li_div = document.createElement('div');
                     post_li_div.setAttribute('class','post_li_div');
                     post_li_div.innerHTML = `
-                    <div style="display: flex; width: 100%;">
-                        <div style="flex: 7;"><a href='/${row.content_type}'>${row.post_name}</a> 게시판에 게시물을 작성했습니다. </div>
+                    <div style="display: flex; width: 100%; font-size: 12px;">
+                        <div style="flex: 7;"><a href='/${row.content_type}'>${row.post_name}</a> 게시판에 게시물을 <span style="color: green;">작성</span>했습니다. </div>
                         <div style="flex: 1; display: flex; justify-content: right;">${row.date_now}</div>
                     </div>
                     <div style="display: flex; height: 30px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow:ellipsis;">
