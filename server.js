@@ -14,6 +14,7 @@ const api_Routes = require('./src/routes/api');
 const user_Routes = require('./src/routes/user'); 
 const auth_Routes = require('./src/routes/auth'); 
 const post_Routes = require('./src/routes/post'); 
+const manage_Routes = require('./src/routes/manage');
 
 /// Express
 const app = express();
@@ -22,7 +23,7 @@ const app = express();
 app.use(session_middle());
 app.use(csrf_token());
 app.use(local_session);
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => { // CSRF 토큰 에러 대응
 	if (err.code === 'EBADCSRFTOKEN') {
 	  return res.status(403).json({
 		message : '권한이 없습니다.',
@@ -56,6 +57,7 @@ app.set('layout','layout/forum');
 
 /// routes
 app.use('/api', api_Routes);
+app.use('/manage', manage_Routes);
 app.use('/', auth_Routes);
 app.use('/', user_Routes);
 app.use('/', post_Routes);

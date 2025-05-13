@@ -6,10 +6,16 @@
 <div class="box">
 
     <p> 
-        <% switch ( returnURL.pagetype ) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
-        <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
-        <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
-        <%; break; default : %>	<a href="/popular" style="color: #4c705a;">인기</a>
+
+
+        <% if(returnURL.pagetype === 'popular'){%>
+            <a href="/popular" style="color: #4c705a;">인기</a>
+        <%} else {%>
+            <% switch ( Content.content_type ) { case 'qa': %><a href="/qa" style="color: #4c705a;">Q & A</a>
+            <%; break; case 'info': %> <a href="/info" style="color: #4c705a;">정보</a>
+            <%; break; case 'life': %> <a href="/life" style="color: #4c705a;">생활</a>
+            <%; break; default : %>	
+            <%}%>
         <%}%>
     </p>
 
@@ -87,9 +93,39 @@
                         삭제
                     </button>
                 </div>
-            <% } %>
-            <div class="forum_detail_ctl_return">           
-                <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>"><button type="button" class="forum_button_2">목록</button></a>
+            <% } else { %>
+                <% if( ROLE === 1 ) {%>
+                    <button type="button" id="post_manage" data-current_post_id="<%= Content.id %>"> 관리 </button> 
+                    <div style="position:relative;">
+                        <div id="post_manage_modal" style="display: none;">
+                            <div>
+                                <button type="button" id="post_manage_delete"> 삭제 </button>
+                            </div>
+                            <div>
+                                <button type="button" id="post_manage_put"> 이동 </button>
+                                <div id="post_manage_put_modal" style="display: none;">
+                                    <select id="put_selected" data-current_category="<%= Content.content_type %>"
+                                        style="font-size: 12px; padding: 5px; margin-bottom: 5px; width: 90px;">
+                                        <option value="info">정보</option>
+                                        <option value="qa">QA</option>
+                                        <option value="life">생활</option>
+                                    </select>
+                                    <div style="display: flex; justify-content: right;">
+                                        <button type="button" id="post_manage_put_submit"
+                                            style="font-size: 11px; border: 1px solid black; border-radius: 5px;">
+                                            이동
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }%>
+            <%} %>
+            <div class="forum_detail_ctl_return">
+                <a href="/<%= returnURL.pagetype %>?page=<%= returnURL.page %>">
+                    <button type="button" class="forum_button_2">목록</button>
+                </a>
             </div>
         </div>
 
@@ -125,9 +161,7 @@
                             <li>
                                 <div>
                                     <div class="comment_container">
-                                        <!--  -->
                                         <input type="hidden" class='comment_id_hidden' value="<%= row.id %>"> 
-                                        <!--  -->
                                         <div style="display : flex; width: 100%;">
                                             <div style="flex: 3;">
                                                 <% if (Content.user_id === row.user_id) {%>
@@ -141,7 +175,7 @@
                                                 <span><b>&nbsp;·&nbsp;</b></span>
                                                 乃 <span class="comment_like_count"><%= row.like_count %></span>
                                             </div>
-                                            <div style="flex: 1; display: flex; justify-content: right;">
+                                            <div style="flex: 1; display: flex; position: relative; justify-content: right;">
                                                 <% if (userId === row.user_id && row.visible.toString('hex') === '01') {%>
                                                     <button type="button" class="comment_modify">수정</button>
                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
@@ -152,6 +186,15 @@
                                                         <%- row.like_at ? 'style="color: green;"' : null %>>
                                                         좋아요
                                                     </button>
+
+                                                    <% if( ROLE === 1 ) {%>            
+                                                        <button type="button" class="comment_manage">
+                                                            <img width="10px" src="/public/img/menu-icon.png" style="pointer-events: none;">
+                                                        </button>
+                                                        <div class="comment_manage_modal" style="display: none;"> 
+                                                            <button type="button" class="comment_manage_delete">비공개 처리</button>
+                                                        </div>
+                                                        <% }%>
                                                 <% } %>
                                             </div>
                                         </div>
@@ -307,3 +350,4 @@
 <script src="/public/js/forum_detail_util.js"></script>
 <script src="/public/js/forum_detail_list.js"></script>
 <script src="/public/js/forum_detail_comment.js"></script>
+<script src="/public/js/forum_detail_manage.js"></script>

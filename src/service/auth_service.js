@@ -70,7 +70,7 @@ const auth_service_object = {
     set_login : async ( req, input_username, input_password, callback ) => {
         
         const query = `
-        SELECT id, nickname, visible, password
+        SELECT id, nickname, visible, password, role_id
         FROM User 
         WHERE username = ?`;
 
@@ -100,8 +100,10 @@ const auth_service_object = {
             // 세션 등록, 로그인 처리
             req.session.user = {
                 user_id : user_info.id,
-                nickname : user_info.nickname
+                nickname : user_info.nickname,
+                role : user_info.role_id
             };
+
 
             callback(null,'처리 완료');
             
@@ -155,7 +157,7 @@ const auth_service_object = {
         try{ 
 
             const { reuslt, social_data } = await Oauth_module.request_token_social( social_type, request_code ); // { result , data };
-            const existingUser = await Oauth_module.find_social_user( social_data.id, social_key);
+            const existingUser = await Oauth_module.find_social_user( social_data.id, social_key );
 
             // 소셜 등록
             if(!!req.session.user){
@@ -189,8 +191,10 @@ const auth_service_object = {
             // 로그인 처리
             req.session.user = {
                 user_id : existingUser.id,
-                nickname : existingUser.nickname
+                nickname : existingUser.nickname,
+                role : existingUser.role_id
             };
+
 
             callback(null,'login',null);
 

@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY src ./src
 COPY public ./public
-COPY manage.js .
+COPY server.js .
 
-CMD [ "node", "manage.js" ]
+CMD [ "node", "server.js" ]
 
 # 이미지 빌드시 ./public/upload 정리

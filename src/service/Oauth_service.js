@@ -124,7 +124,7 @@ exports.request_token_social = async ( social, request_code ) => {
 /** 소셜 연동 여부 체크  ( 검색 ROW 반환 ) */
 exports.find_social_user =  async ( social_id, social_key ) => {   
     const query = `
-    SELECT id, nickname 
+    SELECT id, nickname, role_id
     FROM User 
     WHERE visible = 1 AND ${social_key} = ?`;
 

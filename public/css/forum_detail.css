@@ -192,7 +192,7 @@ span{
     background-color: rgba(255, 255, 255, 0);
 }
 
-.comment_delete, .comment_edit{
+.comment_edit{
     font-size: 11px; color: #868585; 
     border: none; 
     background-color: white;
@@ -243,4 +243,54 @@ span{
     margin-right: 5px;
 }.comment_cancel:hover{
     background-color: rgb(149, 161, 153);
+}
+
+#post_manage{
+    padding: 10px;
+    margin-right: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #00000081;
+    background-color: rgb(173, 173, 173);
+    border-radius: 5px;
+    border: none;
+    white-space : nowrap;
+}
+#post_manage_modal{
+    border-radius: 3px;
+    box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+    background-color: white;
+    position:absolute;
+    top: 40px;
+    left: -50px;
+    padding: 3px;
+}#post_manage_modal button{
+    width: 50px;
+    font-size: 14px;
+    margin: 5px;
+}
+#post_manage_put_modal{
+    border-radius: 3px;
+    box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+    background-color: white;
+    position:absolute;
+    top: 30px;
+    left: 70px;
+    padding: 3px;
+}
+
+.comment_manage{
+    margin-left: 5px;
+}
+.comment_manage_modal{
+    min-width: 40px;
+    min-height: 60px;
+
+    border-radius: 3px;
+    box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
+    background-color: white;
+    position:absolute;
+    top: 20px;
+    right: -10px;
+    padding: 3px;
 }
