@@ -50,7 +50,7 @@ const data_utils = {
         list
             .filter( row => row.visible.toString('hex') === '00' )
             .forEach( row => {
-                row.comment = "사용자에 의해 삭제된 댓글입니다.";
+                row.comment = "블라인드 처리된 글입니다.";
                 change_count+=1;
             });
         return { list, change_count };

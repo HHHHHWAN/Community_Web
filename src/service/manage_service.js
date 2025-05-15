@@ -28,37 +28,39 @@ const manage_service = {
 
     },
 
-    block_posts : async ( callback ) => {
+    block_posts : async ( content_id, callback ) => {
         const query = `
             UPDATE Content
             SET visible = 0
             WHERE id = ?
         `;
         try{
+            const [ DB_result ] = await read_DB_promise.query(query, [ content_id ]);
 
-            const DB_result = await read_DB_promise.query(query, []);
-
-
-
+            callback(null ,DB_result.affectedRows > 0);
+            
         }catch(err){
-
+            console.log(" 서버에서 요청을 처리하지 못했습니다. " );
+            console.error( "(change_posts_category) MySql2 : \n", err.stack);
+            callback(500, false);
         }
     },
 
-    block_comments : async ( callback ) => {
+    block_comments : async ( comment_id, callback ) => {
         const query = `
             UPDATE Comment
             SET visible = 0
             WHERE id = ?
         `;
         try{
+            const [ DB_result ] = await read_DB_promise.query(query, [ comment_id ]);
 
-            const DB_result = await read_DB_promise.query(query, []);
-
-
-
+            callback(null ,DB_result.affectedRows > 0);
+            
         }catch(err){
-
+            console.log(" 서버에서 요청을 처리하지 못했습니다. " );
+            console.error( "(change_posts_category) MySql2 : \n", err.stack);
+            callback(500, false);
         }
     }
 }

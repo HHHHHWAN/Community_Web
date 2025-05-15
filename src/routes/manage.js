@@ -5,12 +5,12 @@ const router = express.Router();
 const manage_Controller = require('../controllers/manage_ctl');
 
 /// middleware 
-const urlType_Check = require('../middleware/url_content_check');
+const user_check = require('../middleware/user_check');
 
 
 /// API 
 
-router.put('/post', manage_Controller.putPostCategory);
+router.put('/post', user_check.check_authority, manage_Controller.putPostCategory);
 router.delete('/post', manage_Controller.delPost);
 router.delete('/comment', manage_Controller.delComment);
 

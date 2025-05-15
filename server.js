@@ -26,7 +26,7 @@ app.use(local_session);
 app.use((err, req, res, next) => { // CSRF 토큰 에러 대응
 	if (err.code === 'EBADCSRFTOKEN') {
 	  return res.status(403).json({
-		message : '권한이 없습니다.',
+		message : '접근 권한이 없습니다.',
 		result : false
 	  });      
 	}

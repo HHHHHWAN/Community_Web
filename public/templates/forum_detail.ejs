@@ -188,13 +188,14 @@
                                                     </button>
 
                                                     <% if( ROLE === 1 ) {%>            
-                                                        <button type="button" class="comment_manage">
-                                                            <img width="10px" src="/public/img/menu-icon.png" style="pointer-events: none;">
-                                                        </button>
-                                                        <div class="comment_manage_modal" style="display: none;"> 
-                                                            <button type="button" class="comment_manage_delete">비공개 처리</button>
-                                                        </div>
-                                                        <% }%>
+                                                    <button type="button" class="comment_manage">
+                                                        <img width="10px" src="/public/img/menu-icon.png" style="pointer-events: none;">
+                                                    </button>
+                                                    <div class="comment_manage_modal" style="display: none;"
+                                                        data-comment_id=<%= row.id %>> 
+                                                        <button type="button" class="comment_manage_delete">비공개 처리</button>
+                                                    </div>
+                                                    <% }%>
                                                 <% } %>
                                             </div>
                                         </div>
@@ -247,7 +248,7 @@
                                                                 <span><b>&nbsp;·&nbsp;</b></span>
                                                                 乃 <span class="comment_like_count"><%= children.like_count %></span>
                                                             </div>
-                                                            <div style="flex: 1; display: flex; justify-content: right;">
+                                                            <div style="flex: 1; display: flex; position: relative; justify-content: right;">
                                                                 <% if (userId === children.user_id && children.visible.toString('hex') === '01') {%>
                                                                     <button type='button' class="comment_modify">수정</button></a>
                                                                     <span>&nbsp;<b>·</b>&nbsp;</span>
@@ -258,6 +259,16 @@
                                                                         <%- children.like_at ? 'style="color: green;"' : null %>>
                                                                         좋아요
                                                                     </button>
+                                                                    <% if( ROLE === 1 ) {%>            
+                                                                    <button type="button" class="comment_manage">
+                                                                        <img width="10px" src="/public/img/menu-icon.png" style="pointer-events: none;">
+                                                                    </button>
+                                                                    <div class="comment_manage_modal" style="display: none;"
+                                                                        data-comment_id=<%= children.id %>> 
+                                                                        <button type="button" class="comment_manage_delete">비공개 처리</button>
+                                                                    </div>
+                                                                    <% }%>
+
                                                                 <% } %>
                                                             </div>
                                                         </div>

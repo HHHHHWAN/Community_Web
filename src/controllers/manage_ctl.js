@@ -23,7 +23,7 @@ exports.putPostCategory = (req, res) => {
         }
 
         res.json({
-            message : `${content_id} ${category} 확인`,
+            message : `${content_id}번 게시글 ${category} 이동 확인`,
             result : true
         });
     });
@@ -31,16 +31,54 @@ exports.putPostCategory = (req, res) => {
 
 
 exports.delPost = (req, res) => {
-    res.json({
-        message : "확인",
-        result : true
+    const content_id = req.body.post_id;
+
+    manage_service.block_posts( content_id, ( status, success ) => {
+
+        if(status){
+            return res.status(status).json({
+                message : " 서버에서 요청을 처리하지 못했습니다.",
+                result : false
+            });
+        }
+
+        if(!success){
+            return res.status(404).json({
+                message : " 요청한 대상을 찾을 수 없습니다. ",
+                result : false
+            });
+        }
+
+        res.json({
+            message : ` 게시글 비공개 처리 확인`,
+            result : true
+        });
     });
 };
 
 
 exports.delComment = (req, res) => {
-    res.json({
-        message : "확인",
-        result : true
+    const comment_id = req.body.comment_id;
+
+    manage_service.block_comments( comment_id, ( status, success ) => {
+
+        if(status){
+            return res.status(status).json({
+                message : " 서버에서 요청을 처리하지 못했습니다.",
+                result : false
+            });
+        }
+
+        if(!success){
+            return res.status(404).json({
+                message : " 요청한 대상을 찾을 수 없습니다. ",
+                result : false
+            });
+        }
+
+        res.json({
+            message : ` 댓글 비공개 처리 확인`,
+            result : true
+        });
     });
 };

@@ -1,8 +1,8 @@
 ( function(){
     const manage_button_el = document.getElementById('post_manage');
-
     const POST_ID =  manage_button_el.dataset.current_post_id;
-    const POST_CATEGORY = manage_button_el.dataset.current_category
+
+    let isProcessing = false;
 
     // Modal Event
     if(manage_button_el){
@@ -22,11 +22,13 @@
                 const target = event.target;
                 const modal_el = target.nextElementSibling; // event_element
 
+                console.log(modal_el);
+
                 const modal_status = modal_el.style.display;
 
                 if(modal_status === 'none'){
                     modal_el.style.display = 'block';
-                    comment_manage_event(target);
+                    comment_manage_event(modal_el);
                     return;
                 }
 
@@ -54,10 +56,38 @@
         
 
         // DEL Request
-        delete_el.addEventListener('click', () => {
+        delete_el.addEventListener('click', async () => {
+            if(isProcessing) return;
+            isProcessing = true;
+            if(!confirm('비공개 처리하시겠습니까?')) return;
 
-            
+            try{
+                const api_Response = await fetch('/manage/post',{
+                    method : 'DELETE',
+                    headers : {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
+                    },
+                    body : JSON.stringify({
+                        post_id : POST_ID
+                    })
+                });
 
+                const api_result = await api_Response.json();
+
+                if(!api_result.result){
+                    alert(api_result.message);
+                    throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
+                }
+
+                alert(api_result.message);
+                location.href = `/${POST_CATEGORY}`;
+            }catch(err){ 
+                console.error( err );
+            }finally{
+                isProcessing = false;
+            }
         });
 
         // PUT Setting Modal
@@ -65,6 +95,7 @@
             const modal_status = put_modal_el.style.display;
             put_modal_el.style.display = modal_status === 'none' ? 'block' : 'none';
         });
+
         // PUT Request
         put_submit_el.addEventListener('click', async () => {
             const to_category = put_select_el.value;
@@ -73,6 +104,9 @@
                 alert(" 현재와 같은 카테고리 입니다.");
                 return;
             }
+
+            if(isProcessing) return;
+            isProcessing = true;
 
             try{
                 const api_Response = await fetch('/manage/post',{
@@ -97,18 +131,55 @@
 
                 alert(api_result.message);
                 location.href = `/${to_category}/${POST_ID}`;
-            }catch(err){ // fetch error
+            }catch(err){ 
                 console.error( err );
+            }finally{
+                isProcessing = false;
             }
         });
     }
 
-
+    // Comment Manage
     function comment_manage_event(target_el){
         // modal 안에 버튼 comment = id 파악 필요
-        // target_el.addEventListener('click', () => {
+        const current_comment_id = target_el.dataset.comment_id;
+        const del_button_el = target_el.querySelector('.comment_manage_delete');
 
-        // });
+
+        del_button_el.addEventListener('click', async () => {
+
+            if(isProcessing) return;
+            isProcessing = true;
+            if(!confirm('비공개 처리하시겠습니까?')) return;
+
+            try{
+                const api_Response = await fetch('/manage/comment',{
+                    method : 'DELETE',
+                    headers : {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
+                    },
+                    body : JSON.stringify({
+                        comment_id : current_comment_id
+                    })
+                });
+
+                const api_result = await api_Response.json();
+
+                if(!api_result.result){
+                    alert(api_result.message);
+                    throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
+                }
+
+                alert(api_result.message);
+                location.reload();
+            }catch(err){
+                console.error( err );
+            }finally{
+                isProcessing = false;
+            }
+        });
 
     }
 
