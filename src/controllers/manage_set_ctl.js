@@ -1,12 +1,13 @@
-const manage_service = require('../service/manage_service');
+const manage_set_service = require('../service/manage_set_service');
 
 
 
 exports.putPostCategory = (req, res) => {
     const content_id = req.body.post_id;
     const category = req.body.move_category;
+    const request_user = req.session.user.user_id;
 
-    manage_service.change_posts_category( category, content_id, ( status, success ) => {
+    manage_set_service.change_posts_category( category, content_id, request_user, ( status, success ) => {
 
         if(status){
             return res.status(status).json({
@@ -32,8 +33,9 @@ exports.putPostCategory = (req, res) => {
 
 exports.delPost = (req, res) => {
     const content_id = req.body.post_id;
+    const request_user = req.session.user.user_id;
 
-    manage_service.block_posts( content_id, ( status, success ) => {
+    manage_set_service.block_posts( content_id, request_user, ( status, success ) => {
 
         if(status){
             return res.status(status).json({
@@ -59,8 +61,9 @@ exports.delPost = (req, res) => {
 
 exports.delComment = (req, res) => {
     const comment_id = req.body.comment_id;
+    const request_user = req.session.user.user_id;
 
-    manage_service.block_comments( comment_id, ( status, success ) => {
+    manage_set_service.block_comments( comment_id, request_user, ( status, success ) => {
 
         if(status){
             return res.status(status).json({
