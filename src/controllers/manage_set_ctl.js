@@ -1,10 +1,33 @@
 const manage_set_service = require('../service/manage_set_service');
 
 
+exports.addReport = (req, res ) => {
+    const target_type = req.body.type;
+    const target_id = req.body.id;
+    const reason = req.body.reason;
+    const detail = req.body.detail;
+    const request_user = req.session.user.user_id;
+
+    manage_set_service.user_Report( target_type, target_id, request_user, reason, detail, 
+        (status, service_result) => {
+            if(status){
+                return res.status(status).json({
+                    message : service_result,
+                    result : false
+                });
+            }
+
+            res.json({
+                message : service_result,
+                result : true
+            });
+    });
+}
+
 
 exports.putPostCategory = (req, res) => {
     const content_id = req.body.post_id;
-    const category = req.body.move_category;
+    const category = req.body.category;
     const request_user = req.session.user.user_id;
 
     manage_set_service.change_posts_category( category, content_id, request_user, ( status, success ) => {
@@ -24,7 +47,7 @@ exports.putPostCategory = (req, res) => {
         }
 
         res.json({
-            message : `${content_id}번 게시글 ${category} 이동 확인`,
+            message : `${content_id}번 게시글 ${category.change} 이동 확인`,
             result : true
         });
     });

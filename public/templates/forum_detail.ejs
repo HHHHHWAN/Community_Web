@@ -57,8 +57,14 @@
                 <button type="button" class="button_like" 
                     data-status=<%= Content.like_at %>
                     <%- Content.like_at ? 'style="color: green;"' : null %>>
-                좋아요
-            </button>
+                    좋아요
+                </button>
+                <button type="button" class="button_report"
+                    data-target_type="content"
+                    data-target_id=<%= Content.id %>
+                >
+                    신고
+                </button>
             </div>
             <% } %>
         </div>
@@ -186,6 +192,12 @@
                                                         <%- row.like_at ? 'style="color: green;"' : null %>>
                                                         좋아요
                                                     </button>
+                                                    <button type="button" class="button_report"
+                                                        data-target_type="comment"
+                                                        data-target_id=<%= row.id %>
+                                                    >
+                                                        신고
+                                                    </button>
 
                                                     <% if( ROLE === 1 ) {%>            
                                                     <button type="button" class="comment_manage">
@@ -193,7 +205,7 @@
                                                     </button>
                                                     <div class="comment_manage_modal" style="display: none;"
                                                         data-comment_id=<%= row.id %>> 
-                                                        <button type="button" class="comment_manage_delete">비공개 처리</button>
+                                                        <button type="button" class="comment_manage_delete"> 삭제 </button>
                                                     </div>
                                                     <% }%>
                                                 <% } %>
@@ -259,13 +271,19 @@
                                                                         <%- children.like_at ? 'style="color: green;"' : null %>>
                                                                         좋아요
                                                                     </button>
+                                                                    <button type="button" class="button_report"
+                                                                        data-target_type="comment"
+                                                                        data-target_id=<%= children.id %>
+                                                                    >
+                                                                        신고
+                                                                    </button>
                                                                     <% if( ROLE === 1 ) {%>            
                                                                     <button type="button" class="comment_manage">
                                                                         <img width="10px" src="/public/img/menu-icon.png" style="pointer-events: none;">
                                                                     </button>
                                                                     <div class="comment_manage_modal" style="display: none;"
                                                                         data-comment_id=<%= children.id %>> 
-                                                                        <button type="button" class="comment_manage_delete">비공개 처리</button>
+                                                                        <button type="button" class="comment_manage_delete"> 삭제 </button>
                                                                     </div>
                                                                     <% }%>
 
@@ -345,6 +363,38 @@
         </div>
     </div>
 </div>
+
+<% if( userId ) { %>
+    <div id="report_modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; padding:20px; border-radius:8px; min-width:300px; max-width:90vw;">
+            <h4>신고 사유를 선택해주세요</h4>
+            <form id="report_form">
+                <ul style="list-style:none; padding:0;">
+                    <li><label><input type="radio" name="reason" value="스팸" required> 스팸/홍보/도배글</label></li>
+                    <li><label><input type="radio" name="reason" value="욕설"> 욕설/비방/혐오</label></li>
+                    <li><label><input type="radio" name="reason" value="음란물"> 음란물/불건전</label></li>
+                    <li><label><input type="radio" name="reason" value="기타"> 기타</label></li>
+                </ul>
+                <textarea name="detail" id="report_detail"
+                    placeholder="상세 사유(선택)" 
+                    maxlength="199"
+                    style="padding: 8px; 
+                            width:100%; 
+                            min-height: 200px; 
+                            margin-top:10px; 
+                            resize:none;"></textarea>
+                <div style="font-size: 11px; display: flex; justify-content: right;">
+                    <span id='detail_count'>0</span>
+                    &nbsp;/ 200
+                </div>
+                <div style="margin-top:10px; text-align:right;">
+                    <button type="button" id="report_cancel_btn" style="margin-right: 10px;">취소</button>
+                    <button type="submit" class="forum_button">신고하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<% } %>
 
 
 <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>

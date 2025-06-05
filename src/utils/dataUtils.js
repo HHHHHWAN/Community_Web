@@ -1,8 +1,5 @@
 //  utils/dateUtils.js
 
-const e = require("connect-flash");
-
-
 const data_utils = {
 
     //** 시간 단위 변경 */
@@ -68,8 +65,19 @@ const data_utils = {
         }
         
         return result;
-    }
+    },
 
+    XSS_check_string : (text) => {
+        const { JSDOM } = require('jsdom');
+        const DOMPurify = require('dompurify');
+        const window_object = new JSDOM('').window;
+        const objectDOMPurify = DOMPurify(window_object);
+    
+        if(text){
+            const check_text = objectDOMPurify.sanitize(text);
+            return check_text;
+        }
+    }
 }
 
 

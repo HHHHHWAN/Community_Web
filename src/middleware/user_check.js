@@ -29,7 +29,6 @@ const user_check = {
     check_logout : (req, res, next) => {
 
         const accept = req.headers['accept'].split(',');
-
         // 로그인이 되어있는 경우
         if(req.session.user){
 
@@ -54,26 +53,35 @@ const user_check = {
 
     check_authority : (req, res, next) => {
         const request_user = req.session.user;
+        const accept = req.headers['accept'].split(',');
 
-        //  login check
+        // check session
         if(!request_user){
-            return res.status(401).json({
-                message: "세션 인증 실패, 세션이 유효하지 않음",
-                returnStatus : 401 });
+            if(accept[0] === 'application/json'){
+                return res.status(401).json({
+                    message: "세션 인증 실패, 세션이 유효하지 않음",
+                    returnStatus : 401 });
+            }
+
+            return res.status(401).render('forum_error.ejs', { layout: false, returnStatus : 401 });        
         }
 
-        // 관리자 권한 체크 
+        // check role
         if(!request_user.role_id === 1){
-            return res.status(403).json({
-                message: "인증 실패, 허가되지 않은 접근",
-                returnStatus : 403 });
+            if(accept[0] === 'application/json'){
+                return res.status(403).json({
+                    message: "인증 실패, 허가되지 않은 접근",
+                    returnStatus : 403 
+                });
+            }
+
+            return res.status(403).render('forum_error.ejs', { layout: false, returnStatus : 403 });        
         }
 
         next();
     }
     
 };
-
 
 
 module.exports = user_check;

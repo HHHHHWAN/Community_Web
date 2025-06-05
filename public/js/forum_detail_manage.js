@@ -1,6 +1,7 @@
+
 ( function(){
     const manage_button_el = document.getElementById('post_manage');
-    const POST_ID =  manage_button_el.dataset.current_post_id;
+    const POST_ID =  manage_button_el ? manage_button_el.dataset.current_post_id : null;
 
     let isProcessing = false;
 
@@ -22,12 +23,10 @@
                 const target = event.target;
                 const modal_el = target.nextElementSibling; // event_element
 
-                console.log(modal_el);
-
                 const modal_status = modal_el.style.display;
 
                 if(modal_status === 'none'){
-                    modal_el.style.display = 'block';
+                    modal_el.style.display = 'flex';
                     comment_manage_event(modal_el);
                     return;
                 }
@@ -57,9 +56,10 @@
 
         // DEL Request
         delete_el.addEventListener('click', async () => {
+
             if(isProcessing) return;
+            if(!confirm('블라인드 처리하시겠습니까?')) return;
             isProcessing = true;
-            if(!confirm('비공개 처리하시겠습니까?')) return;
 
             try{
                 const api_Response = await fetch('/manage/post',{
@@ -77,13 +77,13 @@
                 const api_result = await api_Response.json();
 
                 if(!api_result.result){
-                    alert(api_result.message);
                     throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
                 }
 
                 alert(api_result.message);
                 location.href = `/${POST_CATEGORY}`;
             }catch(err){ 
+                alert(err.message);
                 console.error( err );
             }finally{
                 isProcessing = false;
@@ -104,7 +104,6 @@
                 alert(" 현재와 같은 카테고리 입니다.");
                 return;
             }
-
             if(isProcessing) return;
             isProcessing = true;
 
@@ -118,20 +117,23 @@
                     },
                     body : JSON.stringify({
                         post_id : POST_ID,
-                        move_category : to_category
+                        category : {
+                            current : POST_CATEGORY,
+                            change : to_category
+                        }
                     })
                 });
 
                 const api_result = await api_Response.json();
 
                 if(!api_result.result){
-                    alert(api_result.message);
                     throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
                 }
 
                 alert(api_result.message);
                 location.href = `/${to_category}/${POST_ID}`;
             }catch(err){ 
+                alert(err.message);
                 console.error( err );
             }finally{
                 isProcessing = false;
@@ -149,8 +151,8 @@
         del_button_el.addEventListener('click', async () => {
 
             if(isProcessing) return;
-            isProcessing = true;
             if(!confirm('비공개 처리하시겠습니까?')) return;
+            isProcessing = true;
 
             try{
                 const api_Response = await fetch('/manage/comment',{
@@ -168,13 +170,13 @@
                 const api_result = await api_Response.json();
 
                 if(!api_result.result){
-                    alert(api_result.message);
                     throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
                 }
 
                 alert(api_result.message);
                 location.reload();
             }catch(err){
+                alert(err.message);
                 console.error( err );
             }finally{
                 isProcessing = false;
@@ -182,5 +184,89 @@
         });
 
     }
+
+    // Request Report
+    document.addEventListener('DOMContentLoaded', function() { // DOM 전체 생성 후 설정
+        const reportModal = document.getElementById('report_modal');
+        const reportForm = document.getElementById('report_form');
+        const reportCancel = document.getElementById('report_cancel_btn');
+
+        const reportText = document.getElementById('report_detail');
+        const detailCount = document.getElementById('detail_count');
+
+        let Report_el = null;
+    
+        document.addEventListener('click', (event) => { 
+            if(event.target.classList.contains('button_report')){
+                const reportBtn = event.target;
+                reportModal.style.display = 'flex';
+                Report_el = {
+                    type : reportBtn.dataset.target_type,
+                    id : reportBtn.dataset.target_id
+                };
+            }
+        });
+
+        if(reportCancel) {
+            reportCancel.addEventListener('click', () => {
+                reportModal.style.display = 'none';
+                Report_el = null;
+                reportText.value = '';
+                detailCount.innerText = '0';
+            });
+        }
+        if(reportForm) {
+            reportForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                if (!Report_el) {
+                    throw new Error("존재하지 않은 대상상");
+                };
+                const reason = reportForm.reason.value;
+                const detail = reportForm.detail.value;
+                const type = Report_el.type;
+                const id = Report_el.id;
+    
+                try {
+                    const api_Response = await fetch('/manage/report', {
+                        method: 'POST',
+                        headers: {
+                            'Accept' : 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': user_csrf_token 
+                        },
+                        body: JSON.stringify({
+                            type,
+                            id,
+                            reason,
+                            detail
+                        })
+                    });
+                    const api_result = await api_Response.json();
+
+                    if(api_result.result) {
+                        alert('신고가 접수되었습니다.');
+                    } else {
+                        alert(api_result.message || '신고 처리에 실패했습니다.');
+                    }
+                } catch(err) {
+                    console.error(err.stack);
+                    alert('신고 처리 중 오류가 발생했습니다.');
+                } finally{
+                    reportModal.style.display = 'none';
+                    reportText.value = '';
+                    detailCount.innerText = '0';
+                }
+            });
+        }
+
+        if(reportText){
+            reportText.addEventListener('input', () => {
+                detailCount.innerText = reportText.value.length;
+            });
+        }
+    });
+
+
 
 })()

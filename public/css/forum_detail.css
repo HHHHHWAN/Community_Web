@@ -85,6 +85,14 @@ span{
         color: #4CAF50;
     }
 
+    .button_like{
+     font-size: 10px;
+    }
+    .button_report{
+        font-size: 10px;
+        color: rgb(105, 101, 101);
+        margin-left: 10px;
+    }
 }
 
 @media (min-width: 768px){
@@ -132,6 +140,21 @@ span{
         
     }#forum_detail_user button:hover{
         color: #4CAF50;
+    }
+
+    .button_like{
+        font-size: 11px;
+    }
+    .button_report{
+        font-size: 11px;
+        color: rgb(105, 101, 101);
+        margin-left: 10px;
+    }
+    #post_manage_modal button:hover {
+        color: rgb(35, 194, 96);
+    }
+    .comment_manage_delete:hover {
+        color: rgb(35, 194, 96);
     }
 
 }
@@ -284,8 +307,7 @@ span{
 }
 .comment_manage_modal{
     min-width: 40px;
-    min-height: 60px;
-
+    min-height: 50px;
     border-radius: 3px;
     box-shadow: 0 2px 3px rgba(48, 47, 47, 0.522);
     background-color: white;
@@ -293,4 +315,8 @@ span{
     top: 20px;
     right: -10px;
     padding: 3px;
+
+    justify-content: center;    
 }
+
+

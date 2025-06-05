@@ -10,11 +10,6 @@ const auth_service_object = require("../service/auth_service");
 
 /** 회원가입 페이지 렌더링 */ 
 exports.getSignUp_page = ( req , res ) => {
-    // req.session.returnURL = req.query.returnUrl || '/';  // 진입 경로 
-    // const issue  = req.query.issue || '';  
-    // const request = req.query.request || ''; // OLD 이전 회원가입을 유도한 것인지 체크 용
-    // const history = req.session.sign || {};
-    // delete req.session.sign;
 
     // 소셜 연동 체크
     const social_request = req.session.social ? true : false;
@@ -28,11 +23,6 @@ exports.getSignUp_page = ( req , res ) => {
 exports.getLogin_page = ( req , res ) => {
     req.session.returnURL = req.query.returnUrl || '/'; 
     delete req.session.social;
-    // const error = req.query.error || ''; 
-    // const request = req.query.request || ''; 
-
-    // const signup  = req.query.signup || ''; 
-    // const social_signup  = req.query.social_signup || ''; 
 
     res.render('log_in.ejs', { layout : false});
 };
@@ -122,15 +112,6 @@ exports.setLogin = ( req, res ) => {
 
 /** 회원가입 요청 ( /signup ) */
 exports.setSignUp = async ( req , res ) => {
-
-    // req.session.sign = {
-    //     username : req.body.username,
-    //     email : req.body.email,
-    //     nickname : req.body.nickname,
-    // };
-    // const sign_password = req.body.password; 
-
-    // const request = req.body.request || ''; // 일반 회원가입 , 소셜 연동인지 체크
 
     auth_service_object.set_signup(req, (status, service_message, service_result) => {
 

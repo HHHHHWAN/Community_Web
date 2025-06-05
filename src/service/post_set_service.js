@@ -1,18 +1,6 @@
 const { read_DB , write_DB  } = require('../models/mysql_connect');
+const data_utils = require('../utils/dataUtils');
 
-
-// XSS 체크, 변환
-function XSS_check_string(text){
-    const { JSDOM } = require('jsdom');
-    const DOMPurify = require('dompurify');
-    const window_object = new JSDOM('').window;
-    const objectDOMPurify = DOMPurify(window_object);
-
-    if(text){
-        const check_text = objectDOMPurify.sanitize(text);
-        return check_text;
-    }
-}
 
 
 const post_set_service = {
@@ -20,8 +8,8 @@ const post_set_service = {
     //새 게시물 insert 쿼리
     add_content: (title, text, content_type , user_id , callback) => {
 
-        const xss_check_title = XSS_check_string(title);
-        const xss_check_text = XSS_check_string(text);
+        const xss_check_title = data_utils.XSS_check_string(title);
+        const xss_check_text = data_utils.XSS_check_string(text);
 
         const query = `INSERT INTO Content (title, text, content_type , user_id ) VALUES (?, ?, ?, ?)`;
 
@@ -41,8 +29,8 @@ const post_set_service = {
     // 게시물 수정 
     put_content: (title, text , content_id, category, request_user_id, callback ) => {
 
-        const xss_check_title = XSS_check_string(title);
-        const xss_check_text = XSS_check_string(text);
+        const xss_check_title = data_utils.XSS_check_string(title);
+        const xss_check_text = data_utils.XSS_check_string(text);
 
         const query = `UPDATE Content SET title = ?, text = ?, content_type = ?  WHERE id = ? AND user_id = ? AND visible = 1`;
 
@@ -63,7 +51,7 @@ const post_set_service = {
     // 새 댓글 생성
     add_comment: ( comment_text, user_id , content_id , parent_id, callback) => {
 
-        const xss_check_comment = XSS_check_string(comment_text);
+        const xss_check_comment = data_utils.XSS_check_string(comment_text);
 
         const query = `INSERT INTO Comment (comment, user_id, content_id, parent_id ) VALUES (?, ?, ?, ?)`;
         write_DB.query(query, [ xss_check_comment, user_id , content_id, parent_id ] , (err) => {
@@ -80,7 +68,7 @@ const post_set_service = {
     // 댓글 수정
     put_comment: ( comment_text, comment_id , request_user_id , callback) => {
 
-        const xss_check_comment = XSS_check_string(comment_text);
+        const xss_check_comment = data_utils.XSS_check_string(comment_text);
 
         const query = `UPDATE Comment SET comment = ? WHERE id = ? AND user_id = ? AND visible = 1 `;
 
