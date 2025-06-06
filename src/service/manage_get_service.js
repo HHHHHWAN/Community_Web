@@ -7,7 +7,7 @@ const data_utils = require('../utils/dataUtils')
 const manage_get_service = {
 
     /** 관리 내역 출력 */
-    get_Report_list : async ( request_nav, callback ) => {
+    get_Report_list : async ( request_nav, request_page, callback ) => {
         const query = `
         SELECT 
             R.*,
@@ -17,18 +17,30 @@ const manage_get_service = {
             FROM Report
             WHERE report_type = ? ) R
         JOIN User U ON U.id = R.user_id
-        ORDER BY R.reported_at DESC`;
+        ORDER BY R.reported_at DESC
+        LIMIT 10 OFFSET ?`;
+
+        const offset = ( request_page - 1 ) * 10;
+
+        const totalQuery = `SELECT count(*) AS totalCount FROM Report WHERE report_type = ?`;
+
         try{
-            const [ DB_result ] = await read_DB_promise.query(query, [request_nav]);
+            const [ DB_result ] = await read_DB_promise.query(query, [request_nav, offset]);
+            const [ DB_result_2 ] = await read_DB_promise.query(totalQuery, [request_nav]);
 
             DB_result.forEach( row => {
                 row.reported_at = data_utils.date_before(row.reported_at);
             });
 
-            callback(null, DB_result);
+            const listCount = Math.ceil(DB_result_2[0].totalCount / 10 );
+
+            callback(
+                null, 
+                { issueList : DB_result, listCount}
+            );
         }catch(err){
             console.error( "(get_manage_list) MySql2 : \n", err.stack);
-            callback(500, false);
+            callback(500, null);
         }
     },
 
@@ -36,31 +48,35 @@ const manage_get_service = {
     get_Report_list_detail : async ( target_type, target_id, callback ) => {
         const query = target_type === 'content' ? `
             SELECT 
-                C.*, 
-                U.nickname
+                C.id,
+                C.title,
+                C.text,
+                C.visible,
+                U.nickname 
             FROM (
                 SELECT * 
                 FROM Content 
                 WHERE id = ?
                 ) C
-            LEFT JOIN User U ON U.id = C.user_id` : `
+            JOIN User U ON U.id = C.user_id` : `
             SELECT 
-                C.*,
-                U.nickname
+                C.comment,
+                C.visible AS comment_visible,
+                U.nickname,
+                P.content_type,
+                P.id,
+                P.visible
             FROM 
                 (
                     SELECT *
                     FROM Comment
                     WHERE id = ? 
                 ) C
-            LEFT JOIN User U ON C.user_id = U.id`;
+            JOIN User U ON C.user_id = U.id
+            JOIN Content P ON P.id = C.content_id`;
         
         try{
             const [ DB_result ] = await read_DB_promise.query(query,[target_id]);
-
-            // DB_result.forEach( row => {
-            //     row.reported_at = data_utils.date_before(row.reported_at);
-            // });
 
             callback(null, DB_result[0]);
         }catch(err){
@@ -68,15 +84,6 @@ const manage_get_service = {
             callback(500, false);
         }
     },
-
-    get_complaint_list: () => {
-
-    },
-
-    get_withdraws_list : () => {
-        // 보류 
-    }
-
 
 };
 

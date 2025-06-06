@@ -3,6 +3,8 @@
     const list_nav_el = document.querySelector('.list_nav');
     const list_ul_el = document.querySelector('.list_ul');
 
+    let currentNav = 'manage';
+
     // nav button event ( 네비게이션 이벤트 )
     list_nav_el.addEventListener('click', (event) => {
         const target = event.target;
@@ -10,14 +12,15 @@
             const target_el_id = target.id;
             list_nav_el.querySelectorAll('.nav_btn').forEach( row => row.classList.remove('active'));
             target.classList.add('active');
-            req_Manage_list(target_el_id);
+            Rep_Issue_List(target_el_id);
         }
     });
 
-    // manage list request
-    async function req_Manage_list(navStatus){
+    // issue list request
+    async function Rep_Issue_List(navStatus, page = 1){
+        currentNav = navStatus;
         try{
-            const api_Response = await fetch(`/manage/list?nav=${navStatus}`, {
+            const api_Response = await fetch(`/manage/list?nav=${navStatus}&page=${page}`, {
                 headers : {'Accept' : 'application/json'}
             });
 
@@ -26,16 +29,27 @@
             if(!api_Response.ok){
                 throw new Error(api_result.message);
             }
+            const api_data = api_result.data;
             
-            const list_array = api_result.data;
+            const listArray = api_data.issueList;
+            const listCount = api_data.listCount;
+
+            let postCount = ( page - 1 ) * 10  ;
+
             list_ul_el.innerHTML = ``;
-            list_array.forEach(list_row => {
+            listArray.forEach(list_row => {
+                postCount += 1;
                 const list_li_el = document.createElement('li');
                 list_li_el.innerHTML = `
                     <div class="list_li_div">
-                        <div style="display:flex; padding-left : 10px;">
-                            <div style=" flex : 1; ">${navStatus === 'manage' ? '수정자' : '요청자'} : ${list_row.manage_nickname} </div>
-                            <div style=" display:flex; flex : 1; justify-content: right; ">수정일 : ${list_row.reported_at}</div>
+                        <div style="display:flex;">
+                            <div style="flex: 1 ; text-align:center; font-weight: bold"> ${postCount} </div>
+                            <div style="flex: 13 ;">
+                                <div style="display:flex; padding-left : 10px;">
+                                    <div style=" flex : 1; ">${navStatus === 'manage' ? '수정자' : '요청자'} : ${list_row.manage_nickname} </div>
+                                    <div style=" display:flex; flex : 1; justify-content: right; ">수정일 : ${list_row.reported_at}</div>
+                                </div>
+                            </div>
                         </div>
                         <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 10px;"> 
                             <button type="button" 
@@ -59,6 +73,8 @@
                 `;
                 list_ul_el.appendChild(list_li_el); 
             });
+
+            Reload_Page(page, listCount)
 
         }catch(err){
             alert(err.message);
@@ -110,32 +126,50 @@
             }
 
             const api_data = api_result.data;
+            const isContent = query_data.type === 'content';
+
+            const contentStatus = api_data.visible.data.toString() === '1';
+            let commentStatus = false;
+
+            if( api_data.comment_visible ){
+                commentStatus = api_data.comment_visible.data.toString() === '1';
+            }
 
             const detail_div = document.createElement('div');
-
-            detail_div.innerHTML = query_data.type === 'content' ? `
-                작성자 : ${api_data.nickname} <br>
-                본문 :
-                <div style="margin-left : 10px;">
+            const textdiv = query_data.type === 'content' ? `
                     <div style="border-bottom: 1px solid rgb(161, 201, 176);">
                         <h3>${api_data.title}<h3></div><br>
-                    <div>${api_data.text}</div>
-                </div>
-                <div style=""> 
-                    <div></div>
-                    <div></div>
-                </div>
+                    <div class="detail_text">${api_data.text}</div>
+                    <div style="text-align: center;">...</div>
             ` : `
+                    <div>${api_data.comment}</div>
+                    <div style="text-align: center;">...</div>
+            `;
+
+
+            const orginal_url = ( isContent ? contentStatus : commentStatus ) ? `
+                <div><a href='/${api_data.content_type}/${api_data.id}' disable> 본문  이동 </a></div>
+            ` : '';
+
+            const return_Button = ( isContent ? contentStatus : commentStatus ) ? `
+                공개 처리됨
+            `:` <button type="button" class="cancel_Button"> 취소처리 </button> `;
+
+            detail_div.innerHTML = `
                 작성자 : ${api_data.nickname} <br>
+                상태 : ${  ( isContent ? contentStatus : commentStatus ) ? '공개': '비공개' } <br>
                 본문 :
                 <div style="margin-left : 10px;">
-                    <div>${api_data.comment}</div>
+                    ${textdiv}
                 </div>
-                <div style=""> 
-                    <div></div>
-                    <div></div>
+                <div> 
+                    ${orginal_url}
+                    <div style="display:flex; justify-content:right;">
+                        ${return_Button}
+                    </div>
                 </div>
-            `
+            `;
+
             el.appendChild(detail_div);
 
         }catch(err){
@@ -143,6 +177,120 @@
             console.error( err );
         }
     }
-    req_Manage_list('manage');
+    Rep_Issue_List('manage'); // default nav
 
+    const page_box = document.getElementById('page_box'); // Define div_el
+
+    /** 페이지 UI 재로드 ( 리스트 카테고리, 현재 페이지, 전체 페이지 수 ) */
+    function Reload_Page(currentPage, totalPage ){
+    
+        // 중앙 페이징 정렬렬
+        function set_PageNumber_Button( start , end ){
+            for ( let i = start; i <= end ; i++){
+                const page_Number = document.createElement('button');
+                page_Number.type = 'button';
+                page_Number.className = 'page_Button'
+                page_Number.innerText = i;
+
+                if( i === currentPage){
+                    page_Number.setAttribute('disabled',true);
+                    page_Number.setAttribute('color','rgb(128, 175, 152)');   
+                }
+                page_Center.appendChild(page_Number);
+            }
+        }
+    
+        page_box.innerHTML = ''; // page DIV init
+    
+        //prev 
+        const prev_Div = document.createElement('div');
+        const prev_Button = document.createElement('button');
+
+        prev_Button.innerText = 'Prev';
+        prev_Button.type = 'button';
+        prev_Button.dataset.movePage = currentPage - 1;
+        prev_Button.className = 'move_Button';
+
+        if( currentPage === 1){
+            prev_Button.disabled = true;
+        }
+        prev_Div.appendChild(prev_Button);
+        page_box.appendChild(prev_Div);
+    
+        // center
+        const page_Center = document.createElement('div');
+        page_Center.id = 'page_box_center';
+        // page_Center.setAttribute('id','page_box_center')
+        if(  4 < currentPage  ){ // 1 페이지 출력, 3 페이지 이동
+            const first_Page = document.createElement('button');
+            const prev_Dot = document.createElement('button');
+            first_Page.innerText = '1';
+            first_Page.type = 'button';
+            first_Page.className = 'page_Button';
+
+            prev_Dot.innerText = '...';
+            prev_Dot.type = 'button';
+            prev_Dot.className = 'move_Button';
+            prev_Dot.dataset.movePage = currentPage - 3;
+
+            page_Center.appendChild(first_Page);
+            page_Center.appendChild(prev_Dot);
+
+        } else {
+            set_PageNumber_Button(1, Math.min(totalPage,5));
+        }
+    
+        if ( 4 < currentPage && currentPage < totalPage - 3 ){ // 시작, 끝 페이지와 일정 거리가 있는 경우
+            set_PageNumber_Button((currentPage - 1), (currentPage + 1));
+        }
+    
+        if( currentPage < totalPage - 3){
+            const next_Dot = document.createElement('button');
+            const last_Page = document.createElement('button');
+
+            next_Dot.innerText = '...';
+            next_Dot.type = 'button';
+            next_Dot.className = 'move_Button';
+            next_Dot.dataset.movePage = currentPage + 3;
+        
+            last_Page.innerText = totalPage;
+            last_Page.type = 'button';
+            last_Page.className = 'page_Button'
+
+            page_Center.appendChild(next_Dot);
+            page_Center.appendChild(last_Page);
+
+        }else{
+            set_PageNumber_Button(Math.max(6,totalPage - 4), totalPage );
+        }
+        page_box.appendChild(page_Center);
+    
+        // next
+        const next_Div = document.createElement('div');
+        const next_Button = document.createElement('button');
+
+        next_Button.innerText = 'Next';
+        next_Button.type = 'button';
+        next_Button.dataset.movePage = currentPage + 1;
+        next_Button.className = 'move_Button';
+        
+        if( currentPage === totalPage){
+            next_Button.disabled = true;
+        }
+        next_Div.appendChild(next_Button);
+        page_box.appendChild(next_Div);
+    }    
+
+    page_box.addEventListener('click', (event) => {
+        if( event.target.classList.contains('page_Button')){
+            const selectPage = parseInt(event.target.innerText);
+            Rep_Issue_List(currentNav, selectPage);
+            return;
+        }
+
+        if( event.target.classList.contains('move_Button')){
+            const selectPage = parseInt(event.target.dataset.movePage);
+            Rep_Issue_List(currentNav, selectPage);
+        }
+    });
 })()

@@ -220,7 +220,7 @@
                 e.preventDefault();
 
                 if (!Report_el) {
-                    throw new Error("존재하지 않은 대상상");
+                    throw new Error("존재하지 않은 대상");
                 };
                 const reason = reportForm.reason.value;
                 const detail = reportForm.detail.value;

@@ -2,13 +2,14 @@ const manage_get_service = require('../service/manage_get_service');
 
 exports.getReportList = ( req, res ) => {
     const request_nav = req.query.nav;
+    const request_page = parseInt(req.query.page) || 1;
 
-    manage_get_service.get_Report_list(request_nav,(status, service_result) => {
+    manage_get_service.get_Report_list(request_nav, request_page, (status, service_result) => {
         if(status){
             return res.status(status).json({
                 message : "서버에서 요청을 처리하지 못했습니다.",
                 result : false,
-                data : null
+                data : service_result
             })
         }
 
@@ -39,12 +40,4 @@ exports.getReportDetails = ( req, res ) => {
             data : service_result
         })
     });
-};
-
-// exports.getComplaintReports = ( req, res ) => {
-  
-// };
-
-exports.getWithdrawsRecord = ( req, res ) => {
-  
 };
