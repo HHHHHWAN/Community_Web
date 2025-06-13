@@ -132,46 +132,19 @@ const manage_set_service = {
 
     },
 
-    /** 게시글 블라인드 */
-    block_posts : async ( content_id, request_user, callback ) => {
-        const query = `
+    /** 게시글 댓글 블라인드 처리 */
+    blind_Post : async ( type, id, request_user, callback ) => {
+        const query = type === 'content' ? `
             UPDATE Content
             SET visible = 0
-            WHERE id = ?
-        `;
-        try{
-            const [ DB_result ] = await read_DB_promise.query(query, [ content_id ]);
-
-            const isUpdated = DB_result.affectedRows > 0;
-
-            if(isUpdated){
-                const manage_report = Reportmanage();
-                manage_report.setReport({
-                    report_type: 'manage',
-                    target_id : content_id,
-                    target_type : 'content',
-                    msg : " 블라인드 처리 ",
-                    user_id : request_user
-                });
-                manage_report.reqReport();
-            }
-
-            callback(null, isUpdated);
-        }catch(err){
-            console.error( "(change_posts_category) MySql2 : \n", err.stack);
-            callback(500, false);
-        }
-    },
-
-    /** 댓글 블라인드 */
-    block_comments : async ( comment_id, request_user, callback ) => {
-        const query = `
+            WHERE id = ? `: `
             UPDATE Comment
             SET visible = 0
             WHERE id = ?
         `;
+        
         try{
-            const [ DB_result ] = await read_DB_promise.query(query, [ comment_id ]);
+            const [ DB_result ] = await read_DB_promise.query(query, [ id ]);
 
             const isUpdated = DB_result.affectedRows > 0;
 
@@ -179,8 +152,8 @@ const manage_set_service = {
                 const manage_report = Reportmanage();
                 manage_report.setReport({
                     report_type: 'manage',
-                    target_id : comment_id,
-                    target_type : 'comment',
+                    target_id : id,
+                    target_type : type,
                     msg : " 블라인드 처리 ",
                     user_id : request_user
                 });
@@ -189,9 +162,46 @@ const manage_set_service = {
 
             callback(null, isUpdated);
         }catch(err){
-            console.error( "(change_posts_category) MySql2 : \n", err.stack);
+            console.error( "(restore_Issue) MySql2 : \n", err.stack);
             callback(500, false);
         }
+
+    },
+
+    /** 게시글, 댓글 복구 처리 */
+    restore_Issue : async ( type, id, request_user, callback ) => {
+        const query = type === 'content' ? `
+            UPDATE Content
+            SET visible = 1
+            WHERE id = ? `: `
+            UPDATE Comment
+            SET visible = 1
+            WHERE id = ?
+        `;
+        
+        try{
+            const [ DB_result ] = await read_DB_promise.query(query, [ id ]);
+
+            const isUpdated = DB_result.affectedRows > 0;
+
+            if(isUpdated){
+                const manage_report = Reportmanage();
+                manage_report.setReport({
+                    report_type: 'manage',
+                    target_id : id,
+                    target_type : type,
+                    msg : " 복구 처리 ",
+                    user_id : request_user
+                });
+                manage_report.reqReport();
+            }
+
+            callback(null, isUpdated);
+        }catch(err){
+            console.error( "(restore_Issue) MySql2 : \n", err.stack);
+            callback(500, false);
+        }
+
     },
 
     /** 유저 신고 기록 */
@@ -216,6 +226,8 @@ const manage_set_service = {
 
             callback(null, reqReport_result.message);
         }catch(err){
+            // Reportmanage로 부터 log 기록
+
             callback(500, "서버에서 요청을 처리하지 못했습니다.")
         }
     }

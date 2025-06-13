@@ -45,7 +45,9 @@ const manage_get_service = {
     },
 
     /** 관리 대상 세부 내용 출력 */
-    get_Report_list_detail : async ( target_type, target_id, callback ) => {
+    get_Report_list_detail : async (requestNav, target_type, target_id, callback ) => {
+
+        // detail query
         const query = target_type === 'content' ? `
             SELECT 
                 C.id,
@@ -74,9 +76,24 @@ const manage_get_service = {
                 ) C
             JOIN User U ON C.user_id = U.id
             JOIN Content P ON P.id = C.content_id`;
+
+        // 관련 항목 리스트 업
+        const query_2 = `
+            SELECT 
+                id,
+                message,
+                DATE_FORMAT(reported_at, '%Y-%m-%d') AS reported_at
+            FROM Report 
+            WHERE target_type = ? AND target_id = ? AND report_type = 'manage'
+        ` 
         
         try{
             const [ DB_result ] = await read_DB_promise.query(query,[target_id]);
+
+            if ( requestNav === 'manage'){
+                const [ DB_result_2 ] = await read_DB_promise.query(query_2,[target_type, target_id]);
+                DB_result[0].relatedReport = DB_result_2;
+            }
 
             callback(null, DB_result[0]);
         }catch(err){

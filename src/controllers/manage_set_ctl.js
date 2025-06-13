@@ -53,12 +53,12 @@ exports.putPostCategory = (req, res) => {
     });
 };
 
-
 exports.delPost = (req, res) => {
-    const content_id = req.body.post_id;
+    const target_type = req.body.type;
+    const target_id = req.body.id;
     const request_user = req.session.user.user_id;
 
-    manage_set_service.block_posts( content_id, request_user, ( status, success ) => {
+    manage_set_service.blind_Post( target_type, target_id, request_user, ( status, success ) => {
 
         if(status){
             return res.status(status).json({
@@ -81,12 +81,12 @@ exports.delPost = (req, res) => {
     });
 };
 
-
-exports.delComment = (req, res) => {
-    const comment_id = req.body.comment_id;
+exports.restoreIssue = ( req, res ) => {
+    const target_type = req.body.type;
+    const target_id = req.body.id;
     const request_user = req.session.user.user_id;
 
-    manage_set_service.block_comments( comment_id, request_user, ( status, success ) => {
+    manage_set_service.restore_Issue( target_type, target_id, request_user, ( status, success ) => {
 
         if(status){
             return res.status(status).json({
@@ -103,8 +103,11 @@ exports.delComment = (req, res) => {
         }
 
         res.json({
-            message : ` 댓글 비공개 처리 확인`,
+            message : `Success`,
             result : true
         });
     });
+
+
+
 };

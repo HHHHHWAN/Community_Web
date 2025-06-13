@@ -1,7 +1,8 @@
 
 ( function(){
     const manage_button_el = document.getElementById('post_manage');
-    const POST_ID =  manage_button_el ? manage_button_el.dataset.current_post_id : null;
+    const POST_ID =  manage_button_el ? manage_button_el.dataset.content_id : null;
+    const POST_CATEGORY = manage_button_el ? manage_button_el.dataset.content_category : null;
 
     let isProcessing = false;
 
@@ -49,45 +50,15 @@
         const put_modal_el = document.getElementById('post_manage_put_modal');
         const put_submit_el = document.getElementById('post_manage_put_submit');
         const put_select_el = document.getElementById('put_selected');
-        const POST_CATEGORY = put_select_el.dataset.current_category;
+        
+        // const POST_CATEGORY = put_select_el.dataset.current_category; // current_category
 
         put_select_el.value = POST_CATEGORY; // Select init
         
 
-        // DEL Request
+        //  POST DEL Request
         delete_el.addEventListener('click', async () => {
-
-            if(isProcessing) return;
-            if(!confirm('블라인드 처리하시겠습니까?')) return;
-            isProcessing = true;
-
-            try{
-                const api_Response = await fetch('/manage/post',{
-                    method : 'DELETE',
-                    headers : {
-                        'Accept' : 'application/json',
-                        'Content-Type' : 'application/json',
-                        'X-CSRF-Token' : user_csrf_token
-                    },
-                    body : JSON.stringify({
-                        post_id : POST_ID
-                    })
-                });
-
-                const api_result = await api_Response.json();
-
-                if(!api_result.result){
-                    throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
-                }
-
-                alert(api_result.message);
-                location.href = `/${POST_CATEGORY}`;
-            }catch(err){ 
-                alert(err.message);
-                console.error( err );
-            }finally{
-                isProcessing = false;
-            }
+            delPost( 'content', POST_ID);
         });
 
         // PUT Setting Modal
@@ -147,43 +118,52 @@
         const current_comment_id = target_el.dataset.comment_id;
         const del_button_el = target_el.querySelector('.comment_manage_delete');
 
-
-        del_button_el.addEventListener('click', async () => {
-
-            if(isProcessing) return;
-            if(!confirm('비공개 처리하시겠습니까?')) return;
-            isProcessing = true;
-
-            try{
-                const api_Response = await fetch('/manage/comment',{
-                    method : 'DELETE',
-                    headers : {
-                        'Accept' : 'application/json',
-                        'Content-Type' : 'application/json',
-                        'X-CSRF-Token' : user_csrf_token
-                    },
-                    body : JSON.stringify({
-                        comment_id : current_comment_id
-                    })
-                });
-
-                const api_result = await api_Response.json();
-
-                if(!api_result.result){
-                    throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
-                }
-
-                alert(api_result.message);
-                location.reload();
-            }catch(err){
-                alert(err.message);
-                console.error( err );
-            }finally{
-                isProcessing = false;
-            }
+        // del comment req
+        del_button_el.addEventListener('click', () => {
+            delPost( 'comment', current_comment_id);
         });
-
     }
+
+
+    async function delPost(targetType, targetId){
+        if(isProcessing) return;
+        if(!confirm('비공개 처리하시겠습니까?')) return;
+        isProcessing = true;
+
+        try{
+            const api_Response = await fetch('/manage/blind',{
+                method : 'DELETE',
+                headers : {
+                    'Accept' : 'application/json',
+                    'Content-Type' : 'application/json',
+                    'X-CSRF-Token' : user_csrf_token
+                },
+                body : JSON.stringify({
+                    type : targetType,
+                    id : targetId
+                })
+            });
+
+            const api_result = await api_Response.json();
+
+            if(!api_result.result){
+                throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
+            }
+
+            alert(api_result.message);
+            if( targetType === 'content'){
+                location.href = `/${POST_CATEGORY}`;
+                return ;
+            }
+            location.reload();
+        }catch(err){
+            alert(err.message);
+            console.error( err );
+        }finally{
+            isProcessing = false;
+        }
+    }
+
 
     // Request Report
     document.addEventListener('DOMContentLoaded', function() { // DOM 전체 생성 후 설정
@@ -216,8 +196,8 @@
             });
         }
         if(reportForm) {
-            reportForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+            reportForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
 
                 if (!Report_el) {
                     throw new Error("존재하지 않은 대상");

@@ -54,6 +54,7 @@
                         <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 10px;"> 
                             <button type="button" 
                                     class="list_detail_button"
+                                    data-report_id = "${list_row.id}"
                                     data-target_type = "${list_row.target_type}"
                                     data-target_id = "${list_row.target_id}"
                             >
@@ -89,6 +90,7 @@
             const parent_div_el = event.target.closest('.list_li_div');
             const detail_div_el = parent_div_el.querySelector('.list_detail_div');
 
+            const report_id = event.target.dataset.report_id;
             const target_id = event.target.dataset.target_id;
             const target_type = event.target.dataset.target_type;
 
@@ -96,7 +98,9 @@
                 req_manage_detail(
                     {
                         id : target_id,
-                        type : target_type
+                        type : target_type,
+                        report_id,
+                        currentNav
                     },
                     detail_div_el
                 );
@@ -108,7 +112,7 @@
     });
 
 
-
+    // 리스트 내역
     async function req_manage_detail(query_data, el){
 
         const api_url = '/manage/list/detail'
@@ -126,7 +130,6 @@
             }
 
             const api_data = api_result.data;
-            const isContent = query_data.type === 'content';
 
             const contentStatus = api_data.visible.data.toString() === '1';
             let commentStatus = false;
@@ -134,6 +137,8 @@
             if( api_data.comment_visible ){
                 commentStatus = api_data.comment_visible.data.toString() === '1';
             }
+
+            const isIssue_status = query_data.type === 'content' ? contentStatus : commentStatus ;
 
             const detail_div = document.createElement('div');
             const textdiv = query_data.type === 'content' ? `
@@ -147,29 +152,67 @@
             `;
 
 
-            const orginal_url = ( isContent ? contentStatus : commentStatus ) ? `
+            const orginal_url = isIssue_status ? `
                 <div><a href='/${api_data.content_type}/${api_data.id}' disable> 본문  이동 </a></div>
             ` : '';
 
-            const return_Button = ( isContent ? contentStatus : commentStatus ) ? `
-                공개 처리됨
-            `:` <button type="button" class="cancel_Button"> 취소처리 </button> `;
-
             detail_div.innerHTML = `
                 작성자 : ${api_data.nickname} <br>
-                상태 : ${  ( isContent ? contentStatus : commentStatus ) ? '공개': '비공개' } <br>
+                상태 : ${  isIssue_status ? '공개': '비공개' } <br>
                 본문 :
                 <div style="margin-left : 10px;">
                     ${textdiv}
                 </div>
                 <div> 
                     ${orginal_url}
-                    <div style="display:flex; justify-content:right;">
-                        ${return_Button}
-                    </div>
+                    <div class="restore_div"
+                        style="display:flex; justify-content:right;"></div>
                 </div>
             `;
 
+            const restore_div_el = detail_div.querySelector('.restore_div');
+            restore_div_el.innerText = ' 공개 처리 됨';
+            if( !isIssue_status ){
+                restore_div_el.innerHTML = '';
+                const restore_button_el = document.createElement('button');
+                restore_button_el.type = 'button';
+                restore_button_el.innerText = ' 복구 처리 ';
+                restore_Post_event(query_data.type, query_data.id, restore_button_el);
+                restore_div_el.appendChild(restore_button_el); 
+            }
+
+            const related_list = api_data.relatedReport;
+
+            if ( related_list ){
+
+                let count = 1
+
+                const related_div = document.createElement('legend');
+                related_div.innerHTML = `
+                    <div style=" border-top : 1px solid black; padding-top : 3px;">
+                        <h5>기록</h5>
+                    </div>
+                `;
+
+                related_list.forEach( row => { 
+
+                    let related_row = document.createElement('div');
+
+                    if( row.id === parseInt(query_data.report_id)){
+                        related_row = document.createElement('h4');
+                    }
+
+                    related_row.innerHTML = `
+                        ${count}.&nbsp;${row.message} // ${row.reported_at}
+                    `;
+
+                    count += 1;
+
+                    related_div.appendChild(related_row);
+                });
+                detail_div.appendChild(related_div);
+            }
+            
             el.appendChild(detail_div);
 
         }catch(err){
@@ -177,6 +220,41 @@
             console.error( err );
         }
     }
+
+    async function restore_Post_event(targetType, targetId, el){
+        el.addEventListener('click', async () => {
+            if(!confirm('다시 공개 처리하시겠습니까?')) return;
+
+            try{
+                const api_Response = await fetch('/manage/restore',{
+                    method : 'PUT',
+                    headers : {
+                        'Accept' : 'application/json',
+                        'Content-Type' : 'application/json',
+                        'X-CSRF-Token' : user_csrf_token
+                    },
+                    body : JSON.stringify({
+                        type : targetType,
+                        id : targetId
+                    })
+                });
+    
+                const api_result = await api_Response.json();
+    
+                if(!api_result.result){
+                    throw new Error (" 처리 결과 : 요청한 대상이 존재하지 않음 ")
+                }
+    
+                alert(" 공개 처리되었습니다.");
+
+                location.reload();
+            }catch(err){
+                alert(err.message);
+                console.error( err );
+            }
+        });
+    }
+
     Rep_Issue_List('manage'); // default nav
 
     const page_box = document.getElementById('page_box'); // Define div_el

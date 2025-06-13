@@ -24,8 +24,9 @@ exports.getReportList = ( req, res ) => {
 exports.getReportDetails = ( req, res ) => {
     const target_type = req.query.type;
     const target_id = req.query.id;
+    const requestNav = req.query.currentNav;
 
-    manage_get_service.get_Report_list_detail( target_type, target_id, ( status, service_result ) => {
+    manage_get_service.get_Report_list_detail( requestNav, target_type, target_id, ( status, service_result ) => {
         if(status){
             return res.status(status).json({
                 message : "서버에서 요청을 처리하지 못했습니다.",

@@ -31,7 +31,6 @@ const user_check = {
         const accept = req.headers['accept'].split(',');
         // 로그인이 되어있는 경우
         if(req.session.user){
-
             // JSON REQUEST
             if(accept[0] === 'application/json'){
                 return res.status(409).json({
@@ -63,11 +62,12 @@ const user_check = {
                     returnStatus : 401 });
             }
 
-            return res.status(401).render('forum_error.ejs', { layout: false, returnStatus : 401 });        
+            return res.redirect('/login');
+            // return res.status(401).render('forum_error.ejs', { layout: false, returnStatus : 401 });        
         }
 
         // check role
-        if(!request_user.role_id === 1){
+        if(!(request_user.role === 1)){
             if(accept[0] === 'application/json'){
                 return res.status(403).json({
                     message: "인증 실패, 허가되지 않은 접근",

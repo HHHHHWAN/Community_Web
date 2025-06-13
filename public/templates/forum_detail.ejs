@@ -101,7 +101,9 @@
                 </div>
             <% } else { %>
                 <% if( ROLE === 1 ) {%>
-                    <button type="button" id="post_manage" data-current_post_id="<%= Content.id %>"> 관리 </button> 
+                    <button type="button" id="post_manage" 
+                        data-content_id=<%= Content.id %>
+                        data-content_category=<%= Content.content_type %>> 관리 </button> 
                     <div style="position:relative;">
                         <div id="post_manage_modal" style="display: none;">
                             <div>

@@ -78,7 +78,6 @@ nav li button.active{
     list-style: none;
     margin: 0px;
     padding: 0px;
-
 } .list_ul li {
     padding: 5px;
     min-height: 50px;
@@ -94,8 +93,7 @@ nav li button.active{
     max-height: 300px;
 }
 
-.cancel_Button{
-}
+
 
 
 #page_box button {
