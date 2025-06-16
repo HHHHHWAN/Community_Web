@@ -1,7 +1,11 @@
 const { read_DB , write_DB  } = require('../models/mysql_connect');
+const read_DB_promise = read_DB.promise();
 const data_utils = require('../utils/dataUtils');
 
-
+const path = require('path');
+const Crypto = require('crypto');
+const fs = require('fs');
+const sharp = require('sharp');
 
 const post_set_service = {
 
@@ -109,6 +113,51 @@ const post_set_service = {
             callback(null,result);
         });
     },
+
+    /** 파일 업로드  */
+    set_file_list : async (req, callback) => {
+        const query_select = `SELECT * FROM File WHERE hash = ?`;
+        const filePath = req.file.path;
+
+        try{
+            // 파일 내용 전체를 읽어와 바이트 단위로 해시 생성
+            const fileBuffer = fs.readFileSync(filePath);
+            const fileHash = Crypto.createHash('sha256').update(fileBuffer).digest('hex');
+
+            const [DB_row] = await read_DB_promise.query(query_select,[fileHash]);
+
+            // DUP
+            if (DB_row.length > 0){
+                // 이미 업로드 된 파일 사용
+                const imageInfo = DB_row[0];
+                return callback(null, imageInfo.path);
+            }
+
+            
+            const fileName = `${fileHash}.webp`;
+            const uploadPath = path.join(process.cwd(), '/public/upload', fileName);
+            const staticPath = `/upload/${fileName}`;
+            
+            await sharp(fileBuffer)
+                .toFormat('webp', { quality: 80})
+                .toFile(uploadPath);
+
+            const file_value = {
+                path : staticPath,
+                name : req.file.originalname,
+                hash : fileHash,
+                user_id : req.session.user.user_id
+            }
+
+            await read_DB_promise.query('INSERT INTO File SET ?', file_value);
+
+            callback(null, staticPath);
+        }catch(err){
+            callback(500, null)
+        }finally{
+            fs.unlinkSync(filePath);
+        }
+    }
 };
 
 

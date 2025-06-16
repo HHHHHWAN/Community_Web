@@ -1,6 +1,7 @@
 // forum_list_set.js
 
 const post_set_service = require('../service/post_set_service');
+const Upload = require('../middleware/upload_multer');
 
 
 
@@ -165,3 +166,37 @@ exports.deleteComment = (req, res) => {
 
 };
 
+// Image upload 
+exports.uploadImage = (req, res) => {
+        // upload
+        Upload.single('image')( req, res, (err) => {
+            //upload result 
+            if(err){
+                if( err.code === 'LIMIT_FILE_SIZE'){
+                    err.message = '5MB를 초과하는 파일입니다.';
+                }
+                
+                return res.status(400).json({ 
+                    message: err.message,
+                    filePath : null,
+                    result : false
+                }); 
+            }
+
+            post_set_service.set_file_list(req, (status, service_result) => {
+                if(status){
+                    return res.status(status).json({ 
+                        message: '서버에서 요청을 처리하지 못했습니다.',
+                        filePath : service_result,
+                        result : false
+                    }); 
+                }
+
+                res.json({ 
+                    message: 'Success' ,
+                    filePath : service_result,
+                    result : true
+                }); 
+            });
+        });
+};
