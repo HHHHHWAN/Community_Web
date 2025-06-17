@@ -62,8 +62,7 @@ const user_check = {
                     returnStatus : 401 });
             }
 
-            return res.redirect('/login');
-            // return res.status(401).render('forum_error.ejs', { layout: false, returnStatus : 401 });        
+            return res.redirect('/login');    
         }
 
         // check role

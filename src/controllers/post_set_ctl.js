@@ -168,7 +168,7 @@ exports.deleteComment = (req, res) => {
 
 // Image upload 
 exports.uploadImage = (req, res) => {
-        // upload
+        // upload callback 처리
         Upload.single('image')( req, res, (err) => {
             //upload result 
             if(err){

@@ -126,25 +126,25 @@ const post_set_service = {
 
             const [DB_row] = await read_DB_promise.query(query_select,[fileHash]);
 
-            // DUP
+            // duplication check
             if (DB_row.length > 0){
                 // 이미 업로드 된 파일 사용
                 const imageInfo = DB_row[0];
                 return callback(null, imageInfo.path);
             }
-
             
             const fileName = `${fileHash}.webp`;
             const uploadPath = path.join(process.cwd(), '/public/upload', fileName);
             const staticPath = `/upload/${fileName}`;
             
+            // sharp를 이용한 포맷 변경
             await sharp(fileBuffer)
-                .toFormat('webp', { quality: 80})
+                .toFormat('webp', { quality: 80 })
                 .toFile(uploadPath);
 
             const file_value = {
                 path : staticPath,
-                name : req.file.originalname,
+                name : req.file.filename,
                 hash : fileHash,
                 user_id : req.session.user.user_id
             }
@@ -153,7 +153,8 @@ const post_set_service = {
 
             callback(null, staticPath);
         }catch(err){
-            callback(500, null)
+            console.error ( '(set_file_list) Error : \n', err.stack );
+            callback(500, null);
         }finally{
             fs.unlinkSync(filePath);
         }

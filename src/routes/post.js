@@ -25,32 +25,6 @@ router.put('/post/update' , user_check.check_login, set_Controller.putUpdateCont
 router.delete('/post/delete', user_check.check_login, set_Controller.deleteContent);
 
 // UPLOAD
-
-//lagacy
-// router.post('/post/upload' , user_check.check_login, ( req, res ) => {
-//     upload.single('image')( req, res, (err) => {
-//         if(err){
-//             if( err.code === 'LIMIT_FILE_SIZE'){
-//                 err.message = '5MB를 초과하는 파일입니다.';
-//             }
-            
-//             return res.status(400).json({ 
-//                 message: err.message,
-//                 filePath : null,
-//                 result : false
-//             }); 
-//         }
-
-//         //  DB 기록 로직 작성 영역
-
-//         res.json({ 
-//             message: 'Success' ,
-//             filePath : `/upload/${req.file.filename}`,
-//             result : true
-//         }); 
-//     });
-// });
-
 router.post('/post/upload', user_check.check_login, set_Controller.uploadImage);
 
 // COMMENT
