@@ -1,14 +1,20 @@
+## MyPage
+![Image](https://github.com/user-attachments/assets/d1dc5a31-fa07-4417-907f-3527df3baa77)
+
+
 ## 설명
-1. 내용
-    - 인터넷 커뮤니티 웹 서비스 개발
+1. 주제
+    - 인터넷 커뮤니티 웹 개발
+    - SSR 환경
+    - 온 프레미스 서버 구축
       
 2. 작업기간
-    - 24.10 ~ 
+    - 24.10 ~ 유지보수 중
 
 3. 목표
-    - Node.js 기반, 웹 프레임워크 서버 구축
-    - 백엔드에서 사용되는 프레임워크, 도구 학습
-    - 실제 CI/CD 배포 작업
+    - `Node.js / Express.js` 기반, 웹 프레임워크 서버 구축
+    - 웹 개발에 사용되는 프레임워크, 도구 학습
+    - CI/CD 배포 작업 구축
 
 4. 정리
     - 기록
@@ -19,67 +25,74 @@
         - [릴리즈 기록](https://evening-adapter-5d0.notion.site/1a51a3736ea5806eafa7cb69bb064b64)
 
 5. 기술 
-   - Node.js
-   - Express.js
-   - Docker
-   - Mysql
+   - **Node.js**
+   - **Express.js**
+   - **JavaScript**
+   - MySQL
    - Redis
    - HTML
    - CSS
-   - JavaScript
-   - Nginx
 
-6. 도구
-   - VirtualBox
+6. 환경
+   - **VirtualBox**
+   - **Ubuntu**
+   - **Docker**
    - VScode
-   - Teraterm 또는 iterm
+   - Teraterm 
    - Git
    - GitHub Action
-   - flyway
+   - Flyway
+   - Nginx
 
 ## 구성
 
 1. 기능
-    - 메인페이지
-    - 장르 별 게시판
-    - 게시글
-        - 글 작성
-        - 게시글 메인
-        - 댓글
-            - 대댓글
-        - 게시글 리스트
-            - 게시글 내부에서 게시글 리스트 확인
-    - 검색
-        - 게시글 검색
-        - 댓글 검색
-    - 유저 정보
-        - 작성한 게시글
-        - 활동
-            - 댓글 활동
-        - 회원 설정
-          - 회원 정보
-            - 닉네임 변경
-          - 계정 설정
-            - 비밀번호 변경
-            - 소셜 연동 해제
-    - 회원가입
-    - 로그인
-        - 소셜 로그인
-            - 일반 회원, 소셜 연동 지원  
-            - `GitHub` 소셜 로그인 지원
-            - `Naver` 소셜 로그인 지원  
-        - 일반 로그인
-          - 일반 회원가입 지원
+    1. 게시글
+        - *게시글 작성*
+        - *카테고리 선택*
+        - *이미지 첨부*
+    2. 댓글
+        - *게시글 댓글 작성*
+        - *댓글 답글글 작성*
+    3. 좋아요 기능
+        - *게시글 좋아요*
+        - *댓글 좋아요*
+        - *좋아요 활동 표시*
+    5. 로그인, 회원가입
+        - *일반 회원가입 제공*
+        - *소셜 로그인, 회원가입 제공*
+    6. 검색
+        - *댓글 내용 검색*
+        - *게시글 내용 검색*
+    7. 신고 기능
+        - *신고 리스트 업 ( 관리자 )*
+        - *신고 기능*
+    8. 권한 
+        - *관리자 생성*
+        - *커뮤니티 관리 내역 기록*
+    9. 북마크
+        - *게시글 북마크*
+        - *북마크 리스트*
+    10. 유저 정보 관리
+        - *닉네임 변경*
+        - *비밀번호 변경*
+        - *소셜 연동 해제, 새 등록*
+    11. 유저 활동 기록
+        - *유저 게시글 작성 기록*
+        - *유저 활동 기록 ( 댓글, 좋아요, 북마크 )*
 
-2. 구상
+    - 유스케이스
+        ![UML](https://github.com/user-attachments/assets/ceba2ab5-0d16-4614-91fd-b155cf7fba3d)
+
+2. 구축
          
     1. 아키텍처
-       - 구조
+       - 서버 구조
          ![구상도](https://github.com/user-attachments/assets/f6f23a1f-9a37-4aee-b503-93619b302d37) 
 
     2. MySql
        1. ERD
-          ![image](https://github.com/user-attachments/assets/e26f4594-450b-4783-a8a8-edfbeec9f700)
+          ![Image](https://github.com/user-attachments/assets/55a105ff-5541-40cd-a543-2440bd7c079e)
     
     3. Redis
        - 세션 데이터 유지를 위한, `TTL` 설정
@@ -102,5 +115,5 @@
                - 환경변수 파일 작성
                - 서버 환경에 맞추어, 유동적으로 서버 설정을 바꿀 수 있도록 구현
    6. flyway
-      - 개발 과정 중, 발생하는 마이그레이션을 형상관리
+      - 개발 과정 중, 발생하는 DB 마이그레이션 내역을 기록록
 
